@@ -1,0 +1,130 @@
+{
+    "order": 0,
+    "suite": "SHOP_SUITE_001",
+    "description": "Navegación PreHome",
+    "initMillis": 1522747040577,
+    "config": [{
+        "ROBOTEST_BASE_CONFIG": {
+            "env": "local",
+            "browser": {
+                "browserName": "firefox",
+                "headLess": "true",
+                "windowWidth": "1024",
+                "windowHeight": "768",
+                "maximized": "true",
+                "consoleLogLevel": "WARNING"
+            },
+            "generalTimeout": "10000",
+            "reportFilePath": "C:\\eb2\\git\\139\\devopsstack\\robotest-examples\\legacy-compatibilities\\target/surefire-reports/robotest-suite-reports/assets/json/suites"
+        }
+    }],
+    "cases": [{
+        "order": 0,
+        "case": "SHOP_PAISIDIOMA_001",
+        "description": "Robotest1 PaisIdioma compatible",
+        "initMillis": 1522747058123,
+        "config": [],
+        "caseOutStepErrors": [],
+        "steps": [{
+            "order": 0,
+            "step": "Acceder a la página de inicio y seleccionar el país <b>España</b>, el idioma <b>Castellano</b> y acceder",
+            "description": "Se accede correctamente al pais / idioma seleccionados",
+            "initMillis": 1522747058885,
+            "endMillis": 1522747071302,
+            "status": "INFO",
+            "config": [],
+            "validations": [{
+                "order": 0,
+                "status": "INFO",
+                "type": "text",
+                "resource": ["1) Se cumplen las validaciones genéricas de SEO<br>2) No hay errores JavaScript<br>4) No hay literales sin traducir (contienen \"???\" o \"#\")"]
+            }, {
+                "order": 1,
+                "status": "INFO",
+                "type": "text",
+                "resource": ["1) Aparece el div de contenido asociado al país España (001)"]
+            }, {
+                "order": 2,
+                "status": "INFO",
+                "type": "text",
+                "resource": ["1) Aparece la home de marcas/multimarcas según el país<br>2) No aparece ningún tag de error"]
+            }, {
+                "order": 3,
+                "status": "INFO",
+                "type": "text",
+                "resource": ["1) <b>Sí</b> aparece el link de la línea \"<b>nuevo</b>\"<br>2) <b>Sí</b> aparece el link de la línea \"<b>she</b>\"<br>3) <b>Sí</b> aparece el link de la línea \"<b>he</b>\"<br>4) <b>Sí</b> aparece el link de la línea \"<b>nina</b>\"<br>5) <b>Sí</b> aparece el link de la línea \"<b>nino</b>\"<br>6) <b>Sí</b> aparece el link de la línea \"<b>violeta</b>\"<br>7) <b>Sí</b> aparece el link de la línea \"<b>edits</b>\"<br>"]
+            }]
+        }, {
+            "order": 1,
+            "step": "Seleccionar la <b style=\"color:chocolate\">Línea</b> <b style=\"color:brown;\">\"HE\"</b>",
+            "description": "Aparece la página correcta asociada a la línea HE",
+            "initMillis": 1522747064842,
+            "endMillis": 1522747071303,
+            "status": "INFO",
+            "config": [],
+            "validations": [{
+                "order": 0,
+                "status": "INFO",
+                "type": "text",
+                "resource": ["1) Aparece el logo/link correcto correspondiente al canal, país, línea"]
+            }, {
+                "order": 1,
+                "status": "INFO",
+                "type": "text",
+                "resource": ["1) Está seleccionada la línea <b>he</b>"]
+            }, {
+                "order": 2,
+                "status": "INFO",
+                "type": "text",
+                "resource": ["1) <b>Sí</b> es posible comprar (aparece la capa relacionada con la bolsa)"]
+            }, {
+                "order": 3,
+                "status": "INFO",
+                "type": "text",
+                "resource": ["1) El bloque de contenido (homeContent o bannerHome) existe y tiene >= 1 banner o >=1 map o >=1 items-edit"]
+            }, {
+                "order": 4,
+                "status": "INFO",
+                "type": "text",
+                "resource": ["1) No hay SRCs con HTTPs maliciosos<br>2) Aparece el footer<br>3) Aparece el div de contenido asociado al país 001"]
+            }, {
+                "order": 5,
+                "status": "INFO",
+                "type": "text",
+                "resource": ["1) Se cumplen las validaciones genéricas de SEO<br>2) No hay errores JavaScript<br>3) No hay ninguna imagen cortada<br>4) No hay literales sin traducir (contienen \"???\" o \"#\")"]
+            }]
+        }, {
+            "order": 2,
+            "step": "Seleccionar el menú superior\" he / null / pantalones\"",
+            "description": "Aparece la galería de \"pantalones",
+            "initMillis": 1522747067578,
+            "endMillis": 1522747071303,
+            "status": "INFO",
+            "config": [],
+            "validations": [{
+                "order": 0,
+                "status": "INFO",
+                "type": "text",
+                "resource": ["1) Como mínimo se obtiene un artículo al cabo de 3 segundos<br>2) Cada artículo tiene 1 icono de favoritos asociado"]
+            }, {
+                "order": 1,
+                "status": "INFO",
+                "type": "text",
+                "resource": ["1) Es visible el selector de precios"]
+            }, {
+                "order": 2,
+                "status": "INFO",
+                "type": "text",
+                "resource": ["1) Está seleccionada la línea <b>he</b>"]
+            }, {
+                "order": 3,
+                "status": "INFO",
+                "type": "text",
+                "resource": ["1) Se cumplen las validaciones genéricas de SEO<br>2) No hay errores JavaScript<br>4) No hay literales sin traducir (contienen \"???\" o \"#\")"]
+            }]
+        }],
+        "endMillis": 1522747071304
+    }],
+    "suiteOutCaseErrors": [],
+    "endMillis": 1522747072415
+}

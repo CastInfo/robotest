@@ -1,2 +1,2 @@
 #!/bin/sh
-ng build --prod
+#ng build --prod

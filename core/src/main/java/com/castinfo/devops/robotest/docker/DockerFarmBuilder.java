@@ -39,6 +39,7 @@ import com.github.dockerjava.api.model.Bind;
 import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.Volume;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
+import com.github.dockerjava.core.DefaultDockerClientConfig.Builder;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
 
@@ -133,12 +134,12 @@ public class DockerFarmBuilder {
         if (StringUtils.isEmpty(this.dockerBaseCfg.getHost())) {
             throw new RobotestException("DOCKER CONN IS REQUIRED, REVISE BASE CONFIG");
         }
-        DockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder()
-                                                             .withDockerHost(this.dockerBaseCfg.getHost())
-                                                             .withDockerTlsVerify(true)
-                                                             .withDockerCertPath(this.dockerBaseCfg.getCertsPath())
-                                                             .build();
-        this.setDockerClient(DockerClientBuilder.getInstance(config).build());
+        Builder builder = DefaultDockerClientConfig.createDefaultConfigBuilder()
+                                                   .withDockerHost(this.dockerBaseCfg.getHost());
+        if (StringUtils.isNotEmpty(this.dockerBaseCfg.getCertsPath())) {
+            builder = builder.withDockerTlsVerify(true).withDockerCertPath(this.dockerBaseCfg.getCertsPath());
+        }
+        this.setDockerClient(DockerClientBuilder.getInstance(builder).build());
         DockerFarmBuilder.LOG.info("DOCKER CLIENT RUNING: {}", this.getDockerClient().infoCmd().exec());
     }
 

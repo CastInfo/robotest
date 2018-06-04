@@ -317,13 +317,13 @@ public class DockerFarmBuilder {
             ExposedPort expPort = ExposedPort.tcp(Integer.parseInt(dockerBrowser.getExposePort()));
             dockerBrowser.setExposePort(contenedor.getNetworkSettings().getPorts().getBindings()
                                                   .get(expPort)[0].getHostPortSpec());
+            dockerBrowser.setHub(contenedor.getNetworkSettings().getNetworks().get(BRIDGE_NETWORK_METHOD)
+                                           .getIpAddress());
         } else {
             dockerBrowser.setExposePort("4444");
-        }
-        if (StringUtils.isEmpty(this.dockerBaseCfg.getHub())) {
-            // dockerBrowser.setHub(dockerBrowser.getIdContainer());
             dockerBrowser.setHub(dockerBrowser.getContainerName());
-        } else {
+        }
+        if (StringUtils.isNotEmpty(this.dockerBaseCfg.getHub())) {
             dockerBrowser.setHub(this.dockerBaseCfg.getHub());
         }
         dockerBrowser.setHub(String.format("http://%1$s:%2$s/wd/hub", dockerBrowser.getHub(),

@@ -41,7 +41,6 @@ import com.github.dockerjava.api.model.Volume;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DefaultDockerClientConfig.Builder;
 import com.github.dockerjava.core.DockerClientBuilder;
-import com.github.dockerjava.core.DockerClientConfig;
 
 /**
  * This class build and run Selenium Docker Images in a Docker machine.
@@ -164,8 +163,21 @@ public class DockerFarmBuilder {
      */
     public DockerConfig createBrowser(final String browser) throws RobotestException {
         DockerConfig dockerBrowser = new DockerConfig();
-        this.resolveImageAndCreateBrowserContainer(browser, dockerBrowser);
-        this.resolveBrowserHub(dockerBrowser);
+        this.generateContainerName(dockerBrowser);
+        try {
+            this.resolveImageAndCreateBrowserContainer(browser, dockerBrowser);
+            this.resolveBrowserHub(dockerBrowser);
+        } catch (Exception e) {
+            try {
+                this.stopNode(dockerBrowser.getContainerName());
+            } catch (Exception e2) {
+                LOG.error("ERROR STOPPING CONTAINER", e2);
+            }
+            if (e instanceof RobotestException) {
+                throw e;
+            }
+            throw new RobotestException("UNEXEPTED ERROR CREATING CONTAINER", e);
+        }
         return dockerBrowser;
     }
 
@@ -185,7 +197,6 @@ public class DockerFarmBuilder {
         if ("true".equalsIgnoreCase(this.dockerBaseCfg.getExposeDebugPort())) {
             dockerBrowser.setExposeDebugPort("5900");
         }
-        this.generateContainerName(dockerBrowser);
         if (null == this.dockerBaseCfg.getLabels() || this.dockerBaseCfg.getLabels().isEmpty()) {
             dockerBrowser.setLabels(new HashMap<>());
         } else {
@@ -215,7 +226,7 @@ public class DockerFarmBuilder {
      * @param dockerBrowser
      *            browser config.
      */
-    private void generateContainerName(final DockerConfig dockerBrowser) {
+    public void generateContainerName(final DockerConfig dockerBrowser) {
         StringBuilder containerName = new StringBuilder(ROBOTEST_CONTAINER_PREFIX);
         if (StringUtils.isNotEmpty(this.dockerBaseCfg.getContainerName())) {
             containerName.append(this.dockerBaseCfg.getContainerName());

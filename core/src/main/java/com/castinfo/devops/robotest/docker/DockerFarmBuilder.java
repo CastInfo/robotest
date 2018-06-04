@@ -311,7 +311,7 @@ public class DockerFarmBuilder {
      */
     public void resolveBrowserHub(final DockerConfig dockerBrowser) throws RobotestException {
         DockerFarmBuilder.LOG.info("RESOLVING HUB FOR CONTAINER: {}", dockerBrowser.getIdContainer());
-        if (!BRIDGE_NETWORK_METHOD.equalsIgnoreCase(dockerBrowser.getNetworkMode())) {
+        if (BRIDGE_NETWORK_METHOD.equalsIgnoreCase(dockerBrowser.getNetworkMode())) {
             InspectContainerResponse contenedor = this.getDockerClient()
                                                       .inspectContainerCmd(dockerBrowser.getIdContainer()).exec();
             ExposedPort expPort = ExposedPort.tcp(Integer.parseInt(dockerBrowser.getExposePort()));

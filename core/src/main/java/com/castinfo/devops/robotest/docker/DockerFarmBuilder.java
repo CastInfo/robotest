@@ -38,8 +38,6 @@ import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.model.Bind;
 import com.github.dockerjava.api.model.ExposedPort;
-import com.github.dockerjava.api.model.Ports;
-import com.github.dockerjava.api.model.Ports.Binding;
 import com.github.dockerjava.api.model.Volume;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DefaultDockerClientConfig.Builder;
@@ -254,18 +252,11 @@ public class DockerFarmBuilder {
             containerCmd.withName(dockerBrowser.getContainerName());
             containerCmd.withLabels(dockerBrowser.getLabels());
             containerCmd.withNetworkMode(dockerBrowser.getNetworkMode());
-            Ports portBindings = new Ports();
-            int exposedPort = Integer.parseInt(dockerBrowser.getExposePort());
-            ExposedPort exposePort = ExposedPort.tcp(exposedPort);
-            containerCmd.withExposedPorts(exposePort);
-            portBindings.bind(exposePort, Binding.bindPort(exposedPort));
             if (StringUtils.isNotEmpty(dockerBrowser.getExposeDebugPort())) {
-                exposedPort = Integer.parseInt(dockerBrowser.getExposeDebugPort());
-                exposePort = ExposedPort.tcp(exposedPort);
-                containerCmd.withExposedPorts(exposePort);
-                portBindings.bind(exposePort, Binding.bindPort(exposedPort));
+                containerCmd.withExposedPorts(ExposedPort.tcp(Integer.parseInt(dockerBrowser.getExposeDebugPort())));
             }
-            containerCmd.withPortBindings(portBindings);
+            containerCmd.withExposedPorts(ExposedPort.tcp(Integer.parseInt(dockerBrowser.getExposePort())));
+            containerCmd.withPublishAllPorts(true);
             Volume sharedMemory = new Volume("/dev/shm");
             containerCmd.withVolumes(sharedMemory).withBinds(new Bind("/dev/shm", sharedMemory));
             containerResp = containerCmd.exec();

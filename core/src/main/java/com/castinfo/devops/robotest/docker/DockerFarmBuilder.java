@@ -202,7 +202,11 @@ public class DockerFarmBuilder {
         } else {
             dockerBrowser.setLabels(this.dockerBaseCfg.getLabels());
         }
-        dockerBrowser.setNetworkMode(this.dockerBaseCfg.getNetworkMode());
+        if (StringUtils.isEmpty(this.dockerBaseCfg.getNetworkMode())) {
+            dockerBrowser.setNetworkMode(BRIDGE_NETWORK_METHOD);
+        } else {
+            dockerBrowser.setNetworkMode(this.dockerBaseCfg.getNetworkMode());
+        }
         if (SeleniumBrowser.CHROME.name().equalsIgnoreCase(browser)) {
             dockerBrowser.setImage(this.dockerBaseCfg.getChromeImageTag());
         } else if (SeleniumBrowser.FIREFOX.name().equalsIgnoreCase(browser)) {

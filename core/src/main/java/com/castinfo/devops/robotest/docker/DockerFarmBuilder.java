@@ -311,17 +311,21 @@ public class DockerFarmBuilder {
      */
     public void resolveBrowserHub(final DockerConfig dockerBrowser) throws RobotestException {
         DockerFarmBuilder.LOG.info("RESOLVING HUB FOR CONTAINER: {}", dockerBrowser.getIdContainer());
-        if (BRIDGE_NETWORK_METHOD.equalsIgnoreCase(dockerBrowser.getNetworkMode())) {
-            InspectContainerResponse contenedor = this.getDockerClient()
-                                                      .inspectContainerCmd(dockerBrowser.getIdContainer()).exec();
+        InspectContainerResponse contenedor = this.getDockerClient().inspectContainerCmd(dockerBrowser.getIdContainer())
+                                                  .exec();
+        if (contenedor.getNetworkSettings().getPorts().getBindings().isEmpty()) {
+            dockerBrowser.setExposePort("4444");
+        } else {
             ExposedPort expPort = ExposedPort.tcp(Integer.parseInt(dockerBrowser.getExposePort()));
             dockerBrowser.setExposePort(contenedor.getNetworkSettings().getPorts().getBindings()
                                                   .get(expPort)[0].getHostPortSpec());
-            dockerBrowser.setHub(contenedor.getNetworkSettings().getNetworks().get(BRIDGE_NETWORK_METHOD)
-                                           .getIpAddress());
-        } else {
-            dockerBrowser.setExposePort("4444");
+        }
+        if (contenedor.getNetworkSettings().getNetworks().isEmpty()) {
             dockerBrowser.setHub(dockerBrowser.getContainerName());
+        } else {
+            for (String network : contenedor.getNetworkSettings().getNetworks().keySet()) {
+                dockerBrowser.setHub(contenedor.getNetworkSettings().getNetworks().get(network).getIpAddress());
+            }
         }
         if (StringUtils.isNotEmpty(this.dockerBaseCfg.getHub())) {
             dockerBrowser.setHub(this.dockerBaseCfg.getHub());

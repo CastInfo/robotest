@@ -320,15 +320,26 @@ public class DockerFarmBuilder {
             dockerBrowser.setExposePort(contenedor.getNetworkSettings().getPorts().getBindings()
                                                   .get(expPort)[0].getHostPortSpec());
         }
-        if (contenedor.getNetworkSettings().getNetworks().isEmpty()) {
-            dockerBrowser.setHub(dockerBrowser.getContainerName());
-        } else {
-            for (String network : contenedor.getNetworkSettings().getNetworks().keySet()) {
-                dockerBrowser.setHub(contenedor.getNetworkSettings().getNetworks().get(network).getIpAddress());
-            }
-        }
         if (StringUtils.isNotEmpty(this.dockerBaseCfg.getHub())) {
             dockerBrowser.setHub(this.dockerBaseCfg.getHub());
+        } else {
+            if (contenedor.getNetworkSettings().getNetworks().isEmpty()) {
+                dockerBrowser.setHub(dockerBrowser.getContainerName());
+            } else {
+                String ip = null;
+                for (String network : contenedor.getNetworkSettings().getNetworks().keySet()) {
+                    ip = contenedor.getNetworkSettings().getNetworks().get(network).getIpAddress();
+                    if (StringUtils.isNotEmpty(contenedor.getNetworkSettings().getNetworks().get(network)
+                                                         .getIpAddress())) {
+                        ip = contenedor.getNetworkSettings().getNetworks().get(network).getIpAddress();
+                    }
+                }
+                if (StringUtils.isEmpty(ip)) {
+                    dockerBrowser.setHub(dockerBrowser.getContainerName());
+                } else {
+                    dockerBrowser.setHub(ip);
+                }
+            }
         }
         dockerBrowser.setHub(String.format("http://%1$s:%2$s/wd/hub", dockerBrowser.getHub(),
                                            dockerBrowser.getExposePort()));

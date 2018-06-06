@@ -205,26 +205,26 @@ public class RobotestConfiguration implements IRobotestConfiguration {
 
             System.setProperty(RobotestConfigKeys.ROBOTEST_CHROME_DOCKER_IMG_TAG,
                                this.getProperty(RobotestConfigKeys.ROBOTEST_CHROME_DOCKER_IMG_TAG,
-                                                "selenium/standalone-chrome:3.11.0-dysprosium"));
+                                                "selenium/standalone-chrome:3.12.0-boron"));
             dockerConfig.setChromeImageTag(System.getProperty(RobotestConfigKeys.ROBOTEST_CHROME_DOCKER_IMG_TAG));
             RobotestConfiguration.LOG.info("ROBOTEST_CHROME_DOCKER_IMG_TAG: {}", dockerConfig.getChromeImageTag());
 
             System.setProperty(RobotestConfigKeys.ROBOTEST_CHROME_DEBUG_DOCKER_IMG_TAG,
                                this.getProperty(RobotestConfigKeys.ROBOTEST_CHROME_DEBUG_DOCKER_IMG_TAG,
-                                                "selenium/standalone-chrome-debug:3.11.0-dysprosium"));
+                                                "selenium/standalone-chrome-debug:3.12.0-boron"));
             dockerConfig.setChromeDebugImageTag(System.getProperty(RobotestConfigKeys.ROBOTEST_CHROME_DEBUG_DOCKER_IMG_TAG));
             RobotestConfiguration.LOG.info("ROBOTEST_CHROME_DEBUG_DOCKER_IMG_TAG: {}",
                                            dockerConfig.getChromeDebugImageTag());
 
             System.setProperty(RobotestConfigKeys.ROBOTEST_FIREFOX_DOCKER_IMG_TAG,
                                this.getProperty(RobotestConfigKeys.ROBOTEST_FIREFOX_DOCKER_IMG_TAG,
-                                                "selenium/standalone-firefox:3.11.0-dysprosium"));
+                                                "selenium/standalone-firefox:3.12.0-boron"));
             dockerConfig.setFirefoxImageTag(System.getProperty(RobotestConfigKeys.ROBOTEST_FIREFOX_DOCKER_IMG_TAG));
             RobotestConfiguration.LOG.info("ROBOTEST_FIREFOX_DOCKER_IMG_TAG: {}", dockerConfig.getFirefoxImageTag());
 
             System.setProperty(RobotestConfigKeys.ROBOTEST_FIREFOX_DEBUG_DOCKER_IMG_TAG,
                                this.getProperty(RobotestConfigKeys.ROBOTEST_FIREFOX_DEBUG_DOCKER_IMG_TAG,
-                                                "selenium/standalone-firefox-debug:3.11.0-dysprosium"));
+                                                "selenium/standalone-firefox-debug:3.12.0-boron"));
             dockerConfig.setFirefoxDebugImageTag(System.getProperty(RobotestConfigKeys.ROBOTEST_FIREFOX_DEBUG_DOCKER_IMG_TAG));
             RobotestConfiguration.LOG.info("ROBOTEST_FIREFOX_DEBUG_DOCKER_IMG_TAG: {}",
                                            dockerConfig.getFirefoxDebugImageTag());

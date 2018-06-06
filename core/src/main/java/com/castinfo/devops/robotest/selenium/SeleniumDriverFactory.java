@@ -436,8 +436,8 @@ public class SeleniumDriverFactory {
         capabilities.setCapability(CapabilityType.ForSeleniumServer.ENSURING_CLEAN_SESSION, true);
         com.google.gson.JsonObject timeouts = new com.google.gson.JsonObject();
         timeouts.addProperty("implicit", 0);
-        timeouts.addProperty("pageLoad", this.getBasicCfg().getGeneralTimeout());
-        timeouts.addProperty("script", this.getBasicCfg().getGeneralTimeout());
+        timeouts.addProperty("pageLoad", Integer.parseInt(this.getBasicCfg().getGeneralTimeout()));
+        timeouts.addProperty("script", Integer.parseInt(this.getBasicCfg().getGeneralTimeout()));
         capabilities.setCapability("timeouts", timeouts);
     }
 
@@ -559,9 +559,9 @@ public class SeleniumDriverFactory {
      */
     protected void deleteCookiesAndSetTimemouts(final WebDriver webdriver) {
         webdriver.manage().deleteAllCookies();
-        webdriver.manage().timeouts().pageLoadTimeout(this.getBasicCfg().getGeneralTimeoutInSeconds(),
+        webdriver.manage().timeouts().pageLoadTimeout((int) this.getBasicCfg().getGeneralTimeoutInSeconds(),
                                                       TimeUnit.SECONDS);
-        webdriver.manage().timeouts().setScriptTimeout(this.getBasicCfg().getGeneralTimeoutInSeconds(),
+        webdriver.manage().timeouts().setScriptTimeout((int) this.getBasicCfg().getGeneralTimeoutInSeconds(),
                                                        TimeUnit.SECONDS);
         webdriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
     }

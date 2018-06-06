@@ -476,6 +476,8 @@ public class SeleniumDriverFactory {
                 fp.setPreference("network.proxy.type", 1);
                 fp.setPreference("network.proxy.http", this.browserCfg.getProxy().split(":")[0]);
                 fp.setPreference("network.proxy.http_port", this.browserCfg.getProxy().split(":")[1]);
+                fp.setPreference("network.proxy.ssl", this.browserCfg.getProxy().split(":")[0]);
+                fp.setPreference("network.proxy.ssl_port", this.browserCfg.getProxy().split(":")[1]);
             }
             fp.setPreference("browserCfg.cache.disk.enable", true);
             fp.setPreference("browserCfg.cache.memory.enable", true);

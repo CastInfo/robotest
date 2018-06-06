@@ -30,7 +30,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "browserName", "headLess", "windowWidth", "windowHeight", "maximized", "consoleLogLevel" })
+@JsonPropertyOrder({ "browserName", "headLess", "windowWidth", "windowHeight", "maximized", "consoleLogLevel",
+                     "proxy" })
 public class RobotestBrowserConfig {
 
     @JsonProperty("browserName")
@@ -50,6 +51,9 @@ public class RobotestBrowserConfig {
 
     @JsonProperty("consoleLogLevel")
     private String consoleLogLevel = "";
+
+    @JsonProperty("proxy")
+    private String proxy = "";
 
     /**
      * The Browser.
@@ -183,6 +187,27 @@ public class RobotestBrowserConfig {
         this.consoleLogLevel = level;
     }
 
+    /**
+     * Getter method for proxy.
+     *
+     * @return the proxy
+     */
+    @JsonProperty("proxy")
+    public String getProxy() {
+        return this.proxy;
+    }
+
+    /**
+     * Setter method for the proxy.
+     *
+     * @param proxy
+     *            the proxy to set
+     */
+    @JsonProperty("proxy")
+    public void setProxy(final String proxy) {
+        this.proxy = proxy;
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
@@ -192,7 +217,7 @@ public class RobotestBrowserConfig {
     public int hashCode() {
         return new HashCodeBuilder().append(this.browserName).append(this.headLess).append(this.windowWidth)
                                     .append(this.windowHeight).append(this.maximized).append(this.consoleLogLevel)
-                                    .toHashCode();
+                                    .append(this.proxy).toHashCode();
     }
 
     @Override
@@ -207,7 +232,8 @@ public class RobotestBrowserConfig {
         return new EqualsBuilder().append(this.browserName, rhs.browserName).append(this.headLess, rhs.headLess)
                                   .append(this.windowWidth, rhs.windowWidth).append(this.windowHeight, rhs.windowHeight)
                                   .append(this.maximized, rhs.maximized)
-                                  .append(this.consoleLogLevel, rhs.consoleLogLevel).isEquals();
+                                  .append(this.consoleLogLevel, rhs.consoleLogLevel).append(this.proxy, rhs.proxy)
+                                  .isEquals();
     }
 
 }

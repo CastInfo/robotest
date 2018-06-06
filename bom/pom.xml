@@ -82,6 +82,8 @@
         <robotest.cfg.browser.maximized>true</robotest.cfg.browser.maximized>
         <!-- ROBOTEST_BROWSER_CONSOLE_LOG_LEVEL: Warning by default, values accepted are java.util.logging.Level values. -->
         <robotest.cfg.browser.log.level>WARNING</robotest.cfg.browser.log.level>
+        <!-- ROBOTEST_BROWSER_PROXY: Proxy dns:port settings  -->
+        <robotest.cfg.browser.proxy />
         <!-- ROBOTEST_GENERAL_TIMEOUT: timeout general for Selenium Driver Api utilities, defaults to 10000ms. -->
         <robotest.cfg.general.timeout>10000</robotest.cfg.general.timeout>
         <!-- ROBOTEST_DOCKER_CONN: Docker host, tipical local instalation runs in tcp://192.168.99.100:2376 or unix:// -->
@@ -902,6 +904,7 @@
                                         <ROBOTEST_BROWSER_HEIGHT>${robotest.cfg.browser.height}</ROBOTEST_BROWSER_HEIGHT>
                                         <ROBOTEST_BROWSER_MAXIMIZED>${robotest.cfg.browser.maximized}</ROBOTEST_BROWSER_MAXIMIZED>
                                         <ROBOTEST_BROWSER_CONSOLE_LOG_LEVEL>${robotest.cfg.browser.log.level}</ROBOTEST_BROWSER_CONSOLE_LOG_LEVEL>
+                                        <ROBOTEST_BROWSER_PROXY>${robotest.cfg.browser.proxy}</ROBOTEST_BROWSER_PROXY>
                                         <ROBOTEST_GENERAL_TIMEOUT>${robotest.cfg.general.timeout}</ROBOTEST_GENERAL_TIMEOUT>
                                         <ROBOTEST_DOCKER_CONN>${robotest.cfg.docker.conn}</ROBOTEST_DOCKER_CONN>
                                         <ROBOTEST_DOCKER_PUBLIC_HOST>${robotest.cfg.docker.public_host}</ROBOTEST_DOCKER_PUBLIC_HOST>

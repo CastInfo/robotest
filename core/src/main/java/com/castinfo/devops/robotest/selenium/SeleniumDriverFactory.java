@@ -29,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.http.ssl.SSLInitializationException;
+import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -421,7 +422,14 @@ public class SeleniumDriverFactory {
         if (!SeleniumBrowser.INTERNET_EXPLORER.name().equalsIgnoreCase(capabilities.getBrowserName())) {
             capabilities.setAcceptInsecureCerts(true);
         }
-        capabilities.setCapability(CapabilityType.ForSeleniumServer.AVOIDING_PROXY, true);
+        if (this.browserCfg.getProxy().isEmpty()) {
+            capabilities.setCapability(CapabilityType.ForSeleniumServer.AVOIDING_PROXY, true);
+        } else {
+            Proxy proxy = new Proxy();
+            proxy.setHttpProxy(this.browserCfg.getProxy()).setFtpProxy(this.browserCfg.getProxy())
+                 .setSslProxy(this.browserCfg.getProxy());
+            capabilities.setCapability(CapabilityType.PROXY, proxy);
+        }
         capabilities.setCapability(CapabilityType.ForSeleniumServer.ENSURING_CLEAN_SESSION, true);
         com.google.gson.JsonObject timeouts = new com.google.gson.JsonObject();
         timeouts.addProperty("implicit", 0);
@@ -499,7 +507,8 @@ public class SeleniumDriverFactory {
      *            webdriver created
      * @param capabilities
      *            current capabilities
-     * @param localNative true if is local native browser
+     * @param localNative
+     *            true if is local native browser
      */
     protected void postCreationDriverCapabilities(final WebDriver webdriver, final DesiredCapabilities capabilities,
                                                   final boolean localNative) {
@@ -516,7 +525,8 @@ public class SeleniumDriverFactory {
      *            webdriver created
      * @param capabilities
      *            current capabilities
-     * @param localNative true if is local native browser
+     * @param localNative
+     *            true if is local native browser
      */
     protected void forzeMaximizeWindow(final WebDriver webdriver, final DesiredCapabilities capabilities,
                                        final boolean localNative) {

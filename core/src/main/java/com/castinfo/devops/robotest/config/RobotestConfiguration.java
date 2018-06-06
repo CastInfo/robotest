@@ -142,6 +142,9 @@ public class RobotestConfiguration implements IRobotestConfiguration {
                            this.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_MAXIMIZED, "false"));
         browserConfig.setMaximized(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_MAXIMIZED));
         RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_MAXIMIZED: {}", this.basicCfg.getBrowser().getMaximized());
+
+        browserConfig.setProxy(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_PROXY, ""));
+        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_PROXY: {}", this.basicCfg.getBrowser().getProxy());
     }
 
     /**

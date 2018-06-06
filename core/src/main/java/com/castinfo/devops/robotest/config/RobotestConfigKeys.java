@@ -127,5 +127,9 @@ public final class RobotestConfigKeys {
      * Robotest report base path robotest parameter.
      */
     public static final String ROBOTEST_REPORT_BASE = "ROBOTEST_REPORT_BASE";
+    /**
+     * Robotest browser proxy
+     */
+    public static final String ROBOTEST_BROWSER_PROXY = "ROBOTEST_BROWSER_PROXY";
 
 }

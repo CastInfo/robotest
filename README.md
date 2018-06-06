@@ -146,13 +146,15 @@ SELENIUM DRIVER RELEASES: https://github.com/SeleniumHQ/selenium/releases
 
 DOCKER SELENIUM RELEASES: https://github.com/SeleniumHQ/docker-selenium/releases
 
-
 | BROWSER | BROWSER_VERSION | WEBDRIVER | SELENIUM_DRIVER | DOCKER_IMG                                                 | HEADLESS CAPABILITY |
 |---------|-----------------|-----------|-----------------|------------------------------------------------------------|---------------------|
-| IE      | 7-11            | 2.39      | 3.11.0          |                                                            |                     |  
+| IE      | 7-11            | 2.39      | 3.11.0          |                                                            |                     |
 | IE      | 59.+            | 0.20.0    | 3.11.0          |                                                            |                     |
-| FIREFOX | 59.+            | 0.20.1    | 3.11.0          | `selenium/standalone-firefox:3.11.0-dysprosium`            | yes                 |
-| FIREFOX | 59.+            | 0.20.0    | 3.11.0          | `selenium/standalone-firefox:3.11.0-(bismuth/californium)` | yes                 |
+| FIREFOX | 60.0.+          | 0.20.1    | 3.12.0          | `selenium/standalone-firefox:3.11.0-(americium|boron)`     | yes                 |
+| FIREFOX | 59.0.+          | 0.20.1    | 3.11.0          | `selenium/standalone-firefox:3.11.0-dysprosium`            | yes                 |
+| FIREFOX | 59.0.+          | 0.20.0    | 3.11.0          | `selenium/standalone-firefox:3.11.0-(bismuth/californium)` | yes                 |
+| CHROME  | 67.0.+          | 2.39      | 3.12.0          | `selenium/standalone-firefox:3.11.0-boron`                 | yes                 |
+| CHROME  | 66.0.+          | 2.38      | 3.12.0          | `selenium/standalone-firefox:3.11.0-americium`             | yes                 |
 | CHROME  | 66.0.+          | 2.38      | 3.11.0          | `selenium/standalone-chrome:3.11.0-dysprosium`             | yes                 |
 | CHROME  | 65.0.+          | 2.37      | 3.11.0          | `selenium/standalone-chrome:3.11.0-(bismuth/californium)`  | yes                 |
 

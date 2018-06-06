@@ -245,8 +245,9 @@ public class DockerFarmBuilder {
      */
     private String createBrowserContainer(final DockerConfig dockerBrowser) throws RobotestException {
         CreateContainerResponse containerResp = null;
-        try (CreateContainerCmd containerCmd = this.getDockerClient().createContainerCmd(dockerBrowser.getImage());
-             DockerContainerCallback createCallback = new DockerContainerCallback(DockerFarmBuilder.SEL_SERVER_END)) {
+        try {
+            CreateContainerCmd containerCmd = this.getDockerClient().createContainerCmd(dockerBrowser.getImage());
+            DockerContainerCallback createCallback = new DockerContainerCallback(DockerFarmBuilder.SEL_SERVER_END);
             DockerFarmBuilder.LOG.info("DOCKER CREATE CONTAINER FROM: {}", dockerBrowser);
             containerCmd.withName(dockerBrowser.getContainerName());
             containerCmd.withLabels(dockerBrowser.getLabels());

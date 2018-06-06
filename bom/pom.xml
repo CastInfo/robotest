@@ -99,7 +99,7 @@
         <!-- ROBOTEST_DOCKER_NETWORK: network for Docker, valid values: bridge (default), none, host, container and custom 
             subnet id. -->
         <robotest.cfg.docker.network />
-        <!-- ROBOTEST_DOCKER_CONTAINER_EXEC_TAG: tag appended to default "robotest_" initial name of robotest containers. -->
+        <!-- ROBOTEST_DOCKER_CONTAINER_EXEC_TAG: tag appended to default "robotest_" initial name of robotest containers to avoid paralelism naming conflict. -->
         <robotest.cfg.docker.container.exec.tag />
         <!-- ROBOTEST_DOCKER_LABELS: coma separated list key:value labels -->
         <robotest.cfg.docker.labels />

@@ -6,7 +6,9 @@ import com.castinfo.devops.robotest.annot.RobotestStep;
 
 public class HelloWorldPageObject extends PageObject {
 
-    @RobotestStep(tag = "HELLO_WORLD_STEP_001", description = "Check home title")
+    @RobotestStep(tag = "HELLO_WORLD_STEP_001",
+                  description = "Check home title",
+                  captureConsoleErrorLogsAtEndStep = true)
     public void checkTitle() throws RobotestException {
         String parameter = "Cast Info | Cast Info s.a > Soluciones y Servicios tecnológicos de Vanguardia";
         if (!parameter.equals(this.getDriver().getTitle())) {

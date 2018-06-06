@@ -25,7 +25,9 @@ public class ITHelloWorld extends TestCase {
     public void helloWorld() throws RobotestException {
         HelloWorldPageObject helloWorldPO = this.buildPageObject(HelloWorldPageObject.class);
         String urlToTest = this.getSuiteTestPropertyCfg("WEB_TO_TEST", "CAST-INFO-WEB");
+        helloWorldPO.addInfoToReport().withMessage("Try to open:" + urlToTest);
         helloWorldPO.openURL(urlToTest);
+        helloWorldPO.addInfoToReport().withMessage(urlToTest + " Opened!");
         helloWorldPO.checkTitle();
     }
 

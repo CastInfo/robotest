@@ -220,8 +220,8 @@ public class DockerFarmBuilder {
     }
 
     /**
-     * Generate name of robotest with format:
-     * ${ROBOTEST_CONTAINER_PREFIX}${dockerBaseCfg.getContainerName()}${lastRobotestContainerNumber++}.
+     * Generate name of robotest with format: robotest_[ROBOTEST_DOCKER_CONTAINER_EXEC_TAG_]number
+     *
      *
      * @param dockerBrowser
      *            browser config.
@@ -230,6 +230,7 @@ public class DockerFarmBuilder {
         StringBuilder containerName = new StringBuilder(ROBOTEST_CONTAINER_PREFIX);
         if (StringUtils.isNotEmpty(this.dockerBaseCfg.getContainerName())) {
             containerName.append(this.dockerBaseCfg.getContainerName());
+            containerName.append("_");
         }
         containerName.append(this.dockerInstancesNumber.incrementAndGet());
         dockerBrowser.setContainerName(containerName.toString());

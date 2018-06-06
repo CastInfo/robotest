@@ -27,7 +27,7 @@ public class RobotestConfigurationTest {
         System.setProperty(RobotestConfigKeys.ROBOTEST_BROWSER_WIDTH, "1024");
         System.setProperty(RobotestConfigKeys.ROBOTEST_BROWSER_HEIGHT, "768");
         System.setProperty(RobotestConfigKeys.ROBOTEST_BROWSER_MAXIMIZED, "true");
-        System.setProperty(RobotestConfigKeys.ROBOTEST_GENERAL_TIMEOUT, "1000");
+        System.setProperty(RobotestConfigKeys.ROBOTEST_GENERAL_TIMEOUT_MILLIS, "1000");
         System.setProperty(RobotestConfigKeys.ROBOTEST_DOCKER_CONN, "tcp://192.168.99.100:2376");
         System.setProperty(RobotestConfigKeys.ROBOTEST_DOCKER_TLS, "true");
         System.setProperty(RobotestConfigKeys.ROBOTEST_DOCKER_CERTS,
@@ -48,7 +48,7 @@ public class RobotestConfigurationTest {
         System.setProperty(RobotestConfigKeys.ROBOTEST_BROWSER_WIDTH, "");
         System.setProperty(RobotestConfigKeys.ROBOTEST_BROWSER_HEIGHT, "");
         System.setProperty(RobotestConfigKeys.ROBOTEST_BROWSER_MAXIMIZED, "");
-        System.setProperty(RobotestConfigKeys.ROBOTEST_GENERAL_TIMEOUT, "");
+        System.setProperty(RobotestConfigKeys.ROBOTEST_GENERAL_TIMEOUT_MILLIS, "");
         System.setProperty(RobotestConfigKeys.ROBOTEST_DOCKER_CONN, "");
         System.setProperty(RobotestConfigKeys.ROBOTEST_DOCKER_TLS, "");
         System.setProperty(RobotestConfigKeys.ROBOTEST_DOCKER_CERTS, "");
@@ -73,7 +73,7 @@ public class RobotestConfigurationTest {
         Assert.assertTrue(basicConfig.getEnv().equals("local"));
         Assert.assertTrue(basicConfig.getBrowser().getBrowserName().equals(SeleniumBrowser.CHROME.name()));
         Assert.assertTrue(basicConfig.getBrowser().getConsoleLogLevel().equals("WARNING"));
-        Assert.assertTrue(basicConfig.getGeneralTimeout().equals("1000"));
+        Assert.assertTrue(!basicConfig.getGeneralTimeout().isEmpty());
         Assert.assertTrue(basicConfig.getDocker().getHost().equals("tcp://192.168.99.100:2376"));
         Assert.assertTrue(basicConfig.getDocker().getCertsPath()
                                      .equals(System.getProperty("user.dir") + "/.docker/machine/certs"));

@@ -98,7 +98,7 @@ public final class RobotestConfigKeys {
     /**
      * General timeout robotest parameter.
      */
-    public static final String ROBOTEST_GENERAL_TIMEOUT = "ROBOTEST_GENERAL_TIMEOUT";
+    public static final String ROBOTEST_GENERAL_TIMEOUT_MILLIS = "ROBOTEST_GENERAL_TIMEOUT";
     /**
      * Browser name robotest parameter.
      */

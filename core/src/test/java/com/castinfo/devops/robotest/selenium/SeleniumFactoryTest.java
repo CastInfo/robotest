@@ -18,11 +18,14 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import com.castinfo.devops.robotest.RobotestException;
 import com.castinfo.devops.robotest.config.BrowserStackConfig;
 import com.castinfo.devops.robotest.config.DockerConfig;
+import com.castinfo.devops.robotest.config.RobotestBasicConfig;
 import com.castinfo.devops.robotest.config.RobotestBrowserConfig;
 
 public class SeleniumFactoryTest {
 
-    public static RobotestBrowserConfig buildBrowserConfig(final SeleniumBrowser browser) {
+    public static RobotestBasicConfig buildBrowserConfig(final SeleniumBrowser browser) {
+        RobotestBasicConfig basCfg = new RobotestBasicConfig();
+        basCfg.setGeneralTimeout("1000");
         RobotestBrowserConfig bCfg = new RobotestBrowserConfig();
         bCfg.setBrowserName(browser.name());
         bCfg.setHeadLess("true");
@@ -30,7 +33,8 @@ public class SeleniumFactoryTest {
         bCfg.setConsoleLogLevel("INFO");
         bCfg.setWindowWidth("1024");
         bCfg.setWindowHeight("768");
-        return bCfg;
+        basCfg.setBrowser(bCfg);
+        return basCfg;
     }
 
     @Test

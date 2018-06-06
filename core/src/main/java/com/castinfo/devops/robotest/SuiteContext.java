@@ -188,12 +188,11 @@ public class SuiteContext {
         WebDriver wd = null;
         RobotestBasicConfig basicCfg = this.cfg.getConfigBasic();
         try {
-            SeleniumDriverFactory selFactory = new SeleniumDriverFactory(basicCfg.getBrowser());
+            SeleniumDriverFactory selFactory = new SeleniumDriverFactory(basicCfg);
 
             if (null != basicCfg.getDocker() && StringUtils.isNotEmpty(basicCfg.getDocker().getHost())) {
                 DockerConfig docker = RobotestExecutionContext.getDockerFarmBuilder()
-                                                              .createBrowser(basicCfg.getBrowser()
-                                                                                         .getBrowserName());
+                                                              .createBrowser(basicCfg.getBrowser().getBrowserName());
                 RobotestExecutionContext.getBrowserDockers().get(this.suiteAnnotation).put(testCaseAnnot, docker);
                 ConfigEntry cEntry = new ConfigEntry("DOCKER_BROWSER_INSTANCE", docker);
                 lCfgs.add(cEntry);

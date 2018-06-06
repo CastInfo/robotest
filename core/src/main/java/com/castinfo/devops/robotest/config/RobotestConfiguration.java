@@ -79,9 +79,9 @@ public class RobotestConfiguration implements IRobotestConfiguration {
         this.basicCfg.setEnv(System.getProperty(RobotestConfigKeys.ROBOTEST_ENV));
         RobotestConfiguration.LOG.info("ROBOTEST ENV: {}", this.basicCfg.getEnv());
 
-        System.setProperty(RobotestConfigKeys.ROBOTEST_GENERAL_TIMEOUT,
-                           this.getProperty(RobotestConfigKeys.ROBOTEST_GENERAL_TIMEOUT, "10000"));
-        this.basicCfg.setGeneralTimeout(System.getProperty(RobotestConfigKeys.ROBOTEST_GENERAL_TIMEOUT));
+        System.setProperty(RobotestConfigKeys.ROBOTEST_GENERAL_TIMEOUT_MILLIS,
+                           this.getProperty(RobotestConfigKeys.ROBOTEST_GENERAL_TIMEOUT_MILLIS, "10000"));
+        this.basicCfg.setGeneralTimeout(System.getProperty(RobotestConfigKeys.ROBOTEST_GENERAL_TIMEOUT_MILLIS));
         RobotestConfiguration.LOG.info("ROBOTEST_GENERAL_TIMEOUT: {}", this.basicCfg.getGeneralTimeout());
 
         this.configBrowser();

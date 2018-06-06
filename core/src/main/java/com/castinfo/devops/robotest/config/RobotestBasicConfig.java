@@ -86,6 +86,13 @@ public class RobotestBasicConfig {
         return this.generalTimeout;
     }
 
+    private static final int ONE_SECOND_IN_MILLIS = 1000;
+
+    public long getGeneralTimeoutInSeconds() {
+        long millis = Long.parseLong(this.generalTimeout);
+        return millis / ONE_SECOND_IN_MILLIS;
+    }
+
     /**
      * The generalTimeout.
      *

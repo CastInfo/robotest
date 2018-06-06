@@ -46,10 +46,6 @@ public class PageObject extends SeleniumElementsWrapper {
 
     private static final AtomicInteger AVOID_REPORT_FILE_NAME_CONFLICT_COUNTER = new AtomicInteger();
 
-    private static final int TEN_SECONDS = 10;
-    private static final int TEN_SECONDS_IN_MILLIS = 10000;
-    private static final int ONE_SECOND_IN_MILLIS = 1000;
-
     /**
      * This method is for assure that report fileNames not enter in conflict.
      *
@@ -245,9 +241,9 @@ public class PageObject extends SeleniumElementsWrapper {
      *             If suite initialization problems happens.
      */
     public long getGeneralWaitTimoutMillis() throws RobotestException {
-        long results = PageObject.TEN_SECONDS_IN_MILLIS;
+        long results = -1;
         try {
-            Long.parseLong(this.getBasicCfg().getGeneralTimeout());
+            results = Long.parseLong(this.getBasicCfg().getGeneralTimeout());
         } catch (NumberFormatException e) {
             throw new RobotestException("INCORRECT GENERAL TIMEOUT FOUND", e);
         }
@@ -262,9 +258,9 @@ public class PageObject extends SeleniumElementsWrapper {
      *             If suite initialization problems happens.
      */
     public long getGeneralWaitTimoutSeconds() throws RobotestException {
-        long results = PageObject.TEN_SECONDS;
+        long results = -1;
         try {
-            results = Long.parseLong(this.getBasicCfg().getGeneralTimeout()) / PageObject.ONE_SECOND_IN_MILLIS;
+            results = this.getBasicCfg().getGeneralTimeoutInSeconds();
         } catch (NumberFormatException e) {
             throw new RobotestException("INCORRECT GENERAL TIMEOUT FOUND", e);
         }

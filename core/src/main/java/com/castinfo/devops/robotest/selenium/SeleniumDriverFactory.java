@@ -29,6 +29,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.http.ssl.SSLInitializationException;
+import org.openqa.selenium.Proxy;
+import org.openqa.selenium.Proxy.ProxyType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -432,6 +434,11 @@ public class SeleniumDriverFactory {
         }
         if (StringUtils.isEmpty(this.getBrowserConfig().getProxy())) {
             capabilities.setCapability(CapabilityType.ForSeleniumServer.AVOIDING_PROXY, true);
+        } else {
+            Proxy proxy = new Proxy();
+            proxy.setProxyType(ProxyType.MANUAL).setHttpProxy(this.getBrowserConfig().getProxy())
+                 .setFtpProxy(this.getBrowserConfig().getProxy()).setSslProxy(this.getBrowserConfig().getProxy());
+            capabilities.setCapability(CapabilityType.PROXY, proxy);
         }
         capabilities.setCapability(CapabilityType.ForSeleniumServer.ENSURING_CLEAN_SESSION, true);
         com.google.gson.JsonObject timeouts = new com.google.gson.JsonObject();
@@ -481,11 +488,24 @@ public class SeleniumDriverFactory {
             if (StringUtils.isEmpty(this.getBrowserConfig().getProxy())) {
                 fp.setPreference("network.proxy.type", 0); // Sin proxy (1 -> Con proxy de sistema)
             } else {
-                fp.setPreference("network.proxy.type", 1);
-                fp.setPreference("network.proxy.http", this.getBrowserConfig().getProxy().split(":")[0]);
-                fp.setPreference("network.proxy.http_port", this.getBrowserConfig().getProxy().split(":")[1]);
-                fp.setPreference("network.proxy.ssl", this.getBrowserConfig().getProxy().split(":")[0]);
-                fp.setPreference("network.proxy.ssl_port", this.getBrowserConfig().getProxy().split(":")[1]);
+                String proxyServer = this.getBrowserConfig().getProxy().split(":")[0];
+                String proxyPort = this.getBrowserConfig().getProxy().split(":")[1];
+                // up to ff47
+                /*
+                 * fp.setPreference("network.proxy.type", 1);
+                 * fp.setPreference("network.proxy.http", proxyServer);
+                 * fp.setPreference("network.proxy.http_port", proxyPort);
+                 * fp.setPreference("network.proxy.ssl", proxyServer);
+                 * fp.setPreference("network.proxy.ssl_port", proxyPort);
+                 */
+                // from ff48+
+                com.google.gson.JsonObject json = new com.google.gson.JsonObject();
+                json.addProperty("proxyType", "MANUAL");
+                json.addProperty("httpProxy", proxyServer);
+                json.addProperty("httpProxyPort", proxyPort);
+                json.addProperty("sslProxy", proxyServer);
+                json.addProperty("sslProxyPort", proxyPort);
+                capabilities.setCapability("proxy", json);
             }
             fp.setPreference("browserCfg.cache.disk.enable", true);
             fp.setPreference("browserCfg.cache.memory.enable", true);

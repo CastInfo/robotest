@@ -203,6 +203,18 @@ public class RobotestConfiguration implements IRobotestConfiguration {
             dockerConfig.setLabels(labels);
             RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_LABELS: {}", labelsText);
 
+            dockerConfig.setDockerRegistryUrl(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_REGISTRY_URL));
+            RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_REGISTRY: {}", dockerConfig.getDockerRegistryUrl());
+
+            dockerConfig.setDockerRegistryUser(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_REGISTRY_USER));
+            RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_REGISTRY: {}", dockerConfig.getDockerRegistryUser());
+
+            dockerConfig.setDockerRegistrySecret(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_REGISTRY_SECRET));
+            RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_REGISTRY_SECRET *****");
+
+            dockerConfig.setDockerRegistryEmail(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_REGISTRY_EMAIL));
+            RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_REGISTRY_EMAIL: {}", dockerConfig.getDockerRegistryEmail());
+
             System.setProperty(RobotestConfigKeys.ROBOTEST_CHROME_DOCKER_IMG_TAG,
                                this.getProperty(RobotestConfigKeys.ROBOTEST_CHROME_DOCKER_IMG_TAG,
                                                 "selenium/standalone-chrome:3.12.0-boron"));
@@ -246,6 +258,7 @@ public class RobotestConfiguration implements IRobotestConfiguration {
             bsCfg.setLogin(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSERSTACK_USER_NAME));
             RobotestConfiguration.LOG.info("ROBOTEST_BROWSERSTACK_USER_NAME: {}", bsCfg.getLogin());
             bsCfg.setAccessKey(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSERSTACK_ACCESS_KEY));
+            RobotestConfiguration.LOG.info("ROBOTEST_BROWSERSTACK_ACCESS_KEY *****");
             this.basicCfg.setBrowserStack(bsCfg);
         }
     }

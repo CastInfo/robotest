@@ -136,7 +136,19 @@ public class DockerFarmBuilder {
         Builder builder = DefaultDockerClientConfig.createDefaultConfigBuilder()
                                                    .withDockerHost(this.dockerBaseCfg.getHost());
         if (StringUtils.isNotEmpty(this.dockerBaseCfg.getCertsPath())) {
-            builder = builder.withDockerTlsVerify(true).withDockerCertPath(this.dockerBaseCfg.getCertsPath());
+            builder.withDockerTlsVerify(true).withDockerCertPath(this.dockerBaseCfg.getCertsPath());
+        }
+        if (StringUtils.isNotEmpty(this.dockerBaseCfg.getDockerRegistryUrl())) {
+            builder.withRegistryUrl(this.dockerBaseCfg.getDockerRegistryUrl());
+            if (StringUtils.isNotEmpty(this.dockerBaseCfg.getDockerRegistryUser())) {
+                builder.withRegistryUsername(this.dockerBaseCfg.getDockerRegistryUser());
+            }
+            if (StringUtils.isNotEmpty(this.dockerBaseCfg.getDockerRegistrySecret())) {
+                builder.withRegistryPassword(this.dockerBaseCfg.getDockerRegistrySecret());
+            }
+            if (StringUtils.isNotEmpty(this.dockerBaseCfg.getDockerRegistryEmail())) {
+                builder.withRegistryEmail(this.dockerBaseCfg.getDockerRegistryEmail());
+            }
         }
         this.setDockerClient(DockerClientBuilder.getInstance(builder).build());
         DockerFarmBuilder.LOG.info("DOCKER CLIENT RUNING: {}", this.getDockerClient().infoCmd().exec());

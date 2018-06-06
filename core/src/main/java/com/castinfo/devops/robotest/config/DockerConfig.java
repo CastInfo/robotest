@@ -34,7 +34,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "host", "image", "idContainer", "containerName", "networkMode", "hub", "expose_port",
                      "expose_debug_port", "chromeImageTag", "chromeDebugImageTag", "firefoxImageTag",
-                     "firefoxDebugImageTag" })
+                     "firefoxDebugImageTag", "dockerRegistryUrl", "dockerRegistryUser", "dockerRegistryEmail" })
 public class DockerConfig {
 
     /**
@@ -103,6 +103,14 @@ public class DockerConfig {
      */
     @JsonProperty("networkMode")
     private String networkMode = null;
+
+    @JsonProperty("dockerRegistryUrl")
+    private String dockerRegistryUrl = null;
+    @JsonProperty("dockerRegistryUser")
+    private String dockerRegistryUser = null;
+    private String dockerRegistrySecret = null;
+    @JsonProperty("dockerRegistryEmail")
+    private String dockerRegistryEmail = null;
 
     private Map<String, String> labels = null;
 
@@ -208,6 +216,88 @@ public class DockerConfig {
      */
     public void setNetworkMode(final String networkMode) {
         this.networkMode = networkMode;
+    }
+
+    /**
+     * Getter method for dockerRegistryUrl.
+     *
+     * @return the dockerRegistryUrl
+     */
+    @JsonProperty("dockerRegistryUrl")
+    public String getDockerRegistryUrl() {
+        return this.dockerRegistryUrl;
+    }
+
+    /**
+     * Setter method for the dockerRegistryUrl.
+     *
+     * @param dockerRegistryUrl
+     *            the dockerRegistryUrl to set
+     */
+    @JsonProperty("dockerRegistryUrl")
+    public void setDockerRegistryUrl(final String dockerRegistryUrl) {
+        this.dockerRegistryUrl = dockerRegistryUrl;
+    }
+
+    /**
+     * Getter method for dockerRegistryUser.
+     *
+     * @return the dockerRegistryUser
+     */
+    @JsonProperty("dockerRegistryUser")
+    public String getDockerRegistryUser() {
+        return this.dockerRegistryUser;
+    }
+
+    /**
+     * Setter method for the dockerRegistryUser.
+     *
+     * @param dockerRegistryUser
+     *            the dockerRegistryUser to set
+     */
+    @JsonProperty("dockerRegistryUser")
+    public void setDockerRegistryUser(final String dockerRegistryUser) {
+        this.dockerRegistryUser = dockerRegistryUser;
+    }
+
+    /**
+     * Getter method for dockerRegistrySecret.
+     *
+     * @return the dockerRegistrySecret
+     */
+    public String getDockerRegistrySecret() {
+        return this.dockerRegistrySecret;
+    }
+
+    /**
+     * Setter method for the dockerRegistrySecret.
+     *
+     * @param dockerRegistrySecret
+     *            the dockerRegistrySecret to set
+     */
+    public void setDockerRegistrySecret(final String dockerRegistrySecret) {
+        this.dockerRegistrySecret = dockerRegistrySecret;
+    }
+
+    /**
+     * Getter method for dockerRegistryEmail.
+     *
+     * @return the dockerRegistryEmail
+     */
+    @JsonProperty("dockerRegistryEmail")
+    public String getDockerRegistryEmail() {
+        return this.dockerRegistryEmail;
+    }
+
+    /**
+     * Setter method for the dockerRegistryEmail.
+     *
+     * @param dockerRegistryEmail
+     *            the dockerRegistryEmail to set
+     */
+    @JsonProperty("dockerRegistryEmail")
+    public void setDockerRegistryEmail(final String dockerRegistryEmail) {
+        this.dockerRegistryEmail = dockerRegistryEmail;
     }
 
     /**
@@ -408,6 +498,8 @@ public class DockerConfig {
         return new HashCodeBuilder().append(this.host).append(this.image).append(this.idContainer)
                                     .append(this.containerName).append(this.networkMode).append(this.hub)
                                     .append(this.exposePort).append(this.exposeDebugPort).append(this.certsPath)
+                                    .append(this.dockerRegistryUrl).append(this.dockerRegistryUser)
+                                    .append(this.dockerRegistrySecret).append(this.dockerRegistryEmail)
                                     .append(this.chromeImageTag).append(this.chromeDebugImageTag)
                                     .append(this.firefoxImageTag).append(this.firefoxDebugImageTag).toHashCode();
     }
@@ -428,6 +520,10 @@ public class DockerConfig {
                                   .append(this.exposePort, rhs.exposePort)
                                   .append(this.exposeDebugPort, rhs.exposeDebugPort)
                                   .append(this.certsPath, rhs.certsPath).append(this.chromeImageTag, rhs.chromeImageTag)
+                                  .append(this.dockerRegistryUrl, rhs.dockerRegistryUrl)
+                                  .append(this.dockerRegistryUser, rhs.dockerRegistryUser)
+                                  .append(this.dockerRegistrySecret, rhs.dockerRegistrySecret)
+                                  .append(this.dockerRegistryEmail, rhs.dockerRegistryEmail)
                                   .append(this.chromeDebugImageTag, rhs.chromeDebugImageTag)
                                   .append(this.firefoxImageTag, rhs.firefoxImageTag)
                                   .append(this.firefoxDebugImageTag, rhs.firefoxDebugImageTag).isEquals();

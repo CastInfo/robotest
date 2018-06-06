@@ -82,7 +82,7 @@
         <robotest.cfg.browser.maximized>true</robotest.cfg.browser.maximized>
         <!-- ROBOTEST_BROWSER_CONSOLE_LOG_LEVEL: Warning by default, values accepted are java.util.logging.Level values. -->
         <robotest.cfg.browser.log.level>WARNING</robotest.cfg.browser.log.level>
-        <!-- ROBOTEST_BROWSER_PROXY: Proxy dns:port settings  -->
+        <!-- ROBOTEST_BROWSER_PROXY: Proxy dns:port settings -->
         <robotest.cfg.browser.proxy />
         <!-- ROBOTEST_GENERAL_TIMEOUT: timeout general for Selenium Driver Api utilities, defaults to 10000ms. -->
         <robotest.cfg.general.timeout>10000</robotest.cfg.general.timeout>
@@ -99,7 +99,16 @@
         <!-- ROBOTEST_DOCKER_NETWORK: network for Docker, valid values: bridge (default), none, host, container and custom 
             subnet id. -->
         <robotest.cfg.docker.network />
-        <!-- ROBOTEST_DOCKER_CONTAINER_EXEC_TAG: tag appended to default "robotest_" initial name of robotest containers to avoid paralelism naming conflict. -->
+         <!-- ROBOTEST_DOCKER_REGISTRY_URL: docker registry url -->
+        <robotest.cfg.docker.registry.url />
+        <!-- ROBOTEST_DOCKER_REGISTRY_USER: docker registry user -->
+        <robotest.cfg.docker.registry.user />
+        <!-- ROBOTEST_DOCKER_REGISTRY_SECRET: docker registry password -->
+        <robotest.cfg.docker.registry.secret />
+        <!-- ROBOTEST_DOCKER_PUBLIC_EMAIL: docker registry email -->
+        <robotest.cfg.docker.registry.email />
+        <!-- ROBOTEST_DOCKER_CONTAINER_EXEC_TAG: tag appended to default "robotest_" initial name of robotest containers 
+            to avoid paralelism naming conflict. -->
         <robotest.cfg.docker.container.exec.tag />
         <!-- ROBOTEST_DOCKER_LABELS: coma separated list key:value labels -->
         <robotest.cfg.docker.labels />
@@ -911,6 +920,10 @@
                                         <ROBOTEST_DOCKER_TLS>${robotest.cfg.docker.tls}</ROBOTEST_DOCKER_TLS>
                                         <ROBOTEST_DOCKER_CERTS>${robotest.cfg.docker.certs}</ROBOTEST_DOCKER_CERTS>
                                         <ROBOTEST_DOCKER_NETWORK>${robotest.cfg.docker.network}</ROBOTEST_DOCKER_NETWORK>
+                                        <ROBOTEST_DOCKER_PUBLIC_URL>${robotest.cfg.docker.registry.url}</ROBOTEST_DOCKER_PUBLIC_URL>
+                                        <ROBOTEST_DOCKER_PUBLIC_USER>${robotest.cfg.docker.registry.user}</ROBOTEST_DOCKER_PUBLIC_USER>
+                                        <ROBOTEST_DOCKER_PUBLIC_SECRET>${robotest.cfg.docker.registry.secret}</ROBOTEST_DOCKER_PUBLIC_SECRET>
+                                        <ROBOTEST_DOCKER_PUBLIC_EMAIL>${robotest.cfg.docker.registry.email}</ROBOTEST_DOCKER_PUBLIC_EMAIL>
                                         <ROBOTEST_DOCKER_CONTAINER_EXEC_TAG>${robotest.cfg.docker.container.exec.tag}</ROBOTEST_DOCKER_CONTAINER_EXEC_TAG>
                                         <ROBOTEST_DOCKER_LABELS>${robotest.cfg.docker.labels}</ROBOTEST_DOCKER_LABELS>
                                         <ROBOTEST_DOCKER_DEBUG_PORT>${robotest.cfg.docker.debug.port}</ROBOTEST_DOCKER_DEBUG_PORT>
@@ -1167,7 +1180,7 @@
                                 -enumerations
                                 -enumconstants -views -visibility -verbose</additionalparam>
                         </configuration>
-                    </plugin>                
+                    </plugin>
                 </plugins>
             </build>
         </profile>

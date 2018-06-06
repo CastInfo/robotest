@@ -131,5 +131,21 @@ public final class RobotestConfigKeys {
      * Robotest browser proxy
      */
     public static final String ROBOTEST_BROWSER_PROXY = "ROBOTEST_BROWSER_PROXY";
+    /**
+     * Robotest docker registry url
+     */
+    public static final String ROBOTEST_DOCKER_REGISTRY_URL = "ROBOTEST_DOCKER_REGISTRY_URL";
+    /**
+     * Robotest docker registry user
+     */
+    public static final String ROBOTEST_DOCKER_REGISTRY_USER = "ROBOTEST_DOCKER_REGISTRY_USER";
+    /**
+     * Robotest docker registry secret
+     */
+    public static final String ROBOTEST_DOCKER_REGISTRY_SECRET = "ROBOTEST_DOCKER_REGISTRY_SECRET";
+    /**
+     * Robotest docker registry email
+     */
+    public static final String ROBOTEST_DOCKER_REGISTRY_EMAIL = "ROBOTEST_DOCKER_REGISTRY_EMAIL";
 
 }

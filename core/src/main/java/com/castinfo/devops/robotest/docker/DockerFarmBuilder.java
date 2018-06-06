@@ -267,7 +267,7 @@ public class DockerFarmBuilder {
                 Thread.sleep(DockerFarmBuilder.ONE_SECOND_IN_MILLIS);
             } while (!createCallback.isServerSeleniumLoaded());
             DockerFarmBuilder.LOG.info("DOCKER NODE UP&RUNING: {}", containerResp.getId());
-        } catch (InterruptedException | IOException e) {
+        } catch (Exception e) {
             if (null != containerResp) {
                 this.stopNode(containerResp.getId());
             }

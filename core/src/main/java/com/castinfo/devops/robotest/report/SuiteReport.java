@@ -216,7 +216,8 @@ public class SuiteReport {
      *
      * @param suiteId
      *            Suite Annot tag or custom id.
-     * @param suiteDescription Suite custom description.
+     * @param suiteDescription
+     *            Suite custom description.
      * @param initMillis
      *            init execution time.
      * @param config
@@ -285,7 +286,8 @@ public class SuiteReport {
      *
      * @param caseId
      *            case annot tag or custom id.
-     * @param caseDescription case custom description
+     * @param caseDescription
+     *            case custom description
      * @param initMillis
      *            execution init millis
      * @param caseConfig
@@ -327,7 +329,8 @@ public class SuiteReport {
      *            case annot tag or custom id.
      * @param stepId
      *            step annot tag or custom id.
-     * @param stepDescription step custom description.
+     * @param stepDescription
+     *            step custom description.
      * @param stepConfig
      *            step config.
      * @param initMillis
@@ -348,7 +351,8 @@ public class SuiteReport {
      *
      * @param caseId
      *            case annot tag or custom id.
-     * @param stepId secondary step annot tag or custom id.
+     * @param stepId
+     *            secondary step annot tag or custom id.
      * @param validationEntry
      *            validation entry.
      * @return The validation entry to fluent api purposes.
@@ -375,13 +379,15 @@ public class SuiteReport {
      *            case annot tag or custom id.
      * @param validationEntry
      *            validation entry.
+     * @return The validation entry to fluent api purposes.
      */
-    public void addCaseValidationEntry(final String caseId, final ValidationEntry validationEntry) {
+    public ValidationEntry addCaseValidationEntry(final String caseId, final ValidationEntry validationEntry) {
         for (CaseReport caseReport : this.caseReports) {
             if (caseReport.getId().equals(caseId)) {
                 caseReport.getOutStepErrors().add(validationEntry);
             }
         }
+        return validationEntry;
     }
 
     /**

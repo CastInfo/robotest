@@ -243,12 +243,11 @@ public class DockerFarmBuilder {
      * @return Container ID
      * @throws RobotestException
      */
+    @SuppressWarnings("resource") // when docker.socket can't be closed
     private String createBrowserContainer(final DockerConfig dockerBrowser) throws RobotestException {
         CreateContainerResponse containerResp = null;
         try {
-            @SuppressWarnings("resource") // when docker.socket can't be closed
             CreateContainerCmd containerCmd = this.getDockerClient().createContainerCmd(dockerBrowser.getImage());
-            @SuppressWarnings("resource") // when docker.socket can't be closed
             DockerContainerCallback createCallback = new DockerContainerCallback(DockerFarmBuilder.SEL_SERVER_END);
             DockerFarmBuilder.LOG.info("DOCKER CREATE CONTAINER FROM: {}", dockerBrowser);
             containerCmd.withName(dockerBrowser.getContainerName());
@@ -317,7 +316,7 @@ public class DockerFarmBuilder {
                                                   .exec();
         dockerBrowser.setExposePort("4444");
         if (!contenedor.getNetworkSettings().getPorts().getBindings().isEmpty()
-                && dockerBrowser.getContainerName().isEmpty()) {
+                && StringUtils.isNotEmpty(dockerBrowser.getContainerName())) {
             ExposedPort expPort = ExposedPort.tcp(Integer.parseInt(dockerBrowser.getExposePort()));
             dockerBrowser.setExposePort(contenedor.getNetworkSettings().getPorts().getBindings()
                                                   .get(expPort)[0].getHostPortSpec());

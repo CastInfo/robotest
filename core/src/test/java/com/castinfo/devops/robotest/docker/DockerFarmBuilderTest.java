@@ -95,8 +95,6 @@ public class DockerFarmBuilderTest {
         farm.resolveBrowserHub(cfgBrowser);
         Assert.assertEquals("http://192.168.99.100:4444/wd/hub", cfgBrowser.getHub());
 
-        cfgBasic.setHost("unix:///var/run/docker.sock");
-        cfgBasic.setHub(null);
         try {
             farm.resolveBrowserHub(cfgBrowser);
         } catch (RobotestException e) {

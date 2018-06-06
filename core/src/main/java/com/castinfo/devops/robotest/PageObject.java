@@ -116,9 +116,15 @@ public class PageObject extends SeleniumElementsWrapper {
      * @throws RobotestException
      *             if Reporter unavailable
      */
-    private ValidationEntry addStepValidationToReport(final ValidationEntry validation) throws RobotestException {
-        return this.getReporter().addStepValidationEntry(this.getCaseAnnot().tag(), this.getStepAnnot().tag(),
-                                                         validation);
+    private ValidationEntry addValidationToReport(final ValidationEntry validation) throws RobotestException {
+        ValidationEntry resultado;
+        if (null == this.getStepAnnot()) {
+            resultado = this.getReporter().addCaseValidationEntry(this.getCaseAnnot().tag(), validation);
+        } else {
+            resultado = this.getReporter().addStepValidationEntry(this.getCaseAnnot().tag(), this.getStepAnnot().tag(),
+                                                                  validation);
+        }
+        return resultado;
     }
 
     /**
@@ -130,7 +136,7 @@ public class PageObject extends SeleniumElementsWrapper {
      */
     public ValidationEntry addDebugToReport() throws RobotestException {
         ValidationEntry v = ValidationEntry.buildDebug();
-        return this.addStepValidationToReport(v);
+        return this.addValidationToReport(v);
     }
 
     /**
@@ -142,7 +148,7 @@ public class PageObject extends SeleniumElementsWrapper {
      */
     public ValidationEntry addInfoToReport() throws RobotestException {
         ValidationEntry v = ValidationEntry.buildInfo();
-        return this.addStepValidationToReport(v);
+        return this.addValidationToReport(v);
     }
 
     /**
@@ -154,7 +160,7 @@ public class PageObject extends SeleniumElementsWrapper {
      */
     public ValidationEntry addWarningToReport() throws RobotestException {
         ValidationEntry v = ValidationEntry.buildWarning();
-        return this.addStepValidationToReport(v);
+        return this.addValidationToReport(v);
     }
 
     /**
@@ -166,7 +172,7 @@ public class PageObject extends SeleniumElementsWrapper {
      */
     public ValidationEntry addErrorToReport() throws RobotestException {
         ValidationEntry v = ValidationEntry.buildError();
-        return this.addStepValidationToReport(v);
+        return this.addValidationToReport(v);
     }
 
     /**
@@ -178,7 +184,7 @@ public class PageObject extends SeleniumElementsWrapper {
      */
     public ValidationEntry addDefectToReport() throws RobotestException {
         ValidationEntry v = ValidationEntry.buildDefect();
-        return this.addStepValidationToReport(v);
+        return this.addValidationToReport(v);
     }
 
     /**
@@ -190,7 +196,7 @@ public class PageObject extends SeleniumElementsWrapper {
      */
     public ValidationEntry addCriticalToReport() throws RobotestException {
         ValidationEntry v = ValidationEntry.buildCritical();
-        return this.addStepValidationToReport(v);
+        return this.addValidationToReport(v);
     }
 
     /**
@@ -206,6 +212,9 @@ public class PageObject extends SeleniumElementsWrapper {
     public void addScreenShotToReport(final StepStatus status, final String customName) throws RobotestException {
         ValidationEntry validation = new ValidationEntry(status);
         validation.withCapture(this.takeScreenShoot(customName));
+        if (null == this.getStepAnnot()) {
+            throw new RobotestException("Can't add screen shot to report out of step context");
+        }
         this.getReporter().addStepValidationEntry(this.getCaseAnnot().tag(), this.getStepAnnot().tag(), validation);
     }
 
@@ -222,6 +231,9 @@ public class PageObject extends SeleniumElementsWrapper {
     public void addPageSourceToReport(final StepStatus status, final String customName) throws RobotestException {
         ValidationEntry validation = new ValidationEntry(status);
         validation.withHtmlSource(this.takePageSource(customName));
+        if (null == this.getStepAnnot()) {
+            throw new RobotestException("Can't add page source to report out of step context");
+        }
         this.getReporter().addStepValidationEntry(this.getCaseAnnot().tag(), this.getStepAnnot().tag(), validation);
     }
 

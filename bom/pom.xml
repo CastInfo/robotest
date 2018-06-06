@@ -88,13 +88,13 @@
         <robotest.cfg.docker.conn />
         <!-- ROBOTEST_DOCKER_TLS: Use of tls to secure comunications with Docker host -->
         <robotest.cfg.docker.tls />
-        <!-- ROBOTEST_DOCKER_CERTS: Docker certs path of docker remote host, defaults to "user.dir" Java System Property
+        <!-- ROBOTEST_DOCKER_CERTS: Docker certs path of docker remote host, defaults to "user.dir" Java System Property 
             + .docker/machine/certs -->
         <robotest.cfg.docker.certs />
-        <!-- ROBOTEST_DOCKER_PUBLIC_HOST: ip or dns used to publish outside docker machine the selenium hub based in docker,
+        <!-- ROBOTEST_DOCKER_PUBLIC_HOST: ip or dns used to publish outside docker machine the selenium hub based in docker, 
             by default resolved dynamically -->
         <robotest.cfg.docker.public_host />
-        <!-- ROBOTEST_DOCKER_NETWORK: network for Docker, valid values: bridge (default), none, host, container and custom
+        <!-- ROBOTEST_DOCKER_NETWORK: network for Docker, valid values: bridge (default), none, host, container and custom 
             subnet id. -->
         <robotest.cfg.docker.network />
         <!-- ROBOTEST_DOCKER_CONTAINER_EXEC_TAG: tag appended to default "robotest_" initial name of robotest containers. -->
@@ -115,16 +115,16 @@
         <robotest.cfg.browserstack.user.name />
         <!-- ROBOTEST_BROWSERSTACK_ACCESS_KEY: Browser Stack accessKey -->
         <robotest.cfg.browserstack.access.key />
-        <!-- ROBOTEST_BROWSERSTACK_DEVICE: See device list https://www.browserstack.com/list-of-browsers-and-platforms?product=automate.
+        <!-- ROBOTEST_BROWSERSTACK_DEVICE: See device list https://www.browserstack.com/list-of-browsers-and-platforms?product=automate. 
             For example iPhone X -->
         <robotest.cfg.browserstack.device />
-        <!-- ROBOTEST_BROWSERSTACK_PLATFORM: See platform list https://www.browserstack.com/list-of-browsers-and-platforms?product=automate.
+        <!-- ROBOTEST_BROWSERSTACK_PLATFORM: See platform list https://www.browserstack.com/list-of-browsers-and-platforms?product=automate. 
             For example 11.0 -->
         <robotest.cfg.browserstack.platform />
-        <!-- wdm.geckoDriverVersion: Forze version of native firefox driver manager download for specific user installed
+        <!-- wdm.geckoDriverVersion: Forze version of native firefox driver manager download for specific user installed 
             firefox versions -->
         <robotest.cfg.wdm.geckoDriverVersion />
-        <!-- wdm.chromeDriverVersion: Forze version of native chrome driver manager download for specific user installed
+        <!-- wdm.chromeDriverVersion: Forze version of native chrome driver manager download for specific user installed 
             chrome versions -->
         <robotest.cfg.wdm.chromeDriverVersion />
         <!-- wdm.targetPath: Native driver manager download directory, default user.home -->
@@ -655,7 +655,7 @@
                         </dependency>
                     </dependencies>
                 </plugin>
-                <!-- Selenium test are integration test and must be separated from estandar directoy of unit test. Your app
+                <!-- Selenium test are integration test and must be separated from estandar directoy of unit test. Your app 
                     classpath is not visible! is the diference with unit tests! -->
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -682,7 +682,7 @@
                                 <goal>add-test-resource</goal>
                             </goals>
                             <configuration>
-                                <!-- Configures the resource directory of our integration tests include json anotation procesing
+                                <!-- Configures the resource directory of our integration tests include json anotation procesing 
                                     robotest extractor result -->
                                 <resources>
                                     <resource>
@@ -700,8 +700,8 @@
                     <artifactId>maven-dependency-plugin</artifactId>
                     <version>3.1.1</version>
                 </plugin>
-                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the
-                    Maven build itself. -->
+                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven 
+                    build itself. -->
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
                     <artifactId>lifecycle-mapping</artifactId>
@@ -772,18 +772,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <configuration>
-                            <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
-                            <docletArtifact>
-                                <groupId>org.umlgraph</groupId>
-                                <artifactId>umlgraph</artifactId>
-                                <version>5.6.6</version>
-                            </docletArtifact>
-                            <additionalparam>-inferrel -inferdep -quiet -hide java.* -collpackages java.util.* -qualify
-                                -postfixpackage -nodefontsize 9 -nodefontpackagesize 7 -attributes -operations
-                                -enumerations
-                                -enumconstants -views -visibility -verbose</additionalparam>
-                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -892,23 +880,17 @@
                                     <perCoreThreadCount>false</perCoreThreadCount>
                                     <parallelOptimized>false</parallelOptimized>
                                     <reuseForks>true</reuseForks>
-                                    <!-- The parameter forkCount defines the maximum number of JVM processes that Surefire
-                                        will spawn concurrently to execute the tests. It supports the same syntax as -T in
-                                        maven-core: if you terminate the value
-                                        with a C, that value will be multiplied with the number of available CPU cores in
-                                        your system. For example forkCount=2.5C
-                                        on a Quad-Core system will result in forking up to ten concurrent JVM processes that
-                                        execute tests. The default setting is
-                                        forkCount=1/reuseForks=true, which means that Surefire creates one new JVM process
-                                        to execute all tests in one maven module -->
+                                    <!-- The parameter forkCount defines the maximum number of JVM processes that Surefire 
+                                        will spawn concurrently to execute the tests. It supports the same syntax as -T in maven-core: if you terminate the value 
+                                        with a C, that value will be multiplied with the number of available CPU cores in your system. For example forkCount=2.5C 
+                                        on a Quad-Core system will result in forking up to ten concurrent JVM processes that execute tests. The default setting is 
+                                        forkCount=1/reuseForks=true, which means that Surefire creates one new JVM process to execute all tests in one maven module -->
                                     <forkCount>1</forkCount>
                                     <parallel>methods</parallel>
                                     <robotest.failsafe.forkCount>${robotest.failsafe.parallelProcess}</robotest.failsafe.forkCount>
-                                    <!-- When using reuseForks=true and a forkCount value larger than one, test classes are
-                                        handed over to the forked process one-by-one. Thus, parallel=classes would not change
-                                        anything. However, you can use parallel=methods:
-                                        classes are executed in forkCount concurrent processes, each of the processes can
-                                        then use threadCount threads to execute
+                                    <!-- When using reuseForks=true and a forkCount value larger than one, test classes are 
+                                        handed over to the forked process one-by-one. Thus, parallel=classes would not change anything. However, you can use parallel=methods: 
+                                        classes are executed in forkCount concurrent processes, each of the processes can then use threadCount threads to execute 
                                         the methods of one class in parallel. -->
                                     <threadCount>${robotest.failsafe.parallelBrowsersPerOneProcess}</threadCount>
                                     <systemPropertyVariables>
@@ -1160,6 +1142,29 @@
                             <aggregate>true</aggregate>
                         </configuration>
                     </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>siteJavaDoc</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
+                            <docletArtifact>
+                                <groupId>org.umlgraph</groupId>
+                                <artifactId>umlgraph</artifactId>
+                                <version>5.6.6</version>
+                            </docletArtifact>
+                            <additionalparam>-inferrel -inferdep -quiet -hide java.* -collpackages java.util.* -qualify
+                                -postfixpackage -nodefontsize 9 -nodefontpackagesize 7 -attributes -operations
+                                -enumerations
+                                -enumconstants -views -visibility -verbose</additionalparam>
+                        </configuration>
+                    </plugin>                
                 </plugins>
             </build>
         </profile>

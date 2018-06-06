@@ -313,9 +313,9 @@ public class DockerFarmBuilder {
         DockerFarmBuilder.LOG.info("RESOLVING HUB FOR CONTAINER: {}", dockerBrowser.getIdContainer());
         InspectContainerResponse contenedor = this.getDockerClient().inspectContainerCmd(dockerBrowser.getIdContainer())
                                                   .exec();
-        if (contenedor.getNetworkSettings().getPorts().getBindings().isEmpty()) {
-            dockerBrowser.setExposePort("4444");
-        } else {
+        dockerBrowser.setExposePort("4444");
+        if (!contenedor.getNetworkSettings().getPorts().getBindings().isEmpty()
+                && dockerBrowser.getContainerName().isEmpty()) {
             ExposedPort expPort = ExposedPort.tcp(Integer.parseInt(dockerBrowser.getExposePort()));
             dockerBrowser.setExposePort(contenedor.getNetworkSettings().getPorts().getBindings()
                                                   .get(expPort)[0].getHostPortSpec());

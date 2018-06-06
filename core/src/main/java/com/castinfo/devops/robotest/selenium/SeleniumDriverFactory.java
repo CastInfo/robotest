@@ -422,13 +422,8 @@ public class SeleniumDriverFactory {
         if (!SeleniumBrowser.INTERNET_EXPLORER.name().equalsIgnoreCase(capabilities.getBrowserName())) {
             capabilities.setAcceptInsecureCerts(true);
         }
-        if (this.browserCfg.getProxy().isEmpty()) {
+        if (StringUtils.isEmpty(this.browserCfg.getProxy())) {
             capabilities.setCapability(CapabilityType.ForSeleniumServer.AVOIDING_PROXY, true);
-        } else {
-            Proxy proxy = new Proxy();
-            proxy.setHttpProxy(this.browserCfg.getProxy()).setFtpProxy(this.browserCfg.getProxy())
-                 .setSslProxy(this.browserCfg.getProxy());
-            capabilities.setCapability(CapabilityType.PROXY, proxy);
         }
         capabilities.setCapability(CapabilityType.ForSeleniumServer.ENSURING_CLEAN_SESSION, true);
         com.google.gson.JsonObject timeouts = new com.google.gson.JsonObject();
@@ -475,7 +470,13 @@ public class SeleniumDriverFactory {
             // fp.setPreference("media.windows-media-foundation.enabled", false); // video-off
             fp.setPreference("toolkit.startup.max_resumed_crashes", -1); // Desactivar el Safe Mode
             fp.setPreference("browserCfg.sessionstore.postdata", -1); // Desactivar el "Document Expired"
-            fp.setPreference("network.proxy.type", 0); // Sin proxy (1 -> Con proxy de sistema)
+            if (StringUtils.isEmpty(this.browserCfg.getProxy())) {
+                fp.setPreference("network.proxy.type", 0); // Sin proxy (1 -> Con proxy de sistema)
+            } else {
+                fp.setPreference("network.proxy.type", 1);
+                fp.setPreference("network.proxy.http", this.browserCfg.getProxy().split(":")[0]);
+                fp.setPreference("network.proxy.http_port", this.browserCfg.getProxy().split(":")[1]);
+            }
             fp.setPreference("browserCfg.cache.disk.enable", true);
             fp.setPreference("browserCfg.cache.memory.enable", true);
             fp.setPreference("browserCfg.cache.offline.enable", true);
@@ -497,6 +498,10 @@ public class SeleniumDriverFactory {
             ChromeOptions options = new ChromeOptions();
             options.addArguments(Arrays.asList("--no-sandbox", "--no-proxy-server", "--start-maximized"));
             capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+        }
+        if (StringUtils.isNotEmpty(this.browserCfg.getProxy())) {
+            capabilities.setCapability("chrome.switches", Arrays.asList("--proxy \"http=http://"
+                    + this.browserCfg.getProxy() + "/;https=http://" + this.browserCfg.getProxy() + "/\""));
         }
     }
 

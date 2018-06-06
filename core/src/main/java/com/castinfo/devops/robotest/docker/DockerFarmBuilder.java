@@ -316,7 +316,7 @@ public class DockerFarmBuilder {
                                                   .exec();
         dockerBrowser.setExposePort("4444");
         if (!contenedor.getNetworkSettings().getPorts().getBindings().isEmpty()
-                && StringUtils.isNotEmpty(dockerBrowser.getContainerName())) {
+                && StringUtils.isEmpty(dockerBrowser.getContainerName())) {
             ExposedPort expPort = ExposedPort.tcp(Integer.parseInt(dockerBrowser.getExposePort()));
             dockerBrowser.setExposePort(contenedor.getNetworkSettings().getPorts().getBindings()
                                                   .get(expPort)[0].getHostPortSpec());

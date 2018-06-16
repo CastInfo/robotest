@@ -206,9 +206,6 @@ public class DockerFarmBuilder {
     public void resolveImageAndCreateBrowserContainer(final String browser,
                                                       final DockerConfig dockerBrowser) throws RobotestException {
         dockerBrowser.setExposePort("4444");
-        if ("true".equalsIgnoreCase(this.dockerBaseCfg.getExposeDebugPort())) {
-            dockerBrowser.setExposeDebugPort("5900");
-        }
         if (null == this.dockerBaseCfg.getLabels() || this.dockerBaseCfg.getLabels().isEmpty()) {
             dockerBrowser.setLabels(new HashMap<>());
         } else {
@@ -220,9 +217,19 @@ public class DockerFarmBuilder {
             dockerBrowser.setNetworkMode(this.dockerBaseCfg.getNetworkMode());
         }
         if (SeleniumBrowser.CHROME.name().equalsIgnoreCase(browser)) {
-            dockerBrowser.setImage(this.dockerBaseCfg.getChromeImageTag());
+            if ("true".equalsIgnoreCase(this.dockerBaseCfg.getExposeDebugPort())) {
+                dockerBrowser.setExposeDebugPort("5900");
+                dockerBrowser.setImage(this.dockerBaseCfg.getChromeDebugImageTag());
+            } else {
+                dockerBrowser.setImage(this.dockerBaseCfg.getChromeImageTag());
+            }
         } else if (SeleniumBrowser.FIREFOX.name().equalsIgnoreCase(browser)) {
-            dockerBrowser.setImage(this.dockerBaseCfg.getFirefoxImageTag());
+            if ("true".equalsIgnoreCase(this.dockerBaseCfg.getExposeDebugPort())) {
+                dockerBrowser.setExposeDebugPort("5900");
+                dockerBrowser.setImage(this.dockerBaseCfg.getFirefoxDebugImageTag());
+            } else {
+                dockerBrowser.setImage(this.dockerBaseCfg.getFirefoxImageTag());
+            }
         } else {
             throw new RobotestException("BROWSER DON'T HAVE DOCKER IMAGE TAG:" + browser);
         }
@@ -328,8 +335,7 @@ public class DockerFarmBuilder {
         InspectContainerResponse contenedor = this.getDockerClient().inspectContainerCmd(dockerBrowser.getIdContainer())
                                                   .exec();
         dockerBrowser.setExposePort("4444");
-        if (!contenedor.getNetworkSettings().getPorts().getBindings().isEmpty()
-                && StringUtils.isEmpty(dockerBrowser.getContainerName())) {
+        if (!contenedor.getNetworkSettings().getPorts().getBindings().isEmpty()) {
             ExposedPort expPort = ExposedPort.tcp(Integer.parseInt(dockerBrowser.getExposePort()));
             dockerBrowser.setExposePort(contenedor.getNetworkSettings().getPorts().getBindings()
                                                   .get(expPort)[0].getHostPortSpec());

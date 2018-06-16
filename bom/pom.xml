@@ -82,8 +82,10 @@
         <robotest.cfg.browser.maximized>true</robotest.cfg.browser.maximized>
         <!-- ROBOTEST_BROWSER_CONSOLE_LOG_LEVEL: Warning by default, values accepted are java.util.logging.Level values. -->
         <robotest.cfg.browser.log.level>WARNING</robotest.cfg.browser.log.level>
-        <!-- ROBOTEST_BROWSER_PROXY: Proxy dns:port settings -->
+        <!-- ROBOTEST_BROWSER_PROXY: Proxy dns:port (without protocol) settings -->
         <robotest.cfg.browser.proxy />
+        <!-- ROBOTEST_BROWSER_NOPROXYFOR: Proxy exclusions -->
+        <robotest.cfg.browser.noproxyfor />        
         <!-- ROBOTEST_GENERAL_TIMEOUT: timeout general for Selenium Driver Api utilities, defaults to 10000ms. -->
         <robotest.cfg.general.timeout>10000</robotest.cfg.general.timeout>
         <!-- ROBOTEST_DOCKER_CONN: Docker host, tipical local instalation runs in tcp://192.168.99.100:2376 or unix:// -->
@@ -112,8 +114,8 @@
         <robotest.cfg.docker.container.exec.tag />
         <!-- ROBOTEST_DOCKER_LABELS: coma separated list key:value labels -->
         <robotest.cfg.docker.labels />
-        <!-- ROBOTEST_DOCKER_DEBUG_PORT: true to activate Docker port for remote debug purposes. -->
-        <robotest.cfg.docker.debug.port />
+        <!-- ROBOTEST_DOCKER_DEBUG: true to activate Docker port for remote debug purposes. -->
+        <robotest.cfg.docker.debug />
         <!-- ROBOTEST_CHROME_DOCKER_IMG_TAG: This is managed by default by robotest, but you can forze especific tag. -->
         <robotest.cfg.docker.chrome.image />
         <!-- ROBOTEST_CHROME_DOCKER_DEBUG_IMG_TAG: This is managed by default by robotest, but you can forze especific tag. -->
@@ -914,6 +916,7 @@
                                         <ROBOTEST_BROWSER_MAXIMIZED>${robotest.cfg.browser.maximized}</ROBOTEST_BROWSER_MAXIMIZED>
                                         <ROBOTEST_BROWSER_CONSOLE_LOG_LEVEL>${robotest.cfg.browser.log.level}</ROBOTEST_BROWSER_CONSOLE_LOG_LEVEL>
                                         <ROBOTEST_BROWSER_PROXY>${robotest.cfg.browser.proxy}</ROBOTEST_BROWSER_PROXY>
+                                        <ROBOTEST_BROWSER_NOPROXYFOR>${robotest.cfg.browser.noproxyfor}</ROBOTEST_BROWSER_NOPROXYFOR>
                                         <ROBOTEST_GENERAL_TIMEOUT>${robotest.cfg.general.timeout}</ROBOTEST_GENERAL_TIMEOUT>
                                         <ROBOTEST_DOCKER_CONN>${robotest.cfg.docker.conn}</ROBOTEST_DOCKER_CONN>
                                         <ROBOTEST_DOCKER_PUBLIC_HOST>${robotest.cfg.docker.public_host}</ROBOTEST_DOCKER_PUBLIC_HOST>
@@ -926,7 +929,7 @@
                                         <ROBOTEST_DOCKER_PUBLIC_EMAIL>${robotest.cfg.docker.registry.email}</ROBOTEST_DOCKER_PUBLIC_EMAIL>
                                         <ROBOTEST_DOCKER_CONTAINER_EXEC_TAG>${robotest.cfg.docker.container.exec.tag}</ROBOTEST_DOCKER_CONTAINER_EXEC_TAG>
                                         <ROBOTEST_DOCKER_LABELS>${robotest.cfg.docker.labels}</ROBOTEST_DOCKER_LABELS>
-                                        <ROBOTEST_DOCKER_DEBUG_PORT>${robotest.cfg.docker.debug.port}</ROBOTEST_DOCKER_DEBUG_PORT>
+                                        <ROBOTEST_DOCKER_DEBUG>${robotest.cfg.docker.debug}</ROBOTEST_DOCKER_DEBUG>
                                         <ROBOTEST_CHROME_DOCKER_IMG_TAG>${robotest.cfg.docker.chrome.image}</ROBOTEST_CHROME_DOCKER_IMG_TAG>
                                         <ROBOTEST_CHROME_DEBUG_DOCKER_IMG_TAG>${robotest.cfg.docker.chrome.debug.image}</ROBOTEST_CHROME_DEBUG_DOCKER_IMG_TAG>
                                         <ROBOTEST_FIREFOX_DOCKER_IMG_TAG>${robotest.cfg.docker.firefox.image}</ROBOTEST_FIREFOX_DOCKER_IMG_TAG>

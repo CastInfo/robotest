@@ -2,9 +2,9 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>robotest-examples-basic</artifactId>
-    <name>${project.groupId}:${project.artifactId}</name>    
+    <name>${project.groupId}:${project.artifactId}</name>
     <description>ROBOTEST basic examples.</description>
-    <url>https://github.com/CastInfo/robotest</url>        
+    <url>https://github.com/CastInfo/robotest</url>
     <packaging>jar</packaging>
     <parent>
         <groupId>com.cast-info.devops</groupId>
@@ -17,10 +17,6 @@
         <robotest.cfg.headless>false</robotest.cfg.headless>
         <robotest.cfg.browser.name>CHROME</robotest.cfg.browser.name>
         <!-- uncomment to user your local docker toolkit -->
-<!--         <robotest.cfg.docker.conn>tcp://192.168.99.100:2376</robotest.cfg.docker.conn> -->
-<!--         <robotest.cfg.docker.tls>true</robotest.cfg.docker.tls> -->
-<!--         <robotest.cfg.docker.public_host>192.168.99.100</robotest.cfg.docker.public_host> -->
-        <robotest.failsafe.include.cases>com.castinfo.devops.robotest.examples.ITHelloWorld.*,</robotest.failsafe.include.cases>        
     </properties>
     <!-- If you need to rewrite properties use combine.children="merge" not use combine.children="append" or combine.self="override" 
         because parent default config properties are necesary -->
@@ -40,7 +36,8 @@
                             <!-- If you need to rewrite properties use combine.children="merge" not use combine.children="append" 
                                 or combine.self="override" because parent default config properties are necesary -->
                             <systemPropertyVariables combine.children="merge">
-                                <!-- Example test properties, we recomend to use file properties mechanism in robotest anotation to avoid need to override this plugin -->
+                                <!-- Example test properties, we recomend to use file properties mechanism in robotest anotation 
+                                    to avoid need to override this plugin -->
                                 <CAST-INFO-WEB>https://www.cast-info.es</CAST-INFO-WEB>
                             </systemPropertyVariables>
                         </configuration>
@@ -48,5 +45,5 @@
                 </executions>
             </plugin>
         </plugins>
-    </build>    
+    </build>
 </project>

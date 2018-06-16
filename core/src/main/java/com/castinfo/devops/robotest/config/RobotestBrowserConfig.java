@@ -30,8 +30,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "browserName", "headLess", "windowWidth", "windowHeight", "maximized", "consoleLogLevel",
-                     "proxy" })
+@JsonPropertyOrder({ "browserName", "headLess", "windowWidth", "windowHeight", "maximized", "consoleLogLevel", "proxy",
+                     "noproxyfor" })
 public class RobotestBrowserConfig {
 
     @JsonProperty("browserName")
@@ -54,6 +54,9 @@ public class RobotestBrowserConfig {
 
     @JsonProperty("proxy")
     private String proxy = "";
+
+    @JsonProperty("noproxyfor")
+    private String noproxyfor = "";
 
     /**
      * The Browser.
@@ -208,6 +211,27 @@ public class RobotestBrowserConfig {
         this.proxy = proxy;
     }
 
+    /**
+     * Getter method for noproxyfor.
+     *
+     * @return the noproxyfor
+     */
+    @JsonProperty("noproxyfor")
+    public String getNoproxyfor() {
+        return this.noproxyfor;
+    }
+
+    /**
+     * Setter method for the noproxyfor.
+     *
+     * @param noproxyfor
+     *            the noproxyfor to set
+     */
+    @JsonProperty("noproxyfor")
+    public void setNoproxyfor(final String noproxyfor) {
+        this.noproxyfor = noproxyfor;
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
@@ -217,7 +241,7 @@ public class RobotestBrowserConfig {
     public int hashCode() {
         return new HashCodeBuilder().append(this.browserName).append(this.headLess).append(this.windowWidth)
                                     .append(this.windowHeight).append(this.maximized).append(this.consoleLogLevel)
-                                    .append(this.proxy).toHashCode();
+                                    .append(this.proxy).append(this.noproxyfor).toHashCode();
     }
 
     @Override
@@ -233,7 +257,7 @@ public class RobotestBrowserConfig {
                                   .append(this.windowWidth, rhs.windowWidth).append(this.windowHeight, rhs.windowHeight)
                                   .append(this.maximized, rhs.maximized)
                                   .append(this.consoleLogLevel, rhs.consoleLogLevel).append(this.proxy, rhs.proxy)
-                                  .isEquals();
+                                  .append(this.noproxyfor, rhs.noproxyfor).isEquals();
     }
 
 }

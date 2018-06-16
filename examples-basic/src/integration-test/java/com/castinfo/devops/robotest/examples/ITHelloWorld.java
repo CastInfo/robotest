@@ -26,6 +26,7 @@ public class ITHelloWorld extends TestCase {
         HelloWorldPageObject helloWorldPO = this.buildPageObject(HelloWorldPageObject.class);
         if ("CHROME".equalsIgnoreCase(System.getProperty("ROBOTEST_BROWSER"))) {
             helloWorldPO.openURL("chrome://net-internals/proxyservice#proxy");
+            helloWorldPO.noOpCode();
         }
         String urlToTest = this.getSuiteTestPropertyCfg("WEB_TO_TEST", "CAST-INFO-WEB");
         helloWorldPO.addInfoToReport().withMessage("Try to open:" + urlToTest);

@@ -9,6 +9,13 @@ import com.castinfo.devops.robotest.annot.RobotestStep;
 
 public class HelloWorldPageObject extends PageObject {
 
+    @RobotestStep(tag = "HELLO_WORLD_STEP_000",
+                  description = "Config view",
+                  captureConsoleErrorLogsAtEndStep = false,
+                  captureScreenShootAtEndStep = true)
+    public void noOpCode() {
+    }
+
     @RobotestStep(tag = "HELLO_WORLD_STEP_001",
                   description = "Check home title",
                   captureConsoleErrorLogsAtEndStep = true,

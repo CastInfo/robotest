@@ -28,7 +28,7 @@ public class HelloWorldPageObject extends PageObject {
                   captureScreenShootAtEndStep = true,
                   captureScreenShootAtStartStep = true)
     public void checkLogo() throws RobotestException {
-        Assert.assertTrue(this.isElementPresent(By.id("logoAjuntament")));
+        Assert.assertTrue(this.isElementPresent(By.id("logo")));
         this.addInfoToReport().withMessage("Web logo presence is OK");
     }
 

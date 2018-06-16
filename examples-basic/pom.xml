@@ -38,7 +38,7 @@
                             <systemPropertyVariables combine.children="merge">
                                 <!-- Example test properties, we recomend to use file properties mechanism in robotest anotation 
                                     to avoid need to override this plugin -->
-                                <CAST-INFO-WEB>http://www.ajuntament.bcn/cat/index.htm</CAST-INFO-WEB>
+                                <CAST-INFO-WEB>https://www.cast-info.es</CAST-INFO-WEB>
                             </systemPropertyVariables>
                         </configuration>
                     </execution>

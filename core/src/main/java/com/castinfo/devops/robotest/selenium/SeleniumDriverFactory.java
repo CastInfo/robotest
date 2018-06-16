@@ -54,6 +54,8 @@ import com.castinfo.devops.robotest.config.BrowserStackConfig;
 import com.castinfo.devops.robotest.config.DockerConfig;
 import com.castinfo.devops.robotest.config.RobotestBasicConfig;
 import com.castinfo.devops.robotest.config.RobotestBrowserConfig;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.WebDriverManagerException;
@@ -426,8 +428,6 @@ public class SeleniumDriverFactory {
      */
     protected void preCreationDriverCapabilities(final DesiredCapabilities capabilities) {
         this.configureBrowserLogs(capabilities);
-        this.preDriverCreationChromeCapabilites(capabilities);
-        this.preDriverCreationFirefoxCapabilities(capabilities);
         if (!SeleniumBrowser.INTERNET_EXPLORER.name().equalsIgnoreCase(capabilities.getBrowserName())) {
             capabilities.setAcceptInsecureCerts(true);
         }
@@ -436,8 +436,7 @@ public class SeleniumDriverFactory {
         } else {
             Proxy proxy = new Proxy();
             proxy.setProxyType(ProxyType.MANUAL).setHttpProxy(this.getBrowserConfig().getProxy())
-                 .setFtpProxy(this.getBrowserConfig().getProxy()).setSslProxy(this.getBrowserConfig().getProxy())
-                 .setNoProxy(this.getBrowserConfig().getNoproxyfor());
+                 .setSslProxy(this.getBrowserConfig().getProxy()).setNoProxy(this.getBrowserConfig().getNoproxyfor());
             capabilities.setCapability(CapabilityType.PROXY, proxy);
         }
         capabilities.setCapability(CapabilityType.ForSeleniumServer.ENSURING_CLEAN_SESSION, true);
@@ -446,6 +445,8 @@ public class SeleniumDriverFactory {
         timeouts.addProperty("pageLoad", Integer.parseInt(this.getBasicCfg().getGeneralTimeout()));
         timeouts.addProperty("script", Integer.parseInt(this.getBasicCfg().getGeneralTimeout()));
         capabilities.setCapability("timeouts", timeouts);
+        this.preDriverCreationChromeCapabilites(capabilities);
+        this.preDriverCreationFirefoxCapabilities(capabilities);
     }
 
     /**
@@ -475,7 +476,6 @@ public class SeleniumDriverFactory {
         if (capabilities.getBrowserName().equalsIgnoreCase(SeleniumBrowser.FIREFOX.name())) {
             capabilities.setBrowserName(DesiredCapabilities.firefox().getBrowserName());
             capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, "true");
-            capabilities.setCapability("acceptSslCerts", true);
             capabilities.setCapability("marionette", true);
             System.setProperty(FirefoxDriver.SystemProperty.DRIVER_USE_MARIONETTE, "true");
             FirefoxProfile fp = new FirefoxProfile();
@@ -486,28 +486,27 @@ public class SeleniumDriverFactory {
             fp.setPreference("toolkit.startup.max_resumed_crashes", -1); // Desactivar el Safe Mode
             fp.setPreference("browserCfg.sessionstore.postdata", -1); // Desactivar el "Document Expired"
             if (StringUtils.isEmpty(this.getBrowserConfig().getProxy())) {
-                fp.setPreference("network.proxy.type", 0); // Sin proxy (1 -> Con proxy de sistema)
+                fp.setPreference("network.proxy.type", 0); // Sin proxy
             } else {
                 String proxyServer = this.getBrowserConfig().getProxy().split(":")[0];
                 String proxyPort = this.getBrowserConfig().getProxy().split(":")[1];
-                // up to ff47
-                /*
-                 * fp.setPreference("network.proxy.type", 1);
-                 * fp.setPreference("network.proxy.http", proxyServer);
-                 * fp.setPreference("network.proxy.http_port", proxyPort);
-                 * fp.setPreference("network.proxy.ssl", proxyServer);
-                 * fp.setPreference("network.proxy.ssl_port", proxyPort);
-                 */
-                // from ff48+
-                /*
-                 * com.google.gson.JsonObject json = new com.google.gson.JsonObject();
-                 * json.addProperty("proxyType", "MANUAL");
-                 * json.addProperty("httpProxy", proxyServer);
-                 * json.addProperty("httpProxyPort", proxyPort);
-                 * json.addProperty("sslProxy", proxyServer);
-                 * json.addProperty("sslProxyPort", proxyPort);
-                 * capabilities.setCapability("proxy", json);
-                 */
+                JsonObject json = new JsonObject();
+                json.addProperty("proxyType", Proxy.ProxyType.MANUAL.ordinal());
+                json.addProperty("httpProxy", proxyServer);
+                json.addProperty("httpProxyPort", proxyPort);
+                json.addProperty("sslProxy", proxyServer);
+                json.addProperty("sslProxyPort", proxyPort);
+                if (StringUtils.isNotEmpty(this.getBrowserConfig().getNoproxyfor())) {
+                    String[] noProxies = this.getBrowserConfig().getNoproxyfor().split(",");
+                    if (noProxies.length > 0) {
+                        JsonArray jArray = new JsonArray();
+                        for (String excludeProxy : noProxies) {
+                            jArray.add(excludeProxy);
+                        }
+                        json.add("noProxy", jArray);
+                    }
+                }
+                capabilities.setCapability("proxy", json);
             }
             fp.setPreference("browserCfg.cache.disk.enable", true);
             fp.setPreference("browserCfg.cache.memory.enable", true);
@@ -531,13 +530,6 @@ public class SeleniumDriverFactory {
             options.addArguments(Arrays.asList("--no-sandbox", "--start-maximized"));
             capabilities.setCapability(ChromeOptions.CAPABILITY, options);
         }
-        /*
-         * if (StringUtils.isNotEmpty(this.getBrowserConfig().getProxy())) {
-         * capabilities.setCapability("chrome.switches",
-         * Arrays.asList("--proxy \"http=http://" + this.getBrowserConfig().getProxy()
-         * + "/;https=http://" + this.getBrowserConfig().getProxy() + "/\""));
-         * }
-         */
     }
 
     /**

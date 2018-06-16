@@ -436,9 +436,10 @@ public class SeleniumDriverFactory {
         } else {
             if (!SeleniumBrowser.FIREFOX.name().equalsIgnoreCase(capabilities.getBrowserName())) {
                 Proxy proxy = new Proxy();
-                proxy.setProxyType(ProxyType.MANUAL).setHttpProxy(this.getBrowserConfig().getProxy())
-                     .setSslProxy(this.getBrowserConfig().getProxy())
-                     .setNoProxy(this.getBrowserConfig().getNoproxyfor());
+                proxy.setProxyType(ProxyType.MANUAL);
+                proxy.setHttpProxy(this.getBrowserConfig().getProxy());
+                proxy.setSslProxy(this.getBrowserConfig().getProxy());
+                proxy.setNoProxy(this.getBrowserConfig().getNoproxyfor());
                 capabilities.setCapability(CapabilityType.PROXY, proxy);
             }
         }

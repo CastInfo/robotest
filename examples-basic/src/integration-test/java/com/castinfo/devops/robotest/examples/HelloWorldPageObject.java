@@ -21,7 +21,7 @@ public class HelloWorldPageObject extends PageObject {
                   captureConsoleErrorLogsAtEndStep = true,
                   capturePageSourceAtEndStep = true,
                   captureScreenShootAtEndStep = false,
-                  captureScreenShootAtStartStep = false)
+                  captureScreenShootAtStartStep = true)
     public void checkTitle() throws RobotestException {
         String parameter = "Cast Info | Cast Info s.a > Soluciones y Servicios tecnológicos de Vanguardia";
         if (!parameter.equals(this.getDriver().getTitle())) {
@@ -33,7 +33,7 @@ public class HelloWorldPageObject extends PageObject {
     @RobotestStep(tag = "HELLO_WORLD_STEP_002",
                   description = "Check home logo",
                   captureScreenShootAtEndStep = true,
-                  captureScreenShootAtStartStep = true)
+                  captureScreenShootAtStartStep = false)
     public void checkLogo() throws RobotestException {
         Assert.assertTrue(this.isElementPresent(By.id("logo")));
         this.addInfoToReport().withMessage("Web logo presence is OK");

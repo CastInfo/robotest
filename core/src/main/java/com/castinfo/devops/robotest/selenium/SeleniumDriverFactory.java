@@ -493,8 +493,18 @@ public class SeleniumDriverFactory {
                 json.addProperty("httpProxy", this.getBrowserConfig().getProxy());
                 json.addProperty("sslProxy", this.getBrowserConfig().getProxy());
                 // json.addProperty("noProxy", this.getBrowserConfig().getNoproxyfor());
+                if (StringUtils.isNotEmpty(this.getBrowserConfig().getNoproxyfor())) {
+                    String[] noProxies = this.getBrowserConfig().getNoproxyfor().split(",");
+                    if (noProxies.length > 0) {
+                        JsonArray jArray = new JsonArray();
+                        for (String excludeProxy : noProxies) {
+                            jArray.add(excludeProxy);
+                        }
+                        json.add("noProxy", jArray);
+                    }
+                }
                 capabilities.setCapability("proxy", json);
-                fp.setPreference("network.proxy.no_proxies_on", this.getBrowserConfig().getNoproxyfor());
+                // fp.setPreference("network.proxy.no_proxies_on", this.getBrowserConfig().getNoproxyfor());
             }
             fp.setPreference("browserCfg.cache.disk.enable", true);
             fp.setPreference("browserCfg.cache.memory.enable", true);

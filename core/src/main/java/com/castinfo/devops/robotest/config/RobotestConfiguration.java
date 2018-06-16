@@ -150,6 +150,8 @@ public class RobotestConfiguration implements IRobotestConfiguration {
                                             this.basicCfg.getBrowser().getProxy());
             browserConfig.setProxy("");
         }
+        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_PROXY: {}", this.basicCfg.getBrowser().getProxy());
+
         browserConfig.setNoproxyfor(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_NOPROXYFOR, ""));
         RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_NOPROXYFOR: {}", this.basicCfg.getBrowser().getNoproxyfor());
     }

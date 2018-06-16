@@ -434,10 +434,13 @@ public class SeleniumDriverFactory {
         if (StringUtils.isEmpty(this.getBrowserConfig().getProxy())) {
             capabilities.setCapability(CapabilityType.ForSeleniumServer.AVOIDING_PROXY, true);
         } else {
-            Proxy proxy = new Proxy();
-            proxy.setProxyType(ProxyType.MANUAL).setHttpProxy(this.getBrowserConfig().getProxy())
-                 .setSslProxy(this.getBrowserConfig().getProxy()).setNoProxy(this.getBrowserConfig().getNoproxyfor());
-            capabilities.setCapability(CapabilityType.PROXY, proxy);
+            if (!SeleniumBrowser.FIREFOX.name().equalsIgnoreCase(capabilities.getBrowserName())) {
+                Proxy proxy = new Proxy();
+                proxy.setProxyType(ProxyType.MANUAL).setHttpProxy(this.getBrowserConfig().getProxy())
+                     .setSslProxy(this.getBrowserConfig().getProxy())
+                     .setNoProxy(this.getBrowserConfig().getNoproxyfor());
+                capabilities.setCapability(CapabilityType.PROXY, proxy);
+            }
         }
         capabilities.setCapability(CapabilityType.ForSeleniumServer.ENSURING_CLEAN_SESSION, true);
         com.google.gson.JsonObject timeouts = new com.google.gson.JsonObject();

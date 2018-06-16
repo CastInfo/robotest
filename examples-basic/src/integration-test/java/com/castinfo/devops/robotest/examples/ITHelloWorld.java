@@ -28,7 +28,7 @@ public class ITHelloWorld extends TestCase {
         helloWorldPO.addInfoToReport().withMessage("Try to open:" + urlToTest);
         helloWorldPO.openURL(urlToTest);
         helloWorldPO.addInfoToReport().withMessage(urlToTest + " Opened!");
-        helloWorldPO.checkTitle();
+        // helloWorldPO.checkTitle();
         helloWorldPO.checkLogo();
         helloWorldPO.addInfoToReport().withMessage("Congratulations, you have finish your first ROBOTEST example!");
     }

@@ -54,8 +54,6 @@ import com.castinfo.devops.robotest.config.BrowserStackConfig;
 import com.castinfo.devops.robotest.config.DockerConfig;
 import com.castinfo.devops.robotest.config.RobotestBasicConfig;
 import com.castinfo.devops.robotest.config.RobotestBrowserConfig;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.WebDriverManagerException;
@@ -479,7 +477,7 @@ public class SeleniumDriverFactory {
     protected void preDriverCreationFirefoxCapabilities(final DesiredCapabilities capabilities) {
         if (capabilities.getBrowserName().equalsIgnoreCase(SeleniumBrowser.FIREFOX.name())) {
             capabilities.setBrowserName(DesiredCapabilities.firefox().getBrowserName());
-            capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, "true");
+            capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
             capabilities.setCapability("marionette", true);
             System.setProperty(FirefoxDriver.SystemProperty.DRIVER_USE_MARIONETTE, "true");
             FirefoxProfile fp = new FirefoxProfile();
@@ -492,20 +490,20 @@ public class SeleniumDriverFactory {
             if (StringUtils.isEmpty(this.getBrowserConfig().getProxy())) {
                 fp.setPreference("network.proxy.type", 0); // Sin proxy
             } else {
-                JsonObject json = new JsonObject();
-                json.addProperty("proxyType", Proxy.ProxyType.MANUAL.name().toLowerCase());
-                json.addProperty("httpProxy", this.getBrowserConfig().getProxy());
-                json.addProperty("sslProxy", this.getBrowserConfig().getProxy());
+                // JsonObject json = new JsonObject();
+                // json.addProperty("proxyType", Proxy.ProxyType.MANUAL.name().toLowerCase());
+                // json.addProperty("httpProxy", this.getBrowserConfig().getProxy());
+                // json.addProperty("sslProxy", this.getBrowserConfig().getProxy());
                 // json.addProperty("noProxy", this.getBrowserConfig().getNoproxyfor());
                 // capabilities.setCapability("proxy", json);
-                // workaround related to https://github.com/SeleniumHQ/selenium/issues/5004
+                // WORKAROUND related to https://github.com/SeleniumHQ/selenium/issues/5004
                 String proxyServer = this.getBrowserConfig().getProxy().split(":")[0];
                 String proxyPort = this.getBrowserConfig().getProxy().split(":")[1];
                 fp.setPreference("network.proxy.type", 1);
                 fp.setPreference("network.proxy.http", proxyServer);
-                fp.setPreference("network.proxy.http_port", proxyPort);
+                fp.setPreference("network.proxy.http_port", Integer.parseInt(proxyPort));
                 fp.setPreference("network.proxy.ssl", proxyServer);
-                fp.setPreference("network.proxy.ssl_port", proxyPort);
+                fp.setPreference("network.proxy.ssl_port", Integer.parseInt(proxyPort));
                 fp.setPreference("network.proxy.no_proxies_on", this.getBrowserConfig().getNoproxyfor());
 
             }
@@ -515,6 +513,7 @@ public class SeleniumDriverFactory {
             fp.setPreference("network.http.use-cache", true);
             fp.setPreference("startup.homepage_welcome_url.additional", "");
             fp.setPreference("startup.homepage_welcome_url", "");
+
             capabilities.setCapability(FirefoxDriver.PROFILE, fp);
         }
     }

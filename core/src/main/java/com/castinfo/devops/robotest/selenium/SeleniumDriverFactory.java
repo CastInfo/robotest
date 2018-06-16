@@ -488,14 +488,10 @@ public class SeleniumDriverFactory {
             if (StringUtils.isEmpty(this.getBrowserConfig().getProxy())) {
                 fp.setPreference("network.proxy.type", 0); // Sin proxy
             } else {
-                String proxyServer = this.getBrowserConfig().getProxy().split(":")[0];
-                String proxyPort = this.getBrowserConfig().getProxy().split(":")[1];
                 JsonObject json = new JsonObject();
-                json.addProperty("proxyType", Proxy.ProxyType.MANUAL.ordinal());
-                json.addProperty("httpProxy", proxyServer);
-                json.addProperty("httpProxyPort", proxyPort);
-                json.addProperty("sslProxy", proxyServer);
-                json.addProperty("sslProxyPort", proxyPort);
+                json.addProperty("proxyType", Proxy.ProxyType.MANUAL.name().toLowerCase());
+                json.addProperty("httpProxy", this.getBrowserConfig().getProxy());
+                json.addProperty("sslProxy", this.getBrowserConfig().getProxy());
                 if (StringUtils.isNotEmpty(this.getBrowserConfig().getNoproxyfor())) {
                     String[] noProxies = this.getBrowserConfig().getNoproxyfor().split(",");
                     if (noProxies.length > 0) {

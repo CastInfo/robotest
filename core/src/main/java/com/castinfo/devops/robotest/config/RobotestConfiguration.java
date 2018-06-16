@@ -181,6 +181,10 @@ public class RobotestConfiguration implements IRobotestConfiguration {
             dockerConfig.setNetworkMode(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_NETWORK));
             RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_NETWORK: {}", dockerConfig.getNetworkMode());
 
+            dockerConfig.setInspectRealPort(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_INSPECTREALPORT,
+                                                               "true"));
+            RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_INSPECTREALPORT: {}", dockerConfig.getInspectRealPort());
+
             dockerConfig.setContainerName(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_CONTAINER_EXEC_TAG));
             RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_CONTAINER_EXEC_TAG: {}", dockerConfig.getContainerName());
 

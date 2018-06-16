@@ -84,6 +84,10 @@ public final class RobotestConfigKeys {
      */
     public static final String ROBOTEST_DOCKER_NETWORK = "ROBOTEST_DOCKER_NETWORK";
     /**
+     * Docker Inspect real selenium port
+     */
+    public static final String ROBOTEST_DOCKER_INSPECTREALPORT = "ROBOTEST_DOCKER_INSPECTREALPORT";
+    /**
      * Docker exec tag container identifier
      */
     public static final String ROBOTEST_DOCKER_CONTAINER_EXEC_TAG = "ROBOTEST_DOCKER_CONTAINER_EXEC_TAG";

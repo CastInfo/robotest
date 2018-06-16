@@ -32,8 +32,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "host", "image", "idContainer", "containerName", "networkMode", "hub", "expose_port",
-                     "expose_debug_port", "chromeImageTag", "chromeDebugImageTag", "firefoxImageTag",
+@JsonPropertyOrder({ "host", "image", "idContainer", "containerName", "networkMode", "inspectRealPort", "hub",
+                     "expose_port", "expose_debug_port", "chromeImageTag", "chromeDebugImageTag", "firefoxImageTag",
                      "firefoxDebugImageTag", "dockerRegistryUrl", "dockerRegistryUser", "dockerRegistryEmail" })
 public class DockerConfig {
 
@@ -103,6 +103,9 @@ public class DockerConfig {
      */
     @JsonProperty("networkMode")
     private String networkMode = null;
+
+    @JsonProperty("inspectRealPort")
+    private String inspectRealPort = null;
 
     @JsonProperty("dockerRegistryUrl")
     private String dockerRegistryUrl = null;
@@ -216,6 +219,27 @@ public class DockerConfig {
      */
     public void setNetworkMode(final String networkMode) {
         this.networkMode = networkMode;
+    }
+
+    /**
+     * Getter method for inspectRealPort.
+     *
+     * @return the inspectRealPort
+     */
+    @JsonProperty("inspectRealPort")
+    public String getInspectRealPort() {
+        return this.inspectRealPort;
+    }
+
+    /**
+     * Setter method for the inspectRealPort.
+     *
+     * @param inspectRealPort
+     *            the inspectRealPort to set
+     */
+    @JsonProperty("inspectRealPort")
+    public void setInspectRealPort(final String inspectRealPort) {
+        this.inspectRealPort = inspectRealPort;
     }
 
     /**
@@ -496,12 +520,13 @@ public class DockerConfig {
     @Override
     public int hashCode() {
         return new HashCodeBuilder().append(this.host).append(this.image).append(this.idContainer)
-                                    .append(this.containerName).append(this.networkMode).append(this.hub)
-                                    .append(this.exposePort).append(this.exposeDebugPort).append(this.certsPath)
-                                    .append(this.dockerRegistryUrl).append(this.dockerRegistryUser)
-                                    .append(this.dockerRegistrySecret).append(this.dockerRegistryEmail)
-                                    .append(this.chromeImageTag).append(this.chromeDebugImageTag)
-                                    .append(this.firefoxImageTag).append(this.firefoxDebugImageTag).toHashCode();
+                                    .append(this.containerName).append(this.networkMode).append(this.inspectRealPort)
+                                    .append(this.hub).append(this.exposePort).append(this.exposeDebugPort)
+                                    .append(this.certsPath).append(this.dockerRegistryUrl)
+                                    .append(this.dockerRegistryUser).append(this.dockerRegistrySecret)
+                                    .append(this.dockerRegistryEmail).append(this.chromeImageTag)
+                                    .append(this.chromeDebugImageTag).append(this.firefoxImageTag)
+                                    .append(this.firefoxDebugImageTag).toHashCode();
     }
 
     @Override
@@ -516,7 +541,8 @@ public class DockerConfig {
         return new EqualsBuilder().append(this.host, rhs.host).append(this.image, rhs.image)
                                   .append(this.idContainer, rhs.idContainer)
                                   .append(this.containerName, rhs.containerName)
-                                  .append(this.networkMode, rhs.networkMode).append(this.hub, rhs.hub)
+                                  .append(this.networkMode, rhs.networkMode)
+                                  .append(this.inspectRealPort, rhs.inspectRealPort).append(this.hub, rhs.hub)
                                   .append(this.exposePort, rhs.exposePort)
                                   .append(this.exposeDebugPort, rhs.exposeDebugPort)
                                   .append(this.certsPath, rhs.certsPath).append(this.chromeImageTag, rhs.chromeImageTag)

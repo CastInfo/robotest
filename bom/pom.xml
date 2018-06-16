@@ -101,6 +101,8 @@
         <!-- ROBOTEST_DOCKER_NETWORK: network for Docker, valid values: bridge (default), none, host, container and custom 
             subnet id. -->
         <robotest.cfg.docker.network />
+         <!-- ROBOTEST_DOCKER_INSPECT_REAL_PORT: if false gets 4444 default port else if true or not defined inspect container real port -->
+        <robotest.cfg.docker.inspectrealport />
          <!-- ROBOTEST_DOCKER_REGISTRY_URL: docker registry url -->
         <robotest.cfg.docker.registry.url />
         <!-- ROBOTEST_DOCKER_REGISTRY_USER: docker registry user -->
@@ -923,10 +925,11 @@
                                         <ROBOTEST_DOCKER_TLS>${robotest.cfg.docker.tls}</ROBOTEST_DOCKER_TLS>
                                         <ROBOTEST_DOCKER_CERTS>${robotest.cfg.docker.certs}</ROBOTEST_DOCKER_CERTS>
                                         <ROBOTEST_DOCKER_NETWORK>${robotest.cfg.docker.network}</ROBOTEST_DOCKER_NETWORK>
-                                        <ROBOTEST_DOCKER_PUBLIC_URL>${robotest.cfg.docker.registry.url}</ROBOTEST_DOCKER_PUBLIC_URL>
-                                        <ROBOTEST_DOCKER_PUBLIC_USER>${robotest.cfg.docker.registry.user}</ROBOTEST_DOCKER_PUBLIC_USER>
-                                        <ROBOTEST_DOCKER_PUBLIC_SECRET>${robotest.cfg.docker.registry.secret}</ROBOTEST_DOCKER_PUBLIC_SECRET>
-                                        <ROBOTEST_DOCKER_PUBLIC_EMAIL>${robotest.cfg.docker.registry.email}</ROBOTEST_DOCKER_PUBLIC_EMAIL>
+                                        <ROBOTEST_DOCKER_INSPECTREALPORT>${robotest.cfg.docker.inspectrealport}</ROBOTEST_DOCKER_INSPECTREALPORT>
+                                        <ROBOTEST_DOCKER_REGISTRY_URL>${robotest.cfg.docker.registry.url}</ROBOTEST_DOCKER_REGISTRY_URL>
+                                        <ROBOTEST_DOCKER_REGISTRY_USER>${robotest.cfg.docker.registry.user}</ROBOTEST_DOCKER_REGISTRY_USER>
+                                        <ROBOTEST_DOCKER_REGISTRY_SECRET>${robotest.cfg.docker.registry.secret}</ROBOTEST_DOCKER_REGISTRY_SECRET>
+                                        <ROBOTEST_DOCKER_REGISTRY_EMAIL>${robotest.cfg.docker.registry.email}</ROBOTEST_DOCKER_REGISTRY_EMAIL>
                                         <ROBOTEST_DOCKER_CONTAINER_EXEC_TAG>${robotest.cfg.docker.container.exec.tag}</ROBOTEST_DOCKER_CONTAINER_EXEC_TAG>
                                         <ROBOTEST_DOCKER_LABELS>${robotest.cfg.docker.labels}</ROBOTEST_DOCKER_LABELS>
                                         <ROBOTEST_DOCKER_DEBUG>${robotest.cfg.docker.debug}</ROBOTEST_DOCKER_DEBUG>

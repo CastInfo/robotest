@@ -335,7 +335,8 @@ public class DockerFarmBuilder {
         InspectContainerResponse contenedor = this.getDockerClient().inspectContainerCmd(dockerBrowser.getIdContainer())
                                                   .exec();
         dockerBrowser.setExposePort("4444");
-        if (!contenedor.getNetworkSettings().getPorts().getBindings().isEmpty()) {
+        if (!contenedor.getNetworkSettings().getPorts().getBindings().isEmpty()
+                && "true".equals(dockerBrowser.getInspectRealPort())) {
             ExposedPort expPort = ExposedPort.tcp(Integer.parseInt(dockerBrowser.getExposePort()));
             dockerBrowser.setExposePort(contenedor.getNetworkSettings().getPorts().getBindings()
                                                   .get(expPort)[0].getHostPortSpec());

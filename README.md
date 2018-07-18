@@ -1,6 +1,6 @@
 # ROBOTEST
 
-**PROJECT UNDER CONSTRUCTION, NOT PRODUCTION READY**
+ACTUAL RELEASE: 2.0.0
 
 ![Image of rebotest](robotest-logo.png)
 

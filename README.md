@@ -146,17 +146,20 @@ SELENIUM DRIVER RELEASES: https://github.com/SeleniumHQ/selenium/releases
 
 DOCKER SELENIUM RELEASES: https://github.com/SeleniumHQ/docker-selenium/releases
 
-| BROWSER | BROWSER_VERSION | WEBDRIVER | SELENIUM_DRIVER | DOCKER_IMG                                                 | HEADLESS CAPABILITY |
-|---------|-----------------|-----------|-----------------|------------------------------------------------------------|---------------------|
-| IE      | 7-11            | 2.39      | 3.11.0          |                                                            |                     |
-| IE      | 59.+            | 0.20.0    | 3.11.0          |                                                            |                     |
-| FIREFOX | 60.0.+          | 0.20.1    | 3.12.0          | `selenium/standalone-firefox:3.11.0-(americium/boron)`     | yes                 |
-| FIREFOX | 59.0.+          | 0.20.1    | 3.11.0          | `selenium/standalone-firefox:3.11.0-dysprosium`            | yes                 |
-| FIREFOX | 59.0.+          | 0.20.0    | 3.11.0          | `selenium/standalone-firefox:3.11.0-(bismuth/californium)` | yes                 |
-| CHROME  | 67.0.+          | 2.39      | 3.12.0          | `selenium/standalone-firefox:3.11.0-boron`                 | yes                 |
-| CHROME  | 66.0.+          | 2.38      | 3.12.0          | `selenium/standalone-firefox:3.11.0-americium`             | yes                 |
-| CHROME  | 66.0.+          | 2.38      | 3.11.0          | `selenium/standalone-chrome:3.11.0-dysprosium`             | yes                 |
-| CHROME  | 65.0.+          | 2.37      | 3.11.0          | `selenium/standalone-chrome:3.11.0-(bismuth/californium)`  | yes                 |
+| BROWSER | BROWSER_VERSION | WEBDRIVER | SELENIUM_DRIVER | DOCKER_IMG                                                    | HEADLESS CAPABILITY |
+|---------|-----------------|-----------|-----------------|---------------------------------------------------------------|---------------------|
+| IE      | 7-11            | 2.39      | 3.11.0          |                                                               |                     |
+| IE      | 59.+            | 0.20.0    | 3.11.0          |                                                               |                     |
+| FIREFOX | 60.0.+          | 0.21.0    | 3.13.0          | `selenium/standalone-firefox:3.13.0-argon`                    | yes                 |
+| FIREFOX | 60.0.+          | 0.20.1    | 3.12.0          | `selenium/standalone-firefox:3.12.0-(americium/boron/cobalt)` | yes                 |
+| FIREFOX | 59.0.+          | 0.20.1    | 3.11.0          | `selenium/standalone-firefox:3.11.0-dysprosium`               | yes                 |
+| FIREFOX | 59.0.+          | 0.20.0    | 3.11.0          | `selenium/standalone-firefox:3.11.0-(bismuth/californium)`    | yes                 |
+| CHROME  | 67.0.+          | 2.40      | 3.13.0          | `selenium/standalone-chrome:3.13.0-argon`                     | yes                 |
+| CHROME  | 67.0.+          | 2.40      | 3.12.0          | `selenium/standalone-chrome:3.12.0-cobalt`                    | yes                 |
+| CHROME  | 67.0.+          | 2.39      | 3.12.0          | `selenium/standalone-chrome:3.12.0-boron`                     | yes                 |
+| CHROME  | 66.0.+          | 2.38      | 3.12.0          | `selenium/standalone-chrome:3.12.0-americium`                 | yes                 |
+| CHROME  | 66.0.+          | 2.38      | 3.11.0          | `selenium/standalone-chrome:3.11.0-dysprosium`                | yes                 |
+| CHROME  | 65.0.+          | 2.37      | 3.11.0          | `selenium/standalone-chrome:3.11.0-(bismuth/californium)`     | yes                 |
 
 # REQUIREMENTS
 
@@ -166,13 +169,17 @@ To **run** ROBOTEST you need at least:
 
 * Java 1.8.+
 * Maven 3+  
-* Docker 17.07.0-ce (Only if you need run browser in Docker. We use https://github.com/docker-java/docker-java/ that suports Docker Remote API v1.23, Docker Server version 1.11.x)
+
+Optional:
+
+* Docker: 18.03.1-ce or 17.07.0-ce if you use Docker Toolbox (We use https://github.com/docker-java/docker-java/ that suports Docker Remote API v1.23, Docker Server version 1.11.x)
 * A https://www.browserstack.com/ account if you try it.
 
 To **build** ROBOTEST you need too:
 
-* binaries of Graphviz 2.27 in PATH to generate UML with JavaDoc in MAVEN if you wan't to build ROBOTEST core
-* node.js and npm installed and in PATH to build ROBOTEST suite reporting tool 
+* node.js 6.+ and npm 5.+ installed and in PATH to build ROBOTEST suite reporting tool
+* Optional: binaries of Graphviz 2.27 in PATH to generate UML with JavaDoc in MAVEN if you wan't to build ROBOTEST core (with siteJavaDoc mvn profile)
+
 
 # HELLO WORLD MAVEN PROJECT
 
@@ -209,9 +216,6 @@ MAVEN **Bill of Materials** parent POM is the simplest way to start ROBOTEST int
     <properties>
         <robotest.cfg.headless>false</robotest.cfg.headless>
         <robotest.cfg.browser.name>CHROME</robotest.cfg.browser.name>
-        <robotest.cfg.docker.conn>tcp://192.168.99.100:2376</robotest.cfg.docker.conn>
-        <robotest.cfg.docker.tls>true</robotest.cfg.docker.tls>
-        <robotest.cfg.docker.public_host>192.168.99.100</robotest.cfg.docker.public_host>    
     </properties>
 ```
 

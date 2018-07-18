@@ -50,7 +50,7 @@ public @interface RobotestStep {
      *
      * @return true if capture SCREENSHOT.
      */
-    boolean captureScreenShootAtStartStep() default true;
+    boolean captureScreenShootAtStartStep() default false;
 
     /**
      * If true (default), robotest capture a SCREENSHOT at end step automatically.

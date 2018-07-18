@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
@@ -420,6 +421,9 @@ public class RobotestConfiguration implements IRobotestConfiguration {
             if (annot.annotationType().getName().contains("javax.xml.bind.annotation")) {
                 resultado = true;
             }
+        }
+        if (!resultado && type.getSuperclass().equals(JAXBElement.class)) {
+            resultado = true;
         }
         return resultado;
     }

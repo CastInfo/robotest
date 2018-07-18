@@ -6,7 +6,7 @@
     <name>${project.groupId}:${project.artifactId}</name>
     <description>ROBOTEST Bill of Materials.</description>
     <url>https://github.com/CastInfo/robotest</url>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.0</version>
     <packaging>pom</packaging>
     <licenses>
         <license>
@@ -625,7 +625,6 @@
                     <executions>
                         <execution>
                             <id>attach-sources</id>
-                            <phase>install</phase>
                             <goals>
                                 <goal>jar-no-fork</goal>
                             </goals>
@@ -644,7 +643,6 @@
                     <executions>
                         <execution>
                             <id>attach-javadocs</id>
-                            <phase>install</phase>
                             <goals>
                                 <goal>jar</goal>
                             </goals>
@@ -1155,14 +1153,6 @@
                                 </goals>
                             </execution>
                         </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <configuration combine.self="override">
-                            <failOnError>false</failOnError>
-                            <aggregate>true</aggregate>
-                        </configuration>
                     </plugin>
                 </plugins>
             </build>

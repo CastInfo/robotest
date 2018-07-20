@@ -290,7 +290,7 @@ import com.castinfo.devops.robotest.annot.RobotestSuite;
 import com.castinfo.devops.robotest.junit.JUnitCaseRunner;
 
 @RobotestSuite(tag = "HELLO_WORLD_ROBOTEST",
-               description = "Navegación estándar Mango Shop",
+               description = "Hello World Basic Suite Example",
                configElements = { @RobotestConfig(key = "WEB_TO_TEST",
                                                   type = Properties.class,
                                                   resource = "system://CAST-INFO-WEB") })
@@ -410,7 +410,7 @@ See example:
                configElements = { @RobotestConfig(key = ReusableTestCases.MY_TEST_BASIC_PARAMS,
                                                   type = Properties.class,
                                                   resource = "classpath://basic-${ROBOTEST_ENV}.properties"), 
-                                  @RobotestConfig(key = MangoConfigurations.COUNTRIES_CFG,
+                                  @RobotestConfig(key = ReusableTestCases.COUNTRIES_CFG,
                                                   type = ResponseJaxb.class,
                                                   resource = "http://www.server.config.com/configs/countries-${ROBOTEST_ENV}.xml") })
 @RunWith(JUnitCaseRunner.class)
@@ -427,7 +427,7 @@ To retrieve values you can:
 
     @RobotestCase(tag = "EXAMPLE_TEST", description = "Some case example")
     public void exampleTest() throws RobotestException {
-        String urlToTest=this.getSuiteTestCfg(MangoConfigurations.MY_TEST_BASIC_PARAMS).getProperty("THE_URL_TO_TEST");
+        String urlToTest=this.getSuiteTestCfg(ReusableTestCases.MY_TEST_BASIC_PARAMS).getProperty("THE_URL_TO_TEST");
         //...
     }
 

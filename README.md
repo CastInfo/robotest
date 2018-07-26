@@ -356,7 +356,7 @@ Validations: Validations are Assertions with the Selenium API browser informatio
 
 If you need to validate a REST service with ROBOTEST you have available RestAssured APIs.
 
-See [recomendations](#api-rest-testing--api-testing-) and [examples of use](https://github.com/CastInfo/robotest/blob/master/core/src/test/java/com/castinfo/devops/robotest/restassured/RestTest.java)
+See [recomendations](#api-rest-testing) and [examples of use](https://github.com/CastInfo/robotest/blob/master/core/src/test/java/com/castinfo/devops/robotest/restassured/RestTest.java)
 
 You can use following RestAssured examples in https://github.com/rest-assured/rest-assured 
 

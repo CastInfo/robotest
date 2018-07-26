@@ -8,7 +8,7 @@ ACTUAL RELEASE: 2.0.0
 - [VERSION 2 MOTIVATION](#version-2-motivation)
 - [SELENIUM](#selenium)
 - [DOCKER](#docker)
-- [API REST TESTING (API TESTING)](#api-rest-testing--api-testing-)
+- [API REST TESTING](#api-rest-testing)
 - [BROWSERSTACK](#browserstack)
 - [COMPATIBILITY MATRIX](#compatibility-matrix)
 - [REQUIREMENTS](#requirements)
@@ -106,7 +106,7 @@ This type of tests are carried out with the **Remote Web Selenium Driver** becau
 Debug executing Docker HUB Selenium Browser is posible. Select ROBOTEST Docker debug basic config options to do habitual IDE debuging operations. To visualize Docker browser in action connect with a remote X viewer (VNC Viewer, e.g.) to the docker machine configured IP and do "docker ps" or "docker inspect $image_id" to view real open ports (mapped with 5900 debug default configured port, but not exposed and random assigned real port).
 
 
-# API REST TESTING (API TESTING)
+# API REST TESTING
 
 ROBOTEST **integrates RestAssured API Testing tool, available in your PageObjects and TestCases**.  
 

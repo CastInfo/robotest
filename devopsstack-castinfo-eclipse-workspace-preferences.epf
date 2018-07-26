@@ -1,3 +1,4 @@
+#Thu Jul 26 12:31:09 CEST 2018
 \!/=
 /instance/org.eclipse.core.resources/encoding=UTF-8
 /instance/org.eclipse.core.runtime/line.separator=\n
@@ -11,8 +12,10 @@
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.codeComplete.staticFieldSuffixes=
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.codeComplete.staticFinalFieldPrefixes=
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.codeComplete.staticFinalFieldSuffixes=
+/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.annotation.inheritNullAnnotations=disabled
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.annotation.nullanalysis=enabled
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.codegen.inlineJsrBytecode=enabled
+/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.codegen.methodParameters=do not generate
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.8
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.compliance=1.8
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.maxProblemPerUnit=1000
@@ -63,6 +66,7 @@
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.problem.unqualifiedFieldAccess=ignore
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.problem.unusedDeclaredThrownException=error
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.problem.unusedImport=info
+/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.problem.unusedLabel=error
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.problem.unusedLocal=warning
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.problem.unusedObjectAllocation=warning
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.problem.unusedParameter=warning
@@ -434,9 +438,9 @@
 /instance/org.eclipse.jdt.ui/cleanup.use_blocks_only_for_return_and_throw=false
 /instance/org.eclipse.jdt.ui/cleanup.use_lambda=true
 /instance/org.eclipse.jdt.ui/cleanup.use_parentheses_in_expressions=true
-/instance/org.eclipse.jdt.ui/cleanup.use_this_for_non_static_field_access=true
+/instance/org.eclipse.jdt.ui/cleanup.use_this_for_non_static_field_access=false
 /instance/org.eclipse.jdt.ui/cleanup.use_this_for_non_static_field_access_only_if_necessary=true
-/instance/org.eclipse.jdt.ui/cleanup.use_this_for_non_static_method_access=true
+/instance/org.eclipse.jdt.ui/cleanup.use_this_for_non_static_method_access=false
 /instance/org.eclipse.jdt.ui/cleanup.use_this_for_non_static_method_access_only_if_necessary=true
 /instance/org.eclipse.jdt.ui/cleanup.use_type_arguments=false
 /instance/org.eclipse.jdt.ui/editor_save_participant_org.eclipse.jdt.ui.postsavelistener.cleanup=true
@@ -459,8 +463,8 @@
 /instance/org.eclipse.jdt.ui/sp_cleanup.add_serial_version_id=false
 /instance/org.eclipse.jdt.ui/sp_cleanup.always_use_blocks=true
 /instance/org.eclipse.jdt.ui/sp_cleanup.always_use_parentheses_in_expressions=false
-/instance/org.eclipse.jdt.ui/sp_cleanup.always_use_this_for_non_static_field_access=true
-/instance/org.eclipse.jdt.ui/sp_cleanup.always_use_this_for_non_static_method_access=true
+/instance/org.eclipse.jdt.ui/sp_cleanup.always_use_this_for_non_static_field_access=false
+/instance/org.eclipse.jdt.ui/sp_cleanup.always_use_this_for_non_static_method_access=false
 /instance/org.eclipse.jdt.ui/sp_cleanup.convert_functional_interfaces=false
 /instance/org.eclipse.jdt.ui/sp_cleanup.convert_to_enhanced_for_loop=true
 /instance/org.eclipse.jdt.ui/sp_cleanup.correct_indentation=true
@@ -492,8 +496,8 @@
 /instance/org.eclipse.jdt.ui/sp_cleanup.remove_unused_local_variables=false
 /instance/org.eclipse.jdt.ui/sp_cleanup.remove_unused_private_fields=true
 /instance/org.eclipse.jdt.ui/sp_cleanup.remove_unused_private_members=false
-/instance/org.eclipse.jdt.ui/sp_cleanup.remove_unused_private_methods=true
-/instance/org.eclipse.jdt.ui/sp_cleanup.remove_unused_private_types=true
+/instance/org.eclipse.jdt.ui/sp_cleanup.remove_unused_private_methods=false
+/instance/org.eclipse.jdt.ui/sp_cleanup.remove_unused_private_types=false
 /instance/org.eclipse.jdt.ui/sp_cleanup.sort_members=false
 /instance/org.eclipse.jdt.ui/sp_cleanup.sort_members_all=false
 /instance/org.eclipse.jdt.ui/sp_cleanup.use_anonymous_class_creation=false
@@ -501,9 +505,9 @@
 /instance/org.eclipse.jdt.ui/sp_cleanup.use_blocks_only_for_return_and_throw=false
 /instance/org.eclipse.jdt.ui/sp_cleanup.use_lambda=true
 /instance/org.eclipse.jdt.ui/sp_cleanup.use_parentheses_in_expressions=true
-/instance/org.eclipse.jdt.ui/sp_cleanup.use_this_for_non_static_field_access=true
+/instance/org.eclipse.jdt.ui/sp_cleanup.use_this_for_non_static_field_access=false
 /instance/org.eclipse.jdt.ui/sp_cleanup.use_this_for_non_static_field_access_only_if_necessary=true
-/instance/org.eclipse.jdt.ui/sp_cleanup.use_this_for_non_static_method_access=true
+/instance/org.eclipse.jdt.ui/sp_cleanup.use_this_for_non_static_method_access=false
 /instance/org.eclipse.jdt.ui/sp_cleanup.use_this_for_non_static_method_access_only_if_necessary=true
 /instance/org.eclipse.jdt.ui/sp_cleanup.use_type_arguments=false
 file_export_version=3.0

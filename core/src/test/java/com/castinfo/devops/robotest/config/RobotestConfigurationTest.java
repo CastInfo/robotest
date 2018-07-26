@@ -75,7 +75,8 @@ public class RobotestConfigurationTest {
         Assert.assertTrue(basicConfig.getBrowser().getConsoleLogLevel().equals("WARNING"));
         Assert.assertTrue(!basicConfig.getGeneralTimeout().isEmpty());
         Assert.assertTrue(basicConfig.getDocker().getHost().equals("tcp://192.168.99.100:2376"));
-        Assert.assertTrue(basicConfig.getDocker().getCertsPath()
+        Assert.assertTrue(basicConfig.getDocker()
+                                     .getCertsPath()
                                      .equals(System.getProperty("user.dir") + "/.docker/machine/certs"));
         Assert.assertTrue(basicConfig.getDocker().getExposeDebugPort().equals("5900"));
         Assert.assertTrue(basicConfig.getBrowserStack().getDevice().equals("IPHONE X"));

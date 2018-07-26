@@ -32,9 +32,22 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "host", "image", "idContainer", "containerName", "networkMode", "inspectRealPort", "hub",
-                     "expose_port", "expose_debug_port", "chromeImageTag", "chromeDebugImageTag", "firefoxImageTag",
-                     "firefoxDebugImageTag", "dockerRegistryUrl", "dockerRegistryUser", "dockerRegistryEmail" })
+@JsonPropertyOrder({ "host",
+                     "image",
+                     "idContainer",
+                     "containerName",
+                     "networkMode",
+                     "inspectRealPort",
+                     "hub",
+                     "expose_port",
+                     "expose_debug_port",
+                     "chromeImageTag",
+                     "chromeDebugImageTag",
+                     "firefoxImageTag",
+                     "firefoxDebugImageTag",
+                     "dockerRegistryUrl",
+                     "dockerRegistryUser",
+                     "dockerRegistryEmail" })
 public class DockerConfig {
 
     /**
@@ -519,12 +532,25 @@ public class DockerConfig {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(host).append(image).append(idContainer).append(containerName)
-                                    .append(networkMode).append(inspectRealPort).append(hub).append(exposePort)
-                                    .append(exposeDebugPort).append(certsPath).append(dockerRegistryUrl)
-                                    .append(dockerRegistryUser).append(dockerRegistrySecret).append(dockerRegistryEmail)
-                                    .append(chromeImageTag).append(chromeDebugImageTag).append(firefoxImageTag)
-                                    .append(firefoxDebugImageTag).toHashCode();
+        return new HashCodeBuilder().append(host)
+                                    .append(image)
+                                    .append(idContainer)
+                                    .append(containerName)
+                                    .append(networkMode)
+                                    .append(inspectRealPort)
+                                    .append(hub)
+                                    .append(exposePort)
+                                    .append(exposeDebugPort)
+                                    .append(certsPath)
+                                    .append(dockerRegistryUrl)
+                                    .append(dockerRegistryUser)
+                                    .append(dockerRegistrySecret)
+                                    .append(dockerRegistryEmail)
+                                    .append(chromeImageTag)
+                                    .append(chromeDebugImageTag)
+                                    .append(firefoxImageTag)
+                                    .append(firefoxDebugImageTag)
+                                    .toHashCode();
     }
 
     @Override
@@ -536,18 +562,25 @@ public class DockerConfig {
             return false;
         }
         DockerConfig rhs = (DockerConfig) other;
-        return new EqualsBuilder().append(host, rhs.host).append(image, rhs.image).append(idContainer, rhs.idContainer)
-                                  .append(containerName, rhs.containerName).append(networkMode, rhs.networkMode)
-                                  .append(inspectRealPort, rhs.inspectRealPort).append(hub, rhs.hub)
-                                  .append(exposePort, rhs.exposePort).append(exposeDebugPort, rhs.exposeDebugPort)
-                                  .append(certsPath, rhs.certsPath).append(chromeImageTag, rhs.chromeImageTag)
+        return new EqualsBuilder().append(host, rhs.host)
+                                  .append(image, rhs.image)
+                                  .append(idContainer, rhs.idContainer)
+                                  .append(containerName, rhs.containerName)
+                                  .append(networkMode, rhs.networkMode)
+                                  .append(inspectRealPort, rhs.inspectRealPort)
+                                  .append(hub, rhs.hub)
+                                  .append(exposePort, rhs.exposePort)
+                                  .append(exposeDebugPort, rhs.exposeDebugPort)
+                                  .append(certsPath, rhs.certsPath)
+                                  .append(chromeImageTag, rhs.chromeImageTag)
                                   .append(dockerRegistryUrl, rhs.dockerRegistryUrl)
                                   .append(dockerRegistryUser, rhs.dockerRegistryUser)
                                   .append(dockerRegistrySecret, rhs.dockerRegistrySecret)
                                   .append(dockerRegistryEmail, rhs.dockerRegistryEmail)
                                   .append(chromeDebugImageTag, rhs.chromeDebugImageTag)
                                   .append(firefoxImageTag, rhs.firefoxImageTag)
-                                  .append(firefoxDebugImageTag, rhs.firefoxDebugImageTag).isEquals();
+                                  .append(firefoxDebugImageTag, rhs.firefoxDebugImageTag)
+                                  .isEquals();
     }
 
 }

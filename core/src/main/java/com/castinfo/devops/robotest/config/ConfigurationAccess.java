@@ -95,8 +95,10 @@ public abstract class ConfigurationAccess extends TestContext {
      *            Object config Key.
      * @return The value of properties config key.
      */
-    public String getTestPropertyCfgInScope(final SuiteContext suiteContext, final Annotation scope,
-                                            final String configKey, final String keyProperty) {
+    public String getTestPropertyCfgInScope(final SuiteContext suiteContext,
+                                            final Annotation scope,
+                                            final String configKey,
+                                            final String keyProperty) {
         String resultado = null;
         Properties scopedConfig = this.getTestCfgInScope(suiteContext, scope, configKey);
         if (null != scopedConfig) {

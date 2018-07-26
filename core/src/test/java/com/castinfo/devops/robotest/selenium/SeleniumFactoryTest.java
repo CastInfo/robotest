@@ -123,7 +123,8 @@ public class SeleniumFactoryTest {
         selDrv = new SeleniumDriverFactory(buildBrowserConfig(SeleniumBrowser.IPHONE));
         selDrv.browserStackCfgValidations("TEST_SUITE", "TEST_CASE", bsCfg);
         DesiredCapabilities capabilities = selDrv.browserStackCapabilities("TEST_SUITE", "TEST_CASE", bsCfg);
-        Assert.assertTrue(capabilities.getCapability("browserName").toString()
+        Assert.assertTrue(capabilities.getCapability("browserName")
+                                      .toString()
                                       .equalsIgnoreCase(SeleniumBrowser.IPHONE.name()));
         Assert.assertTrue(capabilities.getCapability("device").equals(bsCfg.getDevice()));
         Assert.assertTrue(capabilities.getCapability("os_version").equals(bsCfg.getPlatform()));

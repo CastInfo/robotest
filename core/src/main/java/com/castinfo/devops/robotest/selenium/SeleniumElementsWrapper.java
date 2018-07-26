@@ -158,7 +158,8 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
     public boolean isElementPresentUntil(final By by, final long seconds) throws RobotestException {
         boolean resultado = true;
         try {
-            new WebDriverWait(getDriver(), seconds).until(ExpectedConditions.presenceOfElementLocated(by));
+            new WebDriverWait(getDriver(),
+                              seconds).until(ExpectedConditions.presenceOfElementLocated(by));
         } catch (TimeoutException e) {
             resultado = false;
         }
@@ -179,7 +180,8 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
     public boolean isElementVisibleUntil(final By by, final long seconds) throws RobotestException {
         boolean resultado = true;
         try {
-            new WebDriverWait(getDriver(), seconds).until(ExpectedConditions.visibilityOfElementLocated(by));
+            new WebDriverWait(getDriver(),
+                              seconds).until(ExpectedConditions.visibilityOfElementLocated(by));
         } catch (TimeoutException e) {
             resultado = false;
         }
@@ -200,7 +202,8 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
     public boolean isElementInvisibleUntil(final By by, final long seconds) throws RobotestException {
         boolean resultado = true;
         try {
-            new WebDriverWait(getDriver(), seconds).until(ExpectedConditions.invisibilityOfElementLocated(by));
+            new WebDriverWait(getDriver(),
+                              seconds).until(ExpectedConditions.invisibilityOfElementLocated(by));
         } catch (TimeoutException e) {
             resultado = false;
         }
@@ -286,7 +289,8 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
     public boolean isElementClickableUntil(final By by, final long seconds) throws RobotestException {
         boolean resultado = true;
         try {
-            new WebDriverWait(getDriver(), seconds).until(ExpectedConditions.elementToBeClickable(by));
+            new WebDriverWait(getDriver(),
+                              seconds).until(ExpectedConditions.elementToBeClickable(by));
         } catch (TimeoutException e) {
             resultado = false;
         }
@@ -344,12 +348,14 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
      * @throws RobotestException
      *             Selenium Driver unavailable or error
      */
-    public boolean clickUntilLoadPage(final long waitForLinkToClick, final By by,
+    public boolean clickUntilLoadPage(final long waitForLinkToClick,
+                                      final By by,
                                       final long pageLoadingWaitSeconds) throws RobotestException {
         boolean timeout = false;
         if (waitForLinkToClick > 0) {
             try {
-                new WebDriverWait(getDriver(), waitForLinkToClick).until(ExpectedConditions.elementToBeClickable(by));
+                new WebDriverWait(getDriver(),
+                                  waitForLinkToClick).until(ExpectedConditions.elementToBeClickable(by));
             } catch (TimeoutException e) {
                 timeout = true;
             }
@@ -378,7 +384,8 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
                 JavascriptExecutor executor = (JavascriptExecutor) getDriver();
                 executor.executeScript("arguments[0].click();", link);
             } catch (JavascriptException e2) {
-                throw new RobotestException("NOT CLICABLE ELEMENT", e2);
+                throw new RobotestException("NOT CLICABLE ELEMENT",
+                                            e2);
             }
         }
     }

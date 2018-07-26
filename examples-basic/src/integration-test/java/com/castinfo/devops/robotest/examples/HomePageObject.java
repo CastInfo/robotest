@@ -102,13 +102,11 @@ public class HomePageObject extends PageObject {
     @RobotestStep(tag = "HOME_STEP_004", description = "Check Contacto form exists", captureScreenShootAtEndStep = true)
     public void checkFormExists() {
         /*
-         * RobotestApiTestingClient restClient = new RobotestApiTestingClient();
-         * String templateUrl = "https://www.cast-info.es/contacto/";
-         * String response = XmlResponseValidations.getXPathForHtml(restClient.getForString(templateUrl),
-         * "//form[@class='et_pb_contact_form clearfix']");
-         * if (response == null) {
-         * throw new RobotestApiTestingException("The is no Search Form");
-         * }
+         * RobotestApiTestingClient restClient = new RobotestApiTestingClient(); String templateUrl =
+         * "https://www.cast-info.es/contacto/"; String response =
+         * XmlResponseValidations.getXPathForHtml(restClient.getForString(templateUrl),
+         * "//form[@class='et_pb_contact_form clearfix']"); if (response == null) { throw new
+         * RobotestApiTestingException("The is no Search Form"); }
          */
     }
 

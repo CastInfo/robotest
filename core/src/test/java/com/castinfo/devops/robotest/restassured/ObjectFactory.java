@@ -24,7 +24,8 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _Response_QNAME = new QName("", "response");
+    private final static QName _Response_QNAME = new QName("",
+                                                           "response");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package:
@@ -48,7 +49,10 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "response")
     public JAXBElement<JaxbPojoType> createResponse(final JaxbPojoType value) {
-        return new JAXBElement<>(_Response_QNAME, JaxbPojoType.class, null, value);
+        return new JAXBElement<>(_Response_QNAME,
+                                 JaxbPojoType.class,
+                                 null,
+                                 value);
     }
 
 }

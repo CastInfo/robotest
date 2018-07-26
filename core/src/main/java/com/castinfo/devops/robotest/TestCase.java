@@ -117,8 +117,10 @@ public class TestCase extends ConfigurationAccess {
      * @param m
      * @throws RobotestException
      */
-    private void pageFragmentAnnotationValidations(final Class<?> pageObject, final String testTagAnnot,
-                                                   final String pfTagAnnot, final Method m) throws RobotestException {
+    private void pageFragmentAnnotationValidations(final Class<?> pageObject,
+                                                   final String testTagAnnot,
+                                                   final String pfTagAnnot,
+                                                   final Method m) throws RobotestException {
         if (!Pattern.matches(RobotestExecutionContext.TAG_PATTERN, pfTagAnnot)) {
             throw new RobotestException("TAG OF FRAGMENT: " + pageObject.getName() + "." + m.getName()
                     + " MUST ACOMPLISH " + RobotestExecutionContext.TAG_PATTERN + " REGEX PATTERN");

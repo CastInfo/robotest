@@ -280,7 +280,8 @@ public class StepReport {
             jGenerator.writeEndArray();
             jGenerator.writeEndObject();
         } catch (IOException e) {
-            throw new RobotestException("ROBOTEST STEP REPORTER ERROR", e);
+            throw new RobotestException("ROBOTEST STEP REPORTER ERROR",
+                                        e);
         }
     }
 

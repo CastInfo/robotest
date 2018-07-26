@@ -269,7 +269,9 @@ public final class RobotestExecutionContext {
     public static void buildCaseByMethod(final Class<?> clazz, final String methodName) throws RobotestException {
         RobotestCase caseAnnot = getCaseAnnotationByMethod(clazz, methodName);
         RobotestSuite suiteAnnot = getSuiteAnnotation(clazz);
-        LOG.info("STARTING CASE: {} OF {} FOR {}", caseAnnot.tag(), suiteAnnot.tag(),
+        LOG.info("STARTING CASE: {} OF {} FOR {}",
+                 caseAnnot.tag(),
+                 suiteAnnot.tag(),
                  clazz.getName() + "." + methodName);
         SuiteContext suite = getSuite(suiteAnnot);
         try {
@@ -330,7 +332,8 @@ public final class RobotestExecutionContext {
             }
             validateTag(klass, methodName, annotCase);
         } catch (SecurityException e) {
-            throw new RobotestException("TEST METHOD NOT EXIST OR NOT ACCESIBLE: " + methodName, e);
+            throw new RobotestException("TEST METHOD NOT EXIST OR NOT ACCESIBLE: " + methodName,
+                                        e);
         }
         return annotCase;
     }
@@ -345,7 +348,8 @@ public final class RobotestExecutionContext {
      * @throws RobotestException
      *             errors in pattern.
      */
-    private static void validateTag(final Class<?> klass, final String methodName,
+    private static void validateTag(final Class<?> klass,
+                                    final String methodName,
                                     final RobotestCase annotCase) throws RobotestException {
         if (!Pattern.matches(TAG_PATTERN, annotCase.tag())) {
             throw new RobotestException("TAG OF CASE: " + methodName + " OF CLASS " + klass.getName()
@@ -382,7 +386,8 @@ public final class RobotestExecutionContext {
                 throw new RobotestException("THERE ARE NO TEST METHOD WITH @RobotestCase TAG: " + tagName);
             }
         } catch (SecurityException e) {
-            throw new RobotestException("TEST METHOD MUST BE DECLARED PUBLIC!", e);
+            throw new RobotestException("TEST METHOD MUST BE DECLARED PUBLIC!",
+                                        e);
         }
         return annotCase;
     }

@@ -254,11 +254,16 @@ public class RestAssuredWrapper {
      *
      * @return The same object for fluent api.
      */
-    public RestAssuredWrapper withFormAuth(final String authFormUrl, final String formName,
-                                           final String usernameInputName, final String passwordInputName,
-                                           final String username, final String password,
+    public RestAssuredWrapper withFormAuth(final String authFormUrl,
+                                           final String formName,
+                                           final String usernameInputName,
+                                           final String passwordInputName,
+                                           final String username,
+                                           final String password,
                                            final Map<String, ?> additionalFields) {
-        FormAuthConfig formConfig = new FormAuthConfig(formName, usernameInputName, passwordInputName);
+        FormAuthConfig formConfig = new FormAuthConfig(formName,
+                                                       usernameInputName,
+                                                       passwordInputName);
         formAdditionalFieldNames(formConfig, additionalFields);
         given().auth().form(username, password, formConfig).when().get(authFormUrl).then().statusCode(HttpStatus.SC_OK);
         loadGivenSpecWhen();
@@ -280,11 +285,18 @@ public class RestAssuredWrapper {
      *
      * @return The same object for fluent api.
      */
-    public RestAssuredWrapper withFormSpringSecurityAuth(final String authFormUrl, final String username,
-                                                         final String password, final Map<String, ?> additionalFields) {
+    public RestAssuredWrapper withFormSpringSecurityAuth(final String authFormUrl,
+                                                         final String username,
+                                                         final String password,
+                                                         final Map<String, ?> additionalFields) {
         FormAuthConfig formConfig = FormAuthConfig.springSecurity();
         formAdditionalFieldNames(formConfig, additionalFields);
-        given().auth().form(username, password, formConfig).formParams(additionalFields).when().get(authFormUrl).then()
+        given().auth()
+               .form(username, password, formConfig)
+               .formParams(additionalFields)
+               .when()
+               .get(authFormUrl)
+               .then()
                .statusCode(HttpStatus.SC_OK);
         loadGivenSpecWhen();
         return this;
@@ -305,11 +317,18 @@ public class RestAssuredWrapper {
      *
      * @return The same object for fluent api.
      */
-    public RestAssuredWrapper withFormCSRF(final String authFormUrl, final String username, final String password,
+    public RestAssuredWrapper withFormCSRF(final String authFormUrl,
+                                           final String username,
+                                           final String password,
                                            final Map<String, ?> additionalFields) {
         FormAuthConfig formConfig = formAuthConfig().withAutoDetectionOfCsrf();
         formAdditionalFieldNames(formConfig, additionalFields);
-        given().auth().form(username, password, formConfig).formParams(additionalFields).when().get(authFormUrl).then()
+        given().auth()
+               .form(username, password, formConfig)
+               .formParams(additionalFields)
+               .when()
+               .get(authFormUrl)
+               .then()
                .statusCode(HttpStatus.SC_OK);
         loadGivenSpecWhen();
         return this;
@@ -334,15 +353,22 @@ public class RestAssuredWrapper {
      *
      * @return The same object for fluent api.
      */
-    public RestAssuredWrapper withFormCSRFWithProvidedFieldName(final String authFormUrl, final String username,
-                                                                final String password, final String csrfFieldName,
+    public RestAssuredWrapper withFormCSRFWithProvidedFieldName(final String authFormUrl,
+                                                                final String username,
+                                                                final String password,
+                                                                final String csrfFieldName,
                                                                 final boolean csrfFieldAsHeader,
                                                                 final Map<String, ?> additionalFields) {
         FormAuthConfig formConfig = springSecurity().withCsrfFieldName(csrfFieldName);
         if (csrfFieldAsHeader) {
             formConfig = formConfig.sendCsrfTokenAsHeader();
         }
-        given().auth().form(username, password, formConfig).formParams(additionalFields).when().get(authFormUrl).then()
+        given().auth()
+               .form(username, password, formConfig)
+               .formParams(additionalFields)
+               .when()
+               .get(authFormUrl)
+               .then()
                .statusCode(HttpStatus.SC_OK);
         loadGivenSpecWhen();
         return this;
@@ -363,7 +389,9 @@ public class RestAssuredWrapper {
      *
      * @return The same object for fluent api.
      */
-    public RestAssuredWrapper withOAuth(final String consumerKey, final String consumerSecret, final String accessToken,
+    public RestAssuredWrapper withOAuth(final String consumerKey,
+                                        final String consumerSecret,
+                                        final String accessToken,
                                         final String secretToken) {
         loadGivenSpecWhen().auth().oauth(consumerKey, consumerSecret, accessToken, secretToken);
         return this;

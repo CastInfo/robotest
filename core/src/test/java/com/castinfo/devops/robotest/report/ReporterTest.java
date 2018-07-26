@@ -41,7 +41,8 @@ public class ReporterTest {
         reportFile.deleteOnExit();
         JsonFactory jfactory = new JsonFactory();
         List<ConfigEntry> cfg = new ArrayList<>();
-        cfg.add(new ConfigEntry("TEST_CFG_KEY", "TEST_CFG_VALUE"));
+        cfg.add(new ConfigEntry("TEST_CFG_KEY",
+                                "TEST_CFG_VALUE"));
         cfg.get(0).setId("TEST_CFG_KEY");
         cfg.get(0).setValue("TEST_CFG_VALUE");
         RobotestConfig cfgAnnot = Mockito.mock(RobotestConfig.class);
@@ -63,7 +64,8 @@ public class ReporterTest {
         Mockito.when(stepAnnot.captureConsoleErrorLogsAtEndStep()).thenReturn(true);
         Mockito.when(stepAnnot.captureScreenShootAtEndStep()).thenReturn(true);
         try (JsonGenerator jGenerator = jfactory.createGenerator(reportFile, JsonEncoding.UTF8)) {
-            SuiteReport sr = new SuiteReport(0, reportFile);
+            SuiteReport sr = new SuiteReport(0,
+                                             reportFile);
             sr.initSuite(suiteAnnot.tag(), suiteAnnot.description(), 1, cfg);
             ValidationEntry val = ValidationEntry.buildError().withMessage("VALIDATION_ENTRY");
             sr.addSuiteValidationEntry(val);
@@ -86,15 +88,29 @@ public class ReporterTest {
             Assert.assertTrue(cfgReaded.get("endMillis").asInt() == 2);
             Assert.assertTrue(cfgReaded.get("config").get(0).get("TEST_CFG_KEY").asText().equals("TEST_CFG_VALUE"));
             Assert.assertTrue(cfgReaded.get("suiteOutCaseErrors").get(0).get("status").asText().equals("ERROR"));
-            Assert.assertTrue(cfgReaded.get("suiteOutCaseErrors").get(0).get("resource").get(0).asText()
+            Assert.assertTrue(cfgReaded.get("suiteOutCaseErrors")
+                                       .get(0)
+                                       .get("resource")
+                                       .get(0)
+                                       .asText()
                                        .contains("VALIDATION_ENTRY"));
             Assert.assertTrue(cfgReaded.get("cases").get(0).get("case").asText().equals("CASE_TAG"));
             Assert.assertTrue(cfgReaded.get("cases").get(0).get("description").asText().equals("CASE_DESC"));
             Assert.assertTrue(cfgReaded.get("cases").get(0).get("initMillis").asInt() == 3);
             Assert.assertTrue(cfgReaded.get("cases").get(0).get("endMillis").asInt() == 4);
-            Assert.assertTrue(cfgReaded.get("cases").get(0).get("steps").get(0).get("step").asText()
+            Assert.assertTrue(cfgReaded.get("cases")
+                                       .get(0)
+                                       .get("steps")
+                                       .get(0)
+                                       .get("step")
+                                       .asText()
                                        .equals("STEP_TAG"));
-            Assert.assertTrue(cfgReaded.get("cases").get(0).get("steps").get(0).get("description").asText()
+            Assert.assertTrue(cfgReaded.get("cases")
+                                       .get(0)
+                                       .get("steps")
+                                       .get(0)
+                                       .get("description")
+                                       .asText()
                                        .equals("STEP_DESC"));
             Assert.assertTrue(cfgReaded.get("cases").get(0).get("steps").get(0).get("initMillis").asInt() == 5);
             Assert.assertTrue(cfgReaded.get("cases").get(0).get("steps").get(0).get("endMillis").asInt() == 6);
@@ -107,15 +123,18 @@ public class ReporterTest {
         reportFile.deleteOnExit();
         JsonFactory jfactory = new JsonFactory();
         List<ConfigEntry> cfg = new ArrayList<>();
-        cfg.add(new ConfigEntry("TEST_CFG_KEY", "TEST_CFG_VALUE"));
+        cfg.add(new ConfigEntry("TEST_CFG_KEY",
+                                "TEST_CFG_VALUE"));
         cfg.get(0).setId("TEST_CFG_KEY");
         cfg.get(0).setValue("TEST_CFG_VALUE");
         Properties props = new Properties();
         props.setProperty("TEST_PROP_KEY", "TEST_PROP_VALUE");
-        cfg.add(new ConfigEntry("TEST_CFG_PROP", props));
+        cfg.add(new ConfigEntry("TEST_CFG_PROP",
+                                props));
         DockerConfig dcfg = new DockerConfig();
         dcfg.setHost("HOST_EXAMPLE");
-        cfg.add(new ConfigEntry("TEST_CFG_JSON", dcfg));
+        cfg.add(new ConfigEntry("TEST_CFG_JSON",
+                                dcfg));
         try (JsonGenerator jGenerator = jfactory.createGenerator(reportFile, JsonEncoding.UTF8)) {
             jGenerator.writeStartObject();
             ConfigReport cfgR = new ConfigReport(cfg);
@@ -128,9 +147,17 @@ public class ReporterTest {
             Assert.assertTrue(cfgReaded.get("TEST_CFG").isArray());
             Assert.assertTrue(cfgReaded.get("TEST_CFG").size() == 3);
             Assert.assertTrue(cfgReaded.get("TEST_CFG").get(0).get("TEST_CFG_KEY").asText().equals("TEST_CFG_VALUE"));
-            Assert.assertTrue(cfgReaded.get("TEST_CFG").get(1).get("TEST_CFG_PROP").get("TEST_PROP_KEY").asText()
+            Assert.assertTrue(cfgReaded.get("TEST_CFG")
+                                       .get(1)
+                                       .get("TEST_CFG_PROP")
+                                       .get("TEST_PROP_KEY")
+                                       .asText()
                                        .equals("TEST_PROP_VALUE"));
-            Assert.assertTrue(cfgReaded.get("TEST_CFG").get(2).get("TEST_CFG_JSON").get("host").asText()
+            Assert.assertTrue(cfgReaded.get("TEST_CFG")
+                                       .get(2)
+                                       .get("TEST_CFG_JSON")
+                                       .get("host")
+                                       .asText()
                                        .equals("HOST_EXAMPLE"));
         }
     }
@@ -141,7 +168,8 @@ public class ReporterTest {
         reportFile.deleteOnExit();
         JsonFactory jfactory = new JsonFactory();
         List<ConfigEntry> cfg = new ArrayList<>();
-        cfg.add(new ConfigEntry("TEST_CFG_KEY", "TEST_CFG_VALUE"));
+        cfg.add(new ConfigEntry("TEST_CFG_KEY",
+                                "TEST_CFG_VALUE"));
         RobotestStep stepAnnot = Mockito.mock(RobotestStep.class);
         Mockito.when(stepAnnot.tag()).thenReturn("STEP_TAG");
         Mockito.when(stepAnnot.description()).thenReturn("STEP_DESC");
@@ -150,7 +178,11 @@ public class ReporterTest {
         Mockito.when(stepAnnot.captureScreenShootAtEndStep()).thenReturn(true);
         ValidationEntry val = null;
         try (JsonGenerator jGenerator = jfactory.createGenerator(reportFile, JsonEncoding.UTF8)) {
-            StepReport sR = new StepReport(0, stepAnnot.tag(), stepAnnot.description(), cfg, 1);
+            StepReport sR = new StepReport(0,
+                                           stepAnnot.tag(),
+                                           stepAnnot.description(),
+                                           cfg,
+                                           1);
             val = ValidationEntry.buildDebug();
             val.setStatus(StepStatus.DEBUG);
             val.withType(ValidationType.TEXT);
@@ -191,27 +223,54 @@ public class ReporterTest {
             Assert.assertTrue(cfgReaded.get("config").get(0).get("TEST_CFG_KEY").asText().equals("TEST_CFG_VALUE"));
             Assert.assertTrue(cfgReaded.get("validations").get(0).get("status").asText().equals("DEBUG"));
             Assert.assertTrue(cfgReaded.get("validations").size() == 7);
-            Assert.assertTrue(cfgReaded.get("validations").get(0).get("type").asText()
+            Assert.assertTrue(cfgReaded.get("validations")
+                                       .get(0)
+                                       .get("type")
+                                       .asText()
                                        .equals(ValidationType.TEXT.name()));
             Assert.assertTrue(cfgReaded.get("validations").get(0).get("order").asInt() == 1);
-            Assert.assertTrue(cfgReaded.get("validations").get(0).get("resource").get(0).asText()
+            Assert.assertTrue(cfgReaded.get("validations")
+                                       .get(0)
+                                       .get("resource")
+                                       .get(0)
+                                       .asText()
                                        .equals("VALIDATION_DEBUG_MESSAGE"));
             Assert.assertTrue(cfgReaded.get("validations").get(1).get("status").asText().equals("INFO"));
-            Assert.assertTrue(cfgReaded.get("validations").get(1).get("type").asText()
+            Assert.assertTrue(cfgReaded.get("validations")
+                                       .get(1)
+                                       .get("type")
+                                       .asText()
                                        .equals(ValidationType.SCREENSHOT.name()));
             Assert.assertTrue(cfgReaded.get("validations").get(1).get("resource").get(0).asText().trim().length() > 0);
             Assert.assertTrue(cfgReaded.get("validations").get(2).get("status").asText().equals("WARNING"));
-            Assert.assertTrue(cfgReaded.get("validations").get(2).get("type").asText()
+            Assert.assertTrue(cfgReaded.get("validations")
+                                       .get(2)
+                                       .get("type")
+                                       .asText()
                                        .equals(ValidationType.CONSOLE.name()));
-            Assert.assertTrue(cfgReaded.get("validations").get(2).get("resource").get(0).asText()
+            Assert.assertTrue(cfgReaded.get("validations")
+                                       .get(2)
+                                       .get("resource")
+                                       .get(0)
+                                       .asText()
                                        .equals("VALIDATION_LOG"));
             Assert.assertTrue(cfgReaded.get("validations").get(3).get("status").asText().equals("ERROR"));
-            Assert.assertTrue(cfgReaded.get("validations").get(3).get("type").asText()
+            Assert.assertTrue(cfgReaded.get("validations")
+                                       .get(3)
+                                       .get("type")
+                                       .asText()
                                        .equals(ValidationType.TEXT.name()));
-            Assert.assertTrue(cfgReaded.get("validations").get(3).get("resource").get(0).asText()
+            Assert.assertTrue(cfgReaded.get("validations")
+                                       .get(3)
+                                       .get("resource")
+                                       .get(0)
+                                       .asText()
                                        .contains("No message"));
             Assert.assertTrue(cfgReaded.get("validations").get(4).get("status").asText().equals("CRITICAL"));
-            Assert.assertTrue(cfgReaded.get("validations").get(4).get("type").asText()
+            Assert.assertTrue(cfgReaded.get("validations")
+                                       .get(4)
+                                       .get("type")
+                                       .asText()
                                        .equals(ValidationType.HTML.name()));
             Assert.assertTrue(cfgReaded.get("validations").get(4).get("resource").get(0).asText().trim().length() > 0);
 
@@ -263,7 +322,8 @@ public class ReporterTest {
     @Test
     public void forzeIOExceptions() throws IOException, RobotestException {
         List<ConfigEntry> cfg = new ArrayList<>();
-        cfg.add(new ConfigEntry("TEST_CFG_KEY", "TEST_CFG_VALUE"));
+        cfg.add(new ConfigEntry("TEST_CFG_KEY",
+                                "TEST_CFG_VALUE"));
         try (JsonGenerator jGenerator = Mockito.mock(JsonGenerator.class)) {
             Mockito.doThrow(new IOException("CRASH!")).when(jGenerator).writeStartArray();
             ConfigReport cfgR = new ConfigReport(cfg);
@@ -282,7 +342,11 @@ public class ReporterTest {
         }
         try (JsonGenerator jGenerator = Mockito.mock(JsonGenerator.class)) {
             Mockito.doThrow(new IOException("CRASH!")).when(jGenerator).writeStartObject();
-            StepReport sR = new StepReport(0, "ID", "DESC", cfg, 0);
+            StepReport sR = new StepReport(0,
+                                           "ID",
+                                           "DESC",
+                                           cfg,
+                                           0);
             sR.writeStep(jGenerator);
             Assert.fail("IO Must fail!");
         } catch (RobotestException e) {
@@ -290,7 +354,11 @@ public class ReporterTest {
         }
         try (JsonGenerator jGenerator = Mockito.mock(JsonGenerator.class)) {
             Mockito.doThrow(new IOException("CRASH!")).when(jGenerator).writeStartObject();
-            CaseReport cR = new CaseReport(0, "ID", "DESC", 0, cfg);
+            CaseReport cR = new CaseReport(0,
+                                           "ID",
+                                           "DESC",
+                                           0,
+                                           cfg);
             cR.writeCase(jGenerator);
             Assert.fail("IO Must fail!");
         } catch (RobotestException e) {
@@ -298,7 +366,8 @@ public class ReporterTest {
         }
         File reportFile = File.createTempFile("test", "json");
         reportFile.deleteOnExit();
-        SuiteReport sR = new SuiteReport(0, reportFile);
+        SuiteReport sR = new SuiteReport(0,
+                                         reportFile);
         sR.setjGenerator(Mockito.mock(JsonGenerator.class));
         Mockito.doThrow(new IOException("CRASH!")).when(sR.getjGenerator()).writeStartObject();
         Mockito.doThrow(new IOException("CRASH!")).when(sR.getjGenerator()).writeStartArray();

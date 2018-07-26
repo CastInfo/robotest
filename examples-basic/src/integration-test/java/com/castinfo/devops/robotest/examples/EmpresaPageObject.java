@@ -60,8 +60,8 @@ public class EmpresaPageObject extends PageObject {
                   description = "Check Empresa certifications links",
                   captureScreenShootAtEndStep = true)
     public void checkCalidadLinks() throws RobotestException {
-        List<WebElement> listElem = this.getDriver()
-                                        .findElements(By.xpath("//*[@id=\"imatges_certificats\"]/div/div/a"));
+        List<WebElement> listElem =
+                this.getDriver().findElements(By.xpath("//*[@id=\"imatges_certificats\"]/div/div/a"));
         for (WebElement elem : listElem) {
             // Open elements in a new Tab
             String selectLinkOpeninNewTab = Keys.chord(Keys.CONTROL, Keys.RETURN);
@@ -94,8 +94,8 @@ public class EmpresaPageObject extends PageObject {
                   description = "Check Empresa clientes links",
                   captureScreenShootAtEndStep = true)
     public void checkClientesLinks() throws RobotestException {
-        List<WebElement> linkList = this.getDriver()
-                                        .findElements(By.xpath("//*[@id=\"post-659\"]/div/div[5]/div/div//a"));
+        List<WebElement> linkList =
+                this.getDriver().findElements(By.xpath("//*[@id=\"post-659\"]/div/div[5]/div/div//a"));
         if (!linkList.isEmpty()) {
             List<String> hrefList = new ArrayList<>();
             for (WebElement elem : linkList) {
@@ -120,8 +120,9 @@ public class EmpresaPageObject extends PageObject {
     public void checkMaps() throws RobotestException, InterruptedException {
         this.findElementBy(By.xpath("//div[@id='cookie-law-info-bar']/span/a")).click();
         this.moveToElement(this.getDriver().findElement(By.xpath("//*[@id=\"post-659\"]/div/div[7]/div")));
-        List<WebElement> elems = this.getDriver()
-                                     .findElements(By.xpath("//*[@id=\"post-659\"]/div/div[7]/div/div[1]/div/div/div[1]/div[3]/div[2]/div[3]/div"));
+        List<WebElement> elems =
+                this.getDriver()
+                    .findElements(By.xpath("//*[@id=\"post-659\"]/div/div[7]/div/div[1]/div/div/div[1]/div[3]/div[2]/div[3]/div"));
         if (!elems.isEmpty()) {
             for (WebElement elem : elems) {
                 this.moveToElement(elem);

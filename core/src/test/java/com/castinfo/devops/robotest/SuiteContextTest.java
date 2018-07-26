@@ -47,7 +47,8 @@ public class SuiteContextTest {
         ctx.setSuiteAnnotation(suiteAnnot);
         Assert.assertNotNull(ctx.getSuiteAnnotation());
         ctx.initSuite(0);
-        ctx.getConfig().getConfigBasic()
+        ctx.getConfig()
+           .getConfigBasic()
            .setBrowser(SeleniumFactoryTest.buildBrowserConfig(SeleniumBrowser.CHROME).getBrowser());
         ctx.getConfig().getConfigBasic().setDocker(new DockerConfig());
         RobotestCase caseAnnot = Mockito.mock(RobotestCase.class);

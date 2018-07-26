@@ -280,7 +280,8 @@ public class CaseReport {
             jGenerator.writeNumberField("endMillis", endMillis);
             jGenerator.writeEndObject();
         } catch (IOException e) {
-            throw new RobotestException("ROBOTEST REPORTER ERROR CASE", e);
+            throw new RobotestException("ROBOTEST REPORTER ERROR CASE",
+                                        e);
         }
     }
 

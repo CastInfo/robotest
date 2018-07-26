@@ -66,7 +66,8 @@ public class SuiteContext {
         RobotestExecutionContext.getBrowserDockers().put(suiteAnnotation, new HashMap<>());
         cfg.loadBasic(suiteAnnotation);
         File reportFile = new File(cfg.getConfigBasic().getReportFilePath() + "/robotest-report-" + order + ".json");
-        reporter = new SuiteReport(order, reportFile);
+        reporter = new SuiteReport(order,
+                                   reportFile);
         try {
             cfg.loadAnnotationScopeConfig(suiteAnnotation.configElements(), suiteAnnotation);
             if (null != cfg.getConfigBasic().getDocker()
@@ -75,7 +76,8 @@ public class SuiteContext {
             }
         } finally {
             List<ConfigEntry> cfgs = cfg.toReportConfigEntries(suiteAnnotation);
-            cfgs.add(new ConfigEntry("ROBOTEST_CONFIG_BASIC", cfg.getConfigBasic()));
+            cfgs.add(new ConfigEntry("ROBOTEST_CONFIG_BASIC",
+                                     cfg.getConfigBasic()));
             reporter.initSuite(suiteAnnotation.tag(), suiteAnnotation.description(), System.currentTimeMillis(), cfgs);
         }
     }
@@ -90,7 +92,8 @@ public class SuiteContext {
         try {
             reporter.endSuite(System.currentTimeMillis());
         } catch (RobotestException e) {
-            throw new RobotestException("ROBOTEST END OF SUITE ERRORS", e);
+            throw new RobotestException("ROBOTEST END OF SUITE ERRORS",
+                                        e);
         }
     }
 
@@ -169,7 +172,7 @@ public class SuiteContext {
     }
 
     /**
-     * Inits Case test with anotation. Load new Selenium Docker if and connect WebDriver or direct creates local driver
+     * Inits Case test with annotation. Load new Selenium Docker if and connect WebDriver or direct creates local driver
      * without Docker.
      *
      * @param testCaseAnnot
@@ -192,11 +195,13 @@ public class SuiteContext {
                 DockerConfig docker = RobotestExecutionContext.getDockerFarmBuilder()
                                                               .createBrowser(basicCfg.getBrowser().getBrowserName());
                 RobotestExecutionContext.getBrowserDockers().get(suiteAnnotation).put(testCaseAnnot, docker);
-                ConfigEntry cEntry = new ConfigEntry("DOCKER_BROWSER_INSTANCE", docker);
+                ConfigEntry cEntry = new ConfigEntry("DOCKER_BROWSER_INSTANCE",
+                                                     docker);
                 lCfgs.add(cEntry);
                 wd = selFactory.buildDockerHubWebDriver(docker);
             } else if (null != basicCfg.getBrowserStack()) {
-                wd = selFactory.buildBrowserStackRealDeviceWebDriver(suiteAnnot.tag(), testCaseAnnot.tag(),
+                wd = selFactory.buildBrowserStackRealDeviceWebDriver(suiteAnnot.tag(),
+                                                                     testCaseAnnot.tag(),
                                                                      basicCfg.getBrowserStack());
             } else {
                 wd = selFactory.buildLocalNativeWebDriver();
@@ -264,9 +269,14 @@ public class SuiteContext {
     public void initStep(final PageObject pf, final long initMillis) throws RobotestException {
         IRobotestConfiguration suiteCfg = RobotestExecutionContext.getSuite(pf.getSuiteAnnot()).getConfig();
         getConfig().loadAnnotationScopeConfig(pf.getStepAnnot().configElements(), pf.getStepAnnot());
-        getReporter().initStep(pf.getCaseAnnot().tag(), pf.getStepAnnot().tag(), pf.getStepAnnot().description(),
-                               suiteCfg.toReportConfigEntries(pf.getStepAnnot()), initMillis);
-        SuiteContext.LOG.info("STARTING STEP: {} OF {} OF {}", pf.getStepAnnot().tag(), pf.getSuiteAnnot().tag(),
+        getReporter().initStep(pf.getCaseAnnot().tag(),
+                               pf.getStepAnnot().tag(),
+                               pf.getStepAnnot().description(),
+                               suiteCfg.toReportConfigEntries(pf.getStepAnnot()),
+                               initMillis);
+        SuiteContext.LOG.info("STARTING STEP: {} OF {} OF {}",
+                              pf.getStepAnnot().tag(),
+                              pf.getSuiteAnnot().tag(),
                               pf.getCaseAnnot().tag());
     }
 
@@ -290,16 +300,25 @@ public class SuiteContext {
      * @throws RobotestException
      *             errors loading step
      */
-    public void addCustomStepToReport(final PageObject pf, final String idStep, final String stepDescription,
-                                      final long startMillis, final long endMillis, final StepStatus status,
+    public void addCustomStepToReport(final PageObject pf,
+                                      final String idStep,
+                                      final String stepDescription,
+                                      final long startMillis,
+                                      final long endMillis,
+                                      final StepStatus status,
                                       final List<ValidationEntry> listValidationEntries) throws RobotestException {
-        getReporter().initStep(pf.getCaseAnnot().tag(), idStep, stepDescription,
-                               pf.getSuiteContext().getConfig().toReportConfigEntries(pf.getStepAnnot()), startMillis);
+        getReporter().initStep(pf.getCaseAnnot().tag(),
+                               idStep,
+                               stepDescription,
+                               pf.getSuiteContext().getConfig().toReportConfigEntries(pf.getStepAnnot()),
+                               startMillis);
         for (ValidationEntry validationEntry : listValidationEntries) {
             getReporter().addStepValidationEntry(pf.getCaseAnnot().tag(), idStep, validationEntry);
         }
         getReporter().endStep(pf.getCaseAnnot().tag(), idStep, status, endMillis);
-        SuiteContext.LOG.info("ADD CUSTOM STEP: {} OF {} OF {}", idStep, pf.getCaseAnnot().tag(),
+        SuiteContext.LOG.info("ADD CUSTOM STEP: {} OF {} OF {}",
+                              idStep,
+                              pf.getCaseAnnot().tag(),
                               pf.getSuiteAnnot().tag());
     }
 
@@ -315,7 +334,9 @@ public class SuiteContext {
      */
     public void endStep(final PageObject pf, final StepStatus resultadoStatusStep, final long endMillis) {
         getReporter().endStep(pf.getCaseAnnot().tag(), pf.getStepAnnot().tag(), resultadoStatusStep, endMillis);
-        SuiteContext.LOG.info("ENDING STEP: {} OF {} OF {}", pf.getStepAnnot().tag(), pf.getCaseAnnot().tag(),
+        SuiteContext.LOG.info("ENDING STEP: {} OF {} OF {}",
+                              pf.getStepAnnot().tag(),
+                              pf.getCaseAnnot().tag(),
                               pf.getSuiteAnnot().tag());
     }
 
@@ -342,7 +363,8 @@ public class SuiteContext {
         try {
             getReporter().addSuiteValidationEntry(validationEntry);
         } catch (Exception e) {
-            SuiteContext.LOG.info("ERROR WRITING SUITE OUT CASE ERROR: {} CAUSE: {}", validationEntry.getResource(),
+            SuiteContext.LOG.info("ERROR WRITING SUITE OUT CASE ERROR: {} CAUSE: {}",
+                                  validationEntry.getResource(),
                                   e.getMessage());
         }
     }

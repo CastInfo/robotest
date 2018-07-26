@@ -30,7 +30,12 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "env", "browser", "browserConsoleLogLevel", "generalTimeout", "reportFilePath", "docker",
+@JsonPropertyOrder({ "env",
+                     "browser",
+                     "browserConsoleLogLevel",
+                     "generalTimeout",
+                     "reportFilePath",
+                     "docker",
                      "browserStack" })
 public class RobotestBasicConfig {
 
@@ -199,8 +204,13 @@ public class RobotestBasicConfig {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(env).append(generalTimeout).append(browser).append(reportFilePath)
-                                    .append(docker).append(browserStack).toHashCode();
+        return new HashCodeBuilder().append(env)
+                                    .append(generalTimeout)
+                                    .append(browser)
+                                    .append(reportFilePath)
+                                    .append(docker)
+                                    .append(browserStack)
+                                    .toHashCode();
     }
 
     @Override
@@ -212,9 +222,13 @@ public class RobotestBasicConfig {
             return false;
         }
         RobotestBasicConfig rhs = (RobotestBasicConfig) other;
-        return new EqualsBuilder().append(generalTimeout, rhs.generalTimeout).append(env, rhs.env)
-                                  .append(browser, rhs.browser).append(reportFilePath, rhs.reportFilePath)
-                                  .append(docker, rhs.docker).append(browserStack, rhs.browserStack).isEquals();
+        return new EqualsBuilder().append(generalTimeout, rhs.generalTimeout)
+                                  .append(env, rhs.env)
+                                  .append(browser, rhs.browser)
+                                  .append(reportFilePath, rhs.reportFilePath)
+                                  .append(docker, rhs.docker)
+                                  .append(browserStack, rhs.browserStack)
+                                  .isEquals();
     }
 
 }

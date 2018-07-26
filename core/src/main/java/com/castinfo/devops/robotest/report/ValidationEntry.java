@@ -362,7 +362,8 @@ public class ValidationEntry {
             }
             jGenerator.writeEndObject();
         } catch (IOException e) {
-            throw new RobotestException("ROBOTEST VALIDATION REPORTER ERROR", e);
+            throw new RobotestException("ROBOTEST VALIDATION REPORTER ERROR",
+                                        e);
         }
     }
 

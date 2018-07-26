@@ -244,7 +244,8 @@ public class PageObject extends SeleniumElementsWrapper {
         try {
             results = Long.parseLong(this.getBasicCfg().getGeneralTimeout());
         } catch (NumberFormatException e) {
-            throw new RobotestException("INCORRECT GENERAL TIMEOUT FOUND", e);
+            throw new RobotestException("INCORRECT GENERAL TIMEOUT FOUND",
+                                        e);
         }
         return results;
     }
@@ -261,7 +262,8 @@ public class PageObject extends SeleniumElementsWrapper {
         try {
             results = this.getBasicCfg().getGeneralTimeoutInSeconds();
         } catch (NumberFormatException e) {
-            throw new RobotestException("INCORRECT GENERAL TIMEOUT FOUND", e);
+            throw new RobotestException("INCORRECT GENERAL TIMEOUT FOUND",
+                                        e);
         }
         return results;
     }
@@ -289,10 +291,13 @@ public class PageObject extends SeleniumElementsWrapper {
      */
     public File takeScreenShoot(final String fileName) throws RobotestException {
         try {
-            return this.takeEvidence(getSuiteContext().getConfig().getConfigBasic().getReportFilePath(), fileName,
-                                     ".png", this.takeScreenShoot());
+            return this.takeEvidence(getSuiteContext().getConfig().getConfigBasic().getReportFilePath(),
+                                     fileName,
+                                     ".png",
+                                     this.takeScreenShoot());
         } catch (IOException e) {
-            throw new RobotestException("TAKE SCREENSHOT PAGE SOURCE ERROR", e);
+            throw new RobotestException("TAKE SCREENSHOT PAGE SOURCE ERROR",
+                                        e);
         }
     }
 
@@ -310,10 +315,13 @@ public class PageObject extends SeleniumElementsWrapper {
     public File takePageSource(final String fileName) throws RobotestException {
         File resultado = null;
         try {
-            resultado = this.takeEvidence(getSuiteContext().getConfig().getConfigBasic().getReportFilePath(), fileName,
-                                          ".html", this.takePageSource().getBytes("UTF-8"));
+            resultado = this.takeEvidence(getSuiteContext().getConfig().getConfigBasic().getReportFilePath(),
+                                          fileName,
+                                          ".html",
+                                          this.takePageSource().getBytes("UTF-8"));
         } catch (IOException e) {
-            throw new RobotestException("TAKE PAGE SOURCE ERROR", e);
+            throw new RobotestException("TAKE PAGE SOURCE ERROR",
+                                        e);
         }
         return resultado;
     }
@@ -333,14 +341,17 @@ public class PageObject extends SeleniumElementsWrapper {
      * @throws RobotestException
      *             Problems with file capturing.
      */
-    public File takeEvidence(final String fileName, final String extension,
-                             final byte[] content) throws RobotestException {
+    public File
+           takeEvidence(final String fileName, final String extension, final byte[] content) throws RobotestException {
         File resultado = null;
         try {
-            resultado = this.takeEvidence(getSuiteContext().getConfig().getConfigBasic().getReportFilePath(), fileName,
-                                          extension, content);
+            resultado = this.takeEvidence(getSuiteContext().getConfig().getConfigBasic().getReportFilePath(),
+                                          fileName,
+                                          extension,
+                                          content);
         } catch (IOException e) {
-            throw new RobotestException("TAKE PAGE SOURCE ERROR", e);
+            throw new RobotestException("TAKE PAGE SOURCE ERROR",
+                                        e);
         }
         return resultado;
     }
@@ -361,7 +372,9 @@ public class PageObject extends SeleniumElementsWrapper {
      * @throws IOException
      *             Problems with file capturing.
      */
-    private File takeEvidence(final String reportPath, final String fileName, final String extension,
+    private File takeEvidence(final String reportPath,
+                              final String fileName,
+                              final String extension,
                               final byte[] content) throws IOException {
         StringBuilder absoluteFileName = new StringBuilder();
         absoluteFileName.append(reportPath);

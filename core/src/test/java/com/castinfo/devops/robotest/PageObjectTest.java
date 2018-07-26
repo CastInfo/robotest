@@ -41,7 +41,8 @@ public class PageObjectTest {
         System.setProperty("ROBOTEST_BROWSER", SeleniumBrowser.CHROME.name());
         System.setProperty("ROBOTEST_GENERAL_TIMEOUT", "10000");
         RobotestExecutionContext.buildSuite(AnnotatedCaseExample.class, "caseExample");
-        SuiteContext ctx = RobotestExecutionContext.getSuite(RobotestExecutionContext.getSuiteAnnotation(AnnotatedCaseExample.class));
+        SuiteContext ctx =
+                RobotestExecutionContext.getSuite(RobotestExecutionContext.getSuiteAnnotation(AnnotatedCaseExample.class));
         AnnotatedPageObjectExample po = new AnnotatedPageObjectExample();
         po.setSuiteAnnot(RobotestExecutionContext.getSuiteAnnotation(AnnotatedCaseExample.class));
         po.setCaseAnnot(RobotestExecutionContext.getCaseAnnotationByMethod(AnnotatedCaseExample.class, "caseExample"));

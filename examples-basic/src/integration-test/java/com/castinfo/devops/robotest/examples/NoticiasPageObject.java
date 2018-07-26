@@ -25,7 +25,8 @@ public class NoticiasPageObject extends PageObject {
      */
     @RobotestStep(tag = "NOTICIAS_STEP_001", description = "Check Noticias Post", captureScreenShootAtEndStep = true)
     public void checkNoticiasPost() throws RobotestException {
-        List<WebElement> listElems = this.findElementsBy(By.xpath("//*[@id=\"post-326\"]/div/div[2]/div/div[1]/div/div/div/div[1]//a"));
+        List<WebElement> listElems =
+                this.findElementsBy(By.xpath("//*[@id=\"post-326\"]/div/div[2]/div/div[1]/div/div/div/div[1]//a"));
         Assert.assertNotNull("There ara no active Posts", listElems);
         String handler = this.getDriver().getWindowHandle();
 

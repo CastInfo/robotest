@@ -41,7 +41,8 @@ public class ClientesPageObject extends PageObject {
     @RobotestStep(tag = "CLIENTES_STEP_002", description = "Check Clientes Links", captureScreenShootAtEndStep = true)
     public void checkClientesLinks() throws RobotestException {
         String handler = this.getDriver().getWindowHandle();
-        List<WebElement> listElem = this.findElementsBy(By.xpath("//*[@id=\"post-503\"]/div/div[2]/div/div/div/div[2]/div/div"));
+        List<WebElement> listElem =
+                this.findElementsBy(By.xpath("//*[@id=\"post-503\"]/div/div[2]/div/div/div/div[2]/div/div"));
         Assert.assertNotNull("No elements found", listElem);
         JavascriptExecutor js = (JavascriptExecutor) this.getDriver();
         for (WebElement elem : listElem) {

@@ -73,14 +73,14 @@ public class DockerFarmBuilder {
     public DockerFarmBuilder(final DockerConfig dockerBaseCfg) {
         setDockerBaseCfg(dockerBaseCfg);
         if (DockerFarmBuilder.getPullableDockerImagesStatus().isEmpty()) {
-            DockerFarmBuilder.getPullableDockerImagesStatus().put(this.dockerBaseCfg.getChromeImageTag(),
-                                                                  Boolean.FALSE);
-            DockerFarmBuilder.getPullableDockerImagesStatus().put(this.dockerBaseCfg.getChromeDebugImageTag(),
-                                                                  Boolean.FALSE);
-            DockerFarmBuilder.getPullableDockerImagesStatus().put(this.dockerBaseCfg.getFirefoxImageTag(),
-                                                                  Boolean.FALSE);
-            DockerFarmBuilder.getPullableDockerImagesStatus().put(this.dockerBaseCfg.getFirefoxDebugImageTag(),
-                                                                  Boolean.FALSE);
+            DockerFarmBuilder.getPullableDockerImagesStatus()
+                             .put(this.dockerBaseCfg.getChromeImageTag(), Boolean.FALSE);
+            DockerFarmBuilder.getPullableDockerImagesStatus()
+                             .put(this.dockerBaseCfg.getChromeDebugImageTag(), Boolean.FALSE);
+            DockerFarmBuilder.getPullableDockerImagesStatus()
+                             .put(this.dockerBaseCfg.getFirefoxImageTag(), Boolean.FALSE);
+            DockerFarmBuilder.getPullableDockerImagesStatus()
+                             .put(this.dockerBaseCfg.getFirefoxDebugImageTag(), Boolean.FALSE);
         }
     }
 
@@ -133,8 +133,8 @@ public class DockerFarmBuilder {
         if (StringUtils.isEmpty(dockerBaseCfg.getHost())) {
             throw new RobotestException("DOCKER CONN IS REQUIRED, REVISE BASE CONFIG");
         }
-        Builder builder = DefaultDockerClientConfig.createDefaultConfigBuilder()
-                                                   .withDockerHost(dockerBaseCfg.getHost());
+        Builder builder =
+                DefaultDockerClientConfig.createDefaultConfigBuilder().withDockerHost(dockerBaseCfg.getHost());
         if (StringUtils.isNotEmpty(dockerBaseCfg.getCertsPath())) {
             builder.withDockerTlsVerify(true).withDockerCertPath(dockerBaseCfg.getCertsPath());
         }
@@ -188,7 +188,8 @@ public class DockerFarmBuilder {
             if (e instanceof RobotestException) {
                 throw e;
             }
-            throw new RobotestException("UNEXEPTED ERROR CREATING CONTAINER", e);
+            throw new RobotestException("UNEXEPTED ERROR CREATING CONTAINER",
+                                        e);
         }
         return dockerBrowser;
     }
@@ -279,11 +280,17 @@ public class DockerFarmBuilder {
             containerCmd.withExposedPorts(ExposedPort.tcp(Integer.parseInt(dockerBrowser.getExposePort())));
             containerCmd.withPublishAllPorts(true);
             Volume sharedMemory = new Volume("/dev/shm");
-            containerCmd.withVolumes(sharedMemory).withBinds(new Bind("/dev/shm", sharedMemory));
+            containerCmd.withVolumes(sharedMemory)
+                        .withBinds(new Bind("/dev/shm",
+                                            sharedMemory));
             containerResp = containerCmd.exec();
             getDockerClient().startContainerCmd(containerResp.getId()).exec();
-            getDockerClient().logContainerCmd(containerResp.getId()).withStdOut(true).withStdErr(true).withTailAll()
-                             .withFollowStream(true).exec(createCallback);
+            getDockerClient().logContainerCmd(containerResp.getId())
+                             .withStdOut(true)
+                             .withStdErr(true)
+                             .withTailAll()
+                             .withFollowStream(true)
+                             .exec(createCallback);
             do {
                 Thread.sleep(DockerFarmBuilder.ONE_SECOND_IN_MILLIS);
             } while (!createCallback.isServerSeleniumLoaded());
@@ -292,7 +299,8 @@ public class DockerFarmBuilder {
             if (null != containerResp) {
                 stopNode(containerResp.getId());
             }
-            throw new RobotestException("ERROR DOCKER ROBOTEST", e);
+            throw new RobotestException("ERROR DOCKER ROBOTEST",
+                                        e);
         }
         return containerResp.getId();
     }
@@ -313,7 +321,8 @@ public class DockerFarmBuilder {
                     getDockerClient().pullImageCmd(imageName).exec(pullCallback).awaitCompletion();
                     DockerFarmBuilder.getPullableDockerImagesStatus().put(imageName, Boolean.TRUE);
                 } catch (InterruptedException | IOException e) {
-                    throw new RobotestException("ERROR DOCKER PULL " + imageName, e);
+                    throw new RobotestException("ERROR DOCKER PULL " + imageName,
+                                                e);
                 }
             } else {
                 DockerFarmBuilder.LOG.info("DOCKER PULL END: {}", imageName);
@@ -332,13 +341,15 @@ public class DockerFarmBuilder {
      */
     public void resolveBrowserHub(final DockerConfig dockerBrowser) throws RobotestException {
         DockerFarmBuilder.LOG.info("RESOLVING HUB FOR CONTAINER: {}", dockerBrowser.getIdContainer());
-        InspectContainerResponse contenedor = getDockerClient().inspectContainerCmd(dockerBrowser.getIdContainer())
-                                                               .exec();
+        InspectContainerResponse contenedor =
+                getDockerClient().inspectContainerCmd(dockerBrowser.getIdContainer()).exec();
         dockerBrowser.setExposePort("4444");
         if (!contenedor.getNetworkSettings().getPorts().getBindings().isEmpty()
                 && "true".equals(dockerBaseCfg.getInspectRealPort())) {
             ExposedPort expPort = ExposedPort.tcp(Integer.parseInt(dockerBrowser.getExposePort()));
-            dockerBrowser.setExposePort(contenedor.getNetworkSettings().getPorts().getBindings()
+            dockerBrowser.setExposePort(contenedor.getNetworkSettings()
+                                                  .getPorts()
+                                                  .getBindings()
                                                   .get(expPort)[0].getHostPortSpec());
         }
         if (StringUtils.isNotEmpty(dockerBaseCfg.getHub())) {
@@ -350,7 +361,9 @@ public class DockerFarmBuilder {
                 String ip = null;
                 for (String network : contenedor.getNetworkSettings().getNetworks().keySet()) {
                     ip = contenedor.getNetworkSettings().getNetworks().get(network).getIpAddress();
-                    if (StringUtils.isNotEmpty(contenedor.getNetworkSettings().getNetworks().get(network)
+                    if (StringUtils.isNotEmpty(contenedor.getNetworkSettings()
+                                                         .getNetworks()
+                                                         .get(network)
                                                          .getIpAddress())) {
                         ip = contenedor.getNetworkSettings().getNetworks().get(network).getIpAddress();
                     }
@@ -362,7 +375,8 @@ public class DockerFarmBuilder {
                 }
             }
         }
-        dockerBrowser.setHub(String.format("http://%1$s:%2$s/wd/hub", dockerBrowser.getHub(),
+        dockerBrowser.setHub(String.format("http://%1$s:%2$s/wd/hub",
+                                           dockerBrowser.getHub(),
                                            dockerBrowser.getExposePort()));
         if (uriValidator(dockerBrowser.getHub(), "http")) {
             DockerFarmBuilder.LOG.info("DOCKER RESOLVED HUB : {}", dockerBrowser.getHub());
@@ -419,7 +433,8 @@ public class DockerFarmBuilder {
             try {
                 docker.close();
             } catch (IOException e) {
-                throw new RobotestException("DOCKER ERROR CLOSING CLIENT", e);
+                throw new RobotestException("DOCKER ERROR CLOSING CLIENT",
+                                            e);
             }
             DockerFarmBuilder.LOG.info("STOP DOCKER CLIENT {}", dockerBaseCfg.getHost());
         }

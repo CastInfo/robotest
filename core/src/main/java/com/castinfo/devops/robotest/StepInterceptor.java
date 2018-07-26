@@ -40,7 +40,9 @@ public class StepInterceptor implements MethodInterceptor {
      * java.lang.Object[], net.sf.cglib.proxy.MethodProxy)
      */
     @Override
-    public Object intercept(final Object obj, final Method method, final Object[] args,
+    public Object intercept(final Object obj,
+                            final Method method,
+                            final Object[] args,
                             final MethodProxy proxy) throws Throwable {
         Object resultado = null;
         Throwable errorTest = null;
@@ -97,7 +99,8 @@ public class StepInterceptor implements MethodInterceptor {
                     sCtx.addAdditionalStepEntry(pageFragment, ValidationEntry.buildInfo().withCapture(screnShoot));
                 } catch (RobotestException e) {
                     ValidationEntry err = ValidationEntry.buildCritical();
-                    err.withException(new RobotestException("IS NOT POSIBLE TO CAPTURE IMAGE SCRENSHOOT", e));
+                    err.withException(new RobotestException("IS NOT POSIBLE TO CAPTURE IMAGE SCRENSHOOT",
+                                                            e));
                     sCtx.addAdditionalStepEntry(pageFragment, err);
                 }
             }
@@ -119,7 +122,8 @@ public class StepInterceptor implements MethodInterceptor {
      * @throws RobotestException
      *             errors in reporting actions.
      */
-    private void atEndAnnotationActions(final PageObject pageFragment, final SuiteContext sCtx,
+    private void atEndAnnotationActions(final PageObject pageFragment,
+                                        final SuiteContext sCtx,
                                         final RobotestStep stepAnnot,
                                         final StepStatus resultadoStatusStep) throws RobotestException {
         if (stepAnnot.capturePageSourceAtEndStep()) {
@@ -129,7 +133,8 @@ public class StepInterceptor implements MethodInterceptor {
                                             new ValidationEntry(resultadoStatusStep).withHtmlSource(pageSrc));
             } catch (RobotestException e) {
                 ValidationEntry err = ValidationEntry.buildCritical();
-                err.withException(new RobotestException("IS NOT POSIBLE TO CAPTURE PAGE SOURCE", e));
+                err.withException(new RobotestException("IS NOT POSIBLE TO CAPTURE PAGE SOURCE",
+                                                        e));
                 sCtx.addAdditionalStepEntry(pageFragment, err);
             }
         }
@@ -140,7 +145,8 @@ public class StepInterceptor implements MethodInterceptor {
                                             new ValidationEntry(resultadoStatusStep).withCapture(screnShoot));
             } catch (RobotestException e) {
                 ValidationEntry err = ValidationEntry.buildCritical();
-                err.withException(new RobotestException("IS NOT POSIBLE TO CAPTURE IMAGE SCRENSHOOT", e));
+                err.withException(new RobotestException("IS NOT POSIBLE TO CAPTURE IMAGE SCRENSHOOT",
+                                                        e));
                 sCtx.addAdditionalStepEntry(pageFragment, err);
             }
         }
@@ -152,7 +158,8 @@ public class StepInterceptor implements MethodInterceptor {
                 }
             } catch (RobotestException e) {
                 ValidationEntry err = ValidationEntry.buildCritical();
-                err.withException(new RobotestException("IS NOT POSIBLE TO RETRIVE BROWSER CONSOLE LOGS", e));
+                err.withException(new RobotestException("IS NOT POSIBLE TO RETRIVE BROWSER CONSOLE LOGS",
+                                                        e));
                 sCtx.addAdditionalStepEntry(pageFragment, err);
             }
         }

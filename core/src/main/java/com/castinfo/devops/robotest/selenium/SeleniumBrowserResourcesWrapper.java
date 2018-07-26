@@ -117,11 +117,13 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
             return pageLoaded;
         };
         try {
-            new WebDriverWait(getDriver(), waitSeconds).until(expectation);
+            new WebDriverWait(getDriver(),
+                              waitSeconds).until(expectation);
         } catch (TimeoutException e) {
             Actions action = new Actions(getDriver());
             action.sendKeys("Keys.ESCAPE").build().perform();
-            throw new RobotestException("LOADING PAGE TIMEOUT", e);
+            throw new RobotestException("LOADING PAGE TIMEOUT",
+                                        e);
         }
     }
 
@@ -156,7 +158,8 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
      *             Selenium Driver unavailable or error
      *
      */
-    public void loadUrlInTabId(final String urlToLoad, final String tabId,
+    public void loadUrlInTabId(final String urlToLoad,
+                               final String tabId,
                                final int timeoutInSeconds) throws RobotestException {
         JavascriptExecutor js = (JavascriptExecutor) getDriver();
         js.executeScript("window.open('" + urlToLoad + "', '" + tabId + "');");
@@ -200,11 +203,12 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
      *             Selenium Driver unavailable or error
      */
     public boolean currentURLContains(final String toSearchInUrl, final long seconds) throws RobotestException {
-        ExpectedCondition<Boolean> currentURLContains = webdriverApplyParam -> Boolean.valueOf(webdriverApplyParam.getCurrentUrl()
-                                                                                                                  .contains(toSearchInUrl));
+        ExpectedCondition<Boolean> currentURLContains =
+                webdriverApplyParam -> Boolean.valueOf(webdriverApplyParam.getCurrentUrl().contains(toSearchInUrl));
         boolean resultado = true;
         try {
-            new WebDriverWait(getDriver(), seconds).until(currentURLContains);
+            new WebDriverWait(getDriver(),
+                              seconds).until(currentURLContains);
         } catch (TimeoutException e) {
             resultado = false;
         }
@@ -225,7 +229,8 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
     public boolean pageTitleContainsUntil(final String title, final long seconds) throws RobotestException {
         boolean resultado = true;
         try {
-            new WebDriverWait(getDriver(), seconds).until(ExpectedConditions.titleContains(title));
+            new WebDriverWait(getDriver(),
+                              seconds).until(ExpectedConditions.titleContains(title));
         } catch (TimeoutException e) {
             resultado = false;
         }
@@ -329,7 +334,8 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
      *             Selenium Driver unavailable or error
      */
     public void addCookie(final String cookieName, final String cookieValue) throws RobotestException {
-        Cookie ck = new Cookie(cookieName, cookieValue);
+        Cookie ck = new Cookie(cookieName,
+                               cookieValue);
         getDriver().manage().addCookie(ck);
     }
 
@@ -377,7 +383,8 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
             }
             return ((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.BYTES);
         } catch (WebDriverException e) {
-            throw new RobotestException("CAPTURE SCREEN SHOOT ERROR", e);
+            throw new RobotestException("CAPTURE SCREEN SHOOT ERROR",
+                                        e);
         }
 
     }
@@ -393,7 +400,8 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
         try {
             return getDriver().getPageSource();
         } catch (WebDriverException e) {
-            throw new RobotestException("CAPTURE PAGE SOURCE ERROR", e);
+            throw new RobotestException("CAPTURE PAGE SOURCE ERROR",
+                                        e);
         }
     }
 
@@ -431,7 +439,8 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
                 }
             }
         } catch (WebDriverException e) {
-            throw new RobotestException("ERROR RETRIVING LOGS", e);
+            throw new RobotestException("ERROR RETRIVING LOGS",
+                                        e);
         }
         return resultado;
     }

@@ -21,11 +21,13 @@ public class SolucionesPageObject extends PageObject {
                   description = "Check Soluciones Link List",
                   captureScreenShootAtEndStep = true)
     public void checkLinkList() throws RobotestException {
-        List<WebElement> elems = this.findElementsBy(By.xpath("//*[@id=\"post-285\"]/div/div[4]/div/div/div/div[2]/div/div"));
+        List<WebElement> elems =
+                this.findElementsBy(By.xpath("//*[@id=\"post-285\"]/div/div[4]/div/div/div/div[2]/div/div"));
         if (!elems.isEmpty()) {
             for (int i = 1; i < elems.size(); i++) {
-                WebElement url = this.findElementBy(By.xpath("//*[@id=\"post-285\"]/div/div[4]/div/div/div/div[2]/div/div["
-                        + i + "]/h2/a"));
+                WebElement url =
+                        this.findElementBy(By.xpath("//*[@id=\"post-285\"]/div/div[4]/div/div/div/div[2]/div/div[" + i
+                                + "]/h2/a"));
                 String urlString = url.getAttribute("href");
                 String title = url.getText();
                 this.getDriver().navigate().to(urlString);

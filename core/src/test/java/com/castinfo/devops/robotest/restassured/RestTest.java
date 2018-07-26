@@ -41,9 +41,14 @@ public class RestTest {
     @Test
     public void doHtmlRestTest() {
         RestAssuredWrapper restClient = new RestAssuredWrapper();
-        String html = restClient.withContentType(ContentType.HTML).doCall("https://www.cast-info.es", Method.GET)
-                                .getResponse().then().extract().asString();
-        XmlPath xmlPath = new XmlPath(CompatibilityMode.HTML, html);
+        String html = restClient.withContentType(ContentType.HTML)
+                                .doCall("https://www.cast-info.es", Method.GET)
+                                .getResponse()
+                                .then()
+                                .extract()
+                                .asString();
+        XmlPath xmlPath = new XmlPath(CompatibilityMode.HTML,
+                                      html);
         Assert.assertTrue(xmlPath.getString("html.head.title")
                                  .equals("Cast Info | Cast Info s.a > Soluciones y Servicios tecnológicos de Vanguardia"));
 
@@ -64,8 +69,8 @@ public class RestTest {
         String echoService = getUrlApi("/echo");
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put(keyEcho, "TEST");
-        ValidatableResponse response = restClient.withQueryParams(queryParams).doCall(echoService, Method.GET)
-                                                 .getResponse().then();
+        ValidatableResponse response =
+                restClient.withQueryParams(queryParams).doCall(echoService, Method.GET).getResponse().then();
         Assert.assertTrue(response.extract().asByteArray().length > 0);
         Assert.assertTrue(response.extract().asString().equals(queryParams.get(keyEcho)));
     }
@@ -75,7 +80,10 @@ public class RestTest {
         RestAssuredWrapper restClient = new RestAssuredWrapper();
         String jacksonService = getUrlApi("/jackson");
         Response response = restClient.doCall(jacksonService, Method.GET).getResponse();
-        response.then().assertThat().body("echo", is(TestController.HELLO_WORLD)).and()
+        response.then()
+                .assertThat()
+                .body("echo", is(TestController.HELLO_WORLD))
+                .and()
                 .body(matchesJsonSchemaInClasspath(echoJsonSchema));
         Assert.assertTrue(response.as(JacksonPojo.class).getEcho().equals(TestController.HELLO_WORLD));
     }
@@ -87,7 +95,10 @@ public class RestTest {
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put(keyEcho, "TEST");
         Response response = restClient.withQueryParams(queryParams).doCall(jacksonService, Method.GET).getResponse();
-        response.then().assertThat().body("echo", is(queryParams.get(keyEcho))).and()
+        response.then()
+                .assertThat()
+                .body("echo", is(queryParams.get(keyEcho)))
+                .and()
                 .body(matchesJsonSchemaInClasspath(echoJsonSchema));
         Assert.assertTrue(response.as(JacksonPojo.class).getEcho().equals(queryParams.get(keyEcho)));
     }
@@ -97,7 +108,10 @@ public class RestTest {
         RestAssuredWrapper restClient = new RestAssuredWrapper();
         String jaxbService = getUrlApi("/xmljaxb");
         Response response = restClient.doCall(jaxbService, Method.GET).getResponse();
-        response.then().assertThat().body("response.echo", is(TestController.HELLO_WORLD)).and()
+        response.then()
+                .assertThat()
+                .body("response.echo", is(TestController.HELLO_WORLD))
+                .and()
                 .body(hasXPath("/response/echo", is(TestController.HELLO_WORLD)))
                 .body(matchesXsdInClasspath(xmlSchema));
         Assert.assertTrue(response.as(JaxbPojoType.class).getEcho().equals(TestController.HELLO_WORLD));

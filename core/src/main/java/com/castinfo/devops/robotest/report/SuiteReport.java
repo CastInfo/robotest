@@ -67,14 +67,15 @@ public class SuiteReport {
             jGenerator = jfactory.createGenerator(reportFile, JsonEncoding.UTF8);
             synchronized (SuiteReport.WRITER_BLOCKER) {
                 if (null == SuiteReport.suitesListReporter) {
-                    File suiteReporterFile = new File(reportFile.getParentFile().getAbsolutePath()
-                            + "/robotest-suites-list.json");
+                    File suiteReporterFile =
+                            new File(reportFile.getParentFile().getAbsolutePath() + "/robotest-suites-list.json");
                     SuiteReport.suitesListReporter = new SuitesListReport(suiteReporterFile);
                 }
                 SuiteReport.suitesListReporter.appendToSuiteListReport(reportFile.getName());
             }
         } catch (IOException e) {
-            throw new RobotestException("ROBOTEST SUITE REPORTER ERROR", e);
+            throw new RobotestException("ROBOTEST SUITE REPORTER ERROR",
+                                        e);
         }
     }
 
@@ -225,7 +226,9 @@ public class SuiteReport {
      * @throws RobotestException
      *             Errors, probably IO.
      */
-    public void initSuite(final String suiteId, final String suiteDescription, final long initMillis,
+    public void initSuite(final String suiteId,
+                          final String suiteDescription,
+                          final long initMillis,
                           final List<ConfigEntry> config) throws RobotestException {
         try {
             caseOrder = new AtomicInteger(0);
@@ -241,7 +244,8 @@ public class SuiteReport {
             jGenerator.writeFieldName("cases");
             jGenerator.writeStartArray();
         } catch (IOException e) {
-            throw new RobotestException("ROBOTEST REPORTER ERROR", e);
+            throw new RobotestException("ROBOTEST REPORTER ERROR",
+                                        e);
         }
     }
 
@@ -277,7 +281,8 @@ public class SuiteReport {
             jGenerator.writeEndObject();
             jGenerator.close();
         } catch (IOException e) {
-            throw new RobotestException("ROBOTEST ERROR REPORT", e);
+            throw new RobotestException("ROBOTEST ERROR REPORT",
+                                        e);
         }
     }
 
@@ -293,10 +298,16 @@ public class SuiteReport {
      * @param caseConfig
      *            case configs.
      */
-    public void initCase(final String caseId, final String caseDescription, final long initMillis,
+    public void initCase(final String caseId,
+                         final String caseDescription,
+                         final long initMillis,
                          final List<ConfigEntry> caseConfig) {
         stepOrder = new AtomicInteger(0);
-        caseReports.add(new CaseReport(caseOrder.getAndIncrement(), caseId, caseDescription, initMillis, caseConfig));
+        caseReports.add(new CaseReport(caseOrder.getAndIncrement(),
+                                       caseId,
+                                       caseDescription,
+                                       initMillis,
+                                       caseConfig));
     }
 
     /**
@@ -335,11 +346,17 @@ public class SuiteReport {
      * @param initMillis
      *            initial exec. millis
      */
-    public void initStep(final String caseId, final String stepId, final String stepDescription,
-                         final List<ConfigEntry> stepConfig, final long initMillis) {
+    public void initStep(final String caseId,
+                         final String stepId,
+                         final String stepDescription,
+                         final List<ConfigEntry> stepConfig,
+                         final long initMillis) {
         for (CaseReport caseReport : caseReports) {
             if (caseReport.getId().equals(caseId)) {
-                caseReport.addStep(new StepReport(stepOrder.getAndIncrement(), stepId, stepDescription, stepConfig,
+                caseReport.addStep(new StepReport(stepOrder.getAndIncrement(),
+                                                  stepId,
+                                                  stepDescription,
+                                                  stepConfig,
                                                   initMillis));
             }
         }
@@ -356,8 +373,8 @@ public class SuiteReport {
      *            validation entry.
      * @return The validation entry to fluent api purposes.
      */
-    public ValidationEntry addStepValidationEntry(final String caseId, final String stepId,
-                                                  final ValidationEntry validationEntry) {
+    public ValidationEntry
+           addStepValidationEntry(final String caseId, final String stepId, final ValidationEntry validationEntry) {
         for (CaseReport caseReport : caseReports) {
             if (caseReport.getId().equals(caseId)) {
                 for (StepReport stepReport : caseReport.getStepReports()) {
@@ -411,8 +428,8 @@ public class SuiteReport {
      * @param endMillis
      *            end time millis.
      */
-    public void endStep(final String caseId, final String stepId, final StepStatus resultadoStep,
-                        final long endMillis) {
+    public void
+           endStep(final String caseId, final String stepId, final StepStatus resultadoStep, final long endMillis) {
         for (CaseReport caseReport : caseReports) {
             if (caseReport.getId().equals(caseId)) {
                 for (StepReport stepReport : caseReport.getStepReports()) {

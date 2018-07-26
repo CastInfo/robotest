@@ -49,7 +49,8 @@ public class SuitesListReport {
             suitesListFile = reportFile;
             mapper.writeValue(suitesListFile, suiteListMapper);
         } catch (IOException e) {
-            throw new RobotestException("ERROR CREATING SUITE LIST REPORT", e);
+            throw new RobotestException("ERROR CREATING SUITE LIST REPORT",
+                                        e);
         }
     }
 
@@ -144,7 +145,8 @@ public class SuitesListReport {
             ObjectWriter writer = mapper.writer(printer);
             writer.writeValue(suitesListFile, suitesList);
         } catch (IOException e) {
-            throw new RobotestException("ERROR APPEND SUITE LIST REPORT", e);
+            throw new RobotestException("ERROR APPEND SUITE LIST REPORT",
+                                        e);
         }
     }
 
@@ -159,7 +161,8 @@ public class SuitesListReport {
         try {
             return mapper.readValue(suitesListFile, SuiteListMapper.class);
         } catch (IOException e) {
-            throw new RobotestException("ERROR GET SUITE LIST REPORT CONTENT", e);
+            throw new RobotestException("ERROR GET SUITE LIST REPORT CONTENT",
+                                        e);
         }
     }
 

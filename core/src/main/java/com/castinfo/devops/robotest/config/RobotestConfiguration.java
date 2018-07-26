@@ -296,7 +296,8 @@ public class RobotestConfiguration implements IRobotestConfiguration {
                     try (InputStream resource = loadResourceStream(resourceUri)) {
                         configEntry.setValue(this.mapObjectResources(resource, cfg.type()));
                     } catch (IOException | NullPointerException e) {
-                        throw new RobotestException("ERROR READING USER CONFIG: " + resourceUri, e);
+                        throw new RobotestException("ERROR READING USER CONFIG: " + resourceUri,
+                                                    e);
                     }
                 }
                 testConfigEntries.computeIfAbsent(scope, k -> new HashMap<>()).put(cfg.key(), configEntry);
@@ -323,13 +324,15 @@ public class RobotestConfiguration implements IRobotestConfiguration {
                 props.load(resource);
                 mapped = props;
             } catch (IOException e) {
-                throw new RobotestException("CONFIG RESOURCE PROPERTIES READ ERROR", e);
+                throw new RobotestException("CONFIG RESOURCE PROPERTIES READ ERROR",
+                                            e);
             }
         } else if (isJackson(clazzType)) {
             try {
                 mapped = new ObjectMapper().readValue(resource, clazzType);
             } catch (IOException e) {
-                throw new RobotestException("CONFIG RESOURCE JSON READ ERROR", e);
+                throw new RobotestException("CONFIG RESOURCE JSON READ ERROR",
+                                            e);
             }
         } else if (isJaxb(clazzType)) {
             try {
@@ -337,7 +340,8 @@ public class RobotestConfiguration implements IRobotestConfiguration {
                 Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
                 mapped = unmarshaller.unmarshal(resource);
             } catch (JAXBException e) {
-                throw new RobotestException("CONFIG RESOURCE JAXB READ ERROR", e);
+                throw new RobotestException("CONFIG RESOURCE JAXB READ ERROR",
+                                            e);
             }
         } else {
             throw new RobotestException("CONFIG RESOURCE TYPE NOT SUPPORTED: " + clazzType.getName());
@@ -357,13 +361,14 @@ public class RobotestConfiguration implements IRobotestConfiguration {
     private InputStream loadResourceStream(final String resourceUri) throws RobotestException {
         InputStream resource = null;
         if (resourceUri.startsWith("classpath://")) {
-            resource = this.getClass().getClassLoader()
-                           .getResourceAsStream(resourceUri.replaceFirst("classpath://", ""));
+            resource =
+                    this.getClass().getClassLoader().getResourceAsStream(resourceUri.replaceFirst("classpath://", ""));
         } else if (resourceUri.startsWith("file://")) {
             try {
                 resource = new FileInputStream(resourceUri);
             } catch (FileNotFoundException e) {
-                throw new RobotestException("CONFIG RESOURCE FILE NOT EXIST", e);
+                throw new RobotestException("CONFIG RESOURCE FILE NOT EXIST",
+                                            e);
             }
         } else if (resourceUri.startsWith("http://") || resourceUri.startsWith("https://")) {
             resource = new ByteArrayInputStream(when().get(resourceUri).getBody().asByteArray());
@@ -468,7 +473,8 @@ public class RobotestConfiguration implements IRobotestConfiguration {
         List<ConfigEntry> entries = new ArrayList<>();
         if (testConfigEntries.containsKey(scope)) {
             for (String key : testConfigEntries.get(scope).keySet()) {
-                entries.add(new ConfigEntry(key, testConfigEntries.get(scope).get(key).getValue()));
+                entries.add(new ConfigEntry(key,
+                                            testConfigEntries.get(scope).get(key).getValue()));
             }
         }
         return entries;

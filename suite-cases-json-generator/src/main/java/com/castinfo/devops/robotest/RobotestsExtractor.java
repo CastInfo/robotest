@@ -19,14 +19,12 @@ import com.castinfo.devops.robotest.annot.RobotestSuite;
 
 /**
  *
- * This plugin utility extract JSON of robotest annotation to select Suite and Cases in Jenkins 1 and 2.
- * You can include this plugin in your test project pom build plugin definition, or exectute manually doing:
+ * This plugin utility extract JSON of robotest annotation to select Suite and Cases in Jenkins 1 and 2. You can include
+ * this plugin in your test project pom build plugin definition, or exectute manually doing:
  * com.castinfo.devops:com.castinfo.devops.robotest.extractor:0.0.1-SNAPSHOT:robotestsextractor
  * -Dtest.classes.subdir=target/test-classes/ -Dresources.dir=src/robotest/
- * -Djenkins1.file=robotest_test_choice_jenkins1.json
- * -Drobotest_test_choice_jenkins2.json
- * This fileNames and dir especified in example, are provided by default.
- * This plugin is associated to TEST_COMPILE fase.
+ * -Djenkins1.file=robotest_test_choice_jenkins1.json -Drobotest_test_choice_jenkins2.json This fileNames and dir
+ * especified in example, are provided by default. This plugin is associated to TEST_COMPILE fase.
  */
 @Mojo(name = "robotestsextractor", defaultPhase = LifecyclePhase.TEST_COMPILE)
 public class RobotestsExtractor extends AbstractMojo {
@@ -71,10 +69,10 @@ public class RobotestsExtractor extends AbstractMojo {
         if (!resourcesJson.exists()) {
             resourcesJson.mkdirs();
         }
-        try (FileWriter testSuitesJenkins2 = new FileWriter(resourcesJson.getAbsolutePath() + File.separator
-                + this.jk2File);
-             FileWriter testSuitesJenkins1 = new FileWriter(resourcesJson.getAbsolutePath() + File.separator
-                     + this.jk1File)) {
+        try (FileWriter testSuitesJenkins2 =
+                new FileWriter(resourcesJson.getAbsolutePath() + File.separator + this.jk2File);
+             FileWriter testSuitesJenkins1 =
+                     new FileWriter(resourcesJson.getAbsolutePath() + File.separator + this.jk1File)) {
             this.getLog().info("RETRIVE ROBOTEST SUITES AND CASES: " + testClassesDir.getAbsolutePath());
             testSuitesJenkins2.write("{ \"tests\":[");
             testSuitesJenkins2.write("{\"robotestSuite\":\"ALL\",\"robotestCase\":\"ALL\",\"robotestClass\":\"*\",\"robotestMethod\":\"*\"}");
@@ -95,8 +93,11 @@ public class RobotestsExtractor extends AbstractMojo {
 
     }
 
-    private void findClasses(final File rootFile, final File file, final FileWriter testSuitesJk1,
-                             final FileWriter testSuitesJk2, final ClassLoader clazzLoader) throws IOException {
+    private void findClasses(final File rootFile,
+                             final File file,
+                             final FileWriter testSuitesJk1,
+                             final FileWriter testSuitesJk2,
+                             final ClassLoader clazzLoader) throws IOException {
         if (file.exists()) {
             if (file.isDirectory()) {
                 for (File child : file.listFiles()) {
@@ -106,8 +107,9 @@ public class RobotestsExtractor extends AbstractMojo {
                 if (file.getName().toLowerCase().endsWith(".class")) {
                     try {
                         Class klass = clazzLoader.loadClass(this.clazzFilePathToJavaPackage(rootFile, file));
-                        this.getLog().info("SEARCH ROBOTEST ANNOTATIONS IN: " + klass.getPackage().getName()
-                                + File.separator + klass.getName());
+                        this.getLog()
+                            .info("SEARCH ROBOTEST ANNOTATIONS IN: " + klass.getPackage().getName() + File.separator
+                                    + klass.getName());
                         if (klass.isAnnotationPresent(RobotestSuite.class)) {
                             RobotestSuite suiteAnnot = (RobotestSuite) klass.getAnnotation(RobotestSuite.class);
                             for (int i = 0; i < klass.getMethods().length; i++) {
@@ -140,7 +142,9 @@ public class RobotestsExtractor extends AbstractMojo {
     }
 
     private String clazzFilePathToJavaPackage(final File rootFile, final File file) {
-        return file.getAbsolutePath().replace(".class", "").replace(rootFile.getAbsolutePath() + File.separator, "")
+        return file.getAbsolutePath()
+                   .replace(".class", "")
+                   .replace(rootFile.getAbsolutePath() + File.separator, "")
                    .replaceAll("\\" + File.separator, ".");
     }
 }

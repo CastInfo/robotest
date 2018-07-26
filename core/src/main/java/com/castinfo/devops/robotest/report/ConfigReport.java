@@ -104,7 +104,8 @@ public class ConfigReport {
             }
             jGenerator.writeEndArray();
         } catch (IOException e) {
-            throw new RobotestException("ROBOTEST REPORTER CONFIG WRITE ERROR", e);
+            throw new RobotestException("ROBOTEST REPORTER CONFIG WRITE ERROR",
+                                        e);
         }
     }
 

@@ -30,7 +30,13 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "browserName", "headLess", "windowWidth", "windowHeight", "maximized", "consoleLogLevel", "proxy",
+@JsonPropertyOrder({ "browserName",
+                     "headLess",
+                     "windowWidth",
+                     "windowHeight",
+                     "maximized",
+                     "consoleLogLevel",
+                     "proxy",
                      "noproxyfor" })
 public class RobotestBrowserConfig {
 
@@ -239,8 +245,14 @@ public class RobotestBrowserConfig {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(browserName).append(headLess).append(windowWidth).append(windowHeight)
-                                    .append(maximized).append(consoleLogLevel).append(proxy).append(noproxyfor)
+        return new HashCodeBuilder().append(browserName)
+                                    .append(headLess)
+                                    .append(windowWidth)
+                                    .append(windowHeight)
+                                    .append(maximized)
+                                    .append(consoleLogLevel)
+                                    .append(proxy)
+                                    .append(noproxyfor)
                                     .toHashCode();
     }
 
@@ -253,10 +265,15 @@ public class RobotestBrowserConfig {
             return false;
         }
         RobotestBrowserConfig rhs = (RobotestBrowserConfig) other;
-        return new EqualsBuilder().append(browserName, rhs.browserName).append(headLess, rhs.headLess)
-                                  .append(windowWidth, rhs.windowWidth).append(windowHeight, rhs.windowHeight)
-                                  .append(maximized, rhs.maximized).append(consoleLogLevel, rhs.consoleLogLevel)
-                                  .append(proxy, rhs.proxy).append(noproxyfor, rhs.noproxyfor).isEquals();
+        return new EqualsBuilder().append(browserName, rhs.browserName)
+                                  .append(headLess, rhs.headLess)
+                                  .append(windowWidth, rhs.windowWidth)
+                                  .append(windowHeight, rhs.windowHeight)
+                                  .append(maximized, rhs.maximized)
+                                  .append(consoleLogLevel, rhs.consoleLogLevel)
+                                  .append(proxy, rhs.proxy)
+                                  .append(noproxyfor, rhs.noproxyfor)
+                                  .isEquals();
     }
 
 }

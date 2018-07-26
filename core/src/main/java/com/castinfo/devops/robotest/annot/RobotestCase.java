@@ -23,8 +23,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * ROBOTEST Annotation.
- * This annotation makes posible to configure a Case.
+ * ROBOTEST Annotation. This annotation makes posible to configure a Case.
  *
  */
 @Retention(RetentionPolicy.RUNTIME)

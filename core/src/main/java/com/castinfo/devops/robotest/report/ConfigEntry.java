@@ -45,7 +45,7 @@ public class ConfigEntry {
      * @return the id
      */
     public String getId() {
-        return this.id;
+        return id;
     }
 
     /**
@@ -64,7 +64,7 @@ public class ConfigEntry {
      * @return the value
      */
     public Object getValue() {
-        return this.value;
+        return value;
     }
 
     /**

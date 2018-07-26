@@ -50,7 +50,7 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
      *             Selenium Driver unavailable or error
      */
     public WebElement findElementBy(final By search) throws RobotestException {
-        return this.getDriver().findElement(search);
+        return getDriver().findElement(search);
     }
 
     /**
@@ -63,7 +63,7 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
      *             Selenium Driver unavailable or error
      */
     public List<WebElement> findElementsBy(final By search) throws RobotestException {
-        return this.getDriver().findElements(search);
+        return getDriver().findElements(search);
     }
 
     /**
@@ -78,7 +78,7 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
     public boolean isElementPresent(final By by) throws RobotestException {
         boolean resultado = true;
         try {
-            this.getDriver().findElement(by);
+            getDriver().findElement(by);
         } catch (NoSuchElementException e) {
             resultado = false;
         }
@@ -116,7 +116,7 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
     public boolean isElementVisible(final By by) throws RobotestException {
         boolean resultado = false;
         try {
-            WebElement element = this.getDriver().findElement(by);
+            WebElement element = getDriver().findElement(by);
             resultado = element != null && element.isDisplayed();
         } catch (NoSuchElementException e) {
             // false
@@ -145,8 +145,7 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
     }
 
     /**
-     * Search in time period, if element exist.
-     * If 0 timeout passed, will do not wait.
+     * Search in time period, if element exist. If 0 timeout passed, will do not wait.
      *
      * @param by
      *            By search
@@ -159,7 +158,7 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
     public boolean isElementPresentUntil(final By by, final long seconds) throws RobotestException {
         boolean resultado = true;
         try {
-            new WebDriverWait(this.getDriver(), seconds).until(ExpectedConditions.presenceOfElementLocated(by));
+            new WebDriverWait(getDriver(), seconds).until(ExpectedConditions.presenceOfElementLocated(by));
         } catch (TimeoutException e) {
             resultado = false;
         }
@@ -167,8 +166,7 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
     }
 
     /**
-     * Search for element visible (not hidden) in wait time period.
-     * If 0 timeout passed, will do not wait.
+     * Search for element visible (not hidden) in wait time period. If 0 timeout passed, will do not wait.
      *
      * @param by
      *            By search
@@ -181,7 +179,7 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
     public boolean isElementVisibleUntil(final By by, final long seconds) throws RobotestException {
         boolean resultado = true;
         try {
-            new WebDriverWait(this.getDriver(), seconds).until(ExpectedConditions.visibilityOfElementLocated(by));
+            new WebDriverWait(getDriver(), seconds).until(ExpectedConditions.visibilityOfElementLocated(by));
         } catch (TimeoutException e) {
             resultado = false;
         }
@@ -189,8 +187,7 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
     }
 
     /**
-     * Search for element hidden (not visible) in wait time period.
-     * If 0 timeout passed, will do not wait.
+     * Search for element hidden (not visible) in wait time period. If 0 timeout passed, will do not wait.
      *
      * @param by
      *            By search
@@ -203,7 +200,7 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
     public boolean isElementInvisibleUntil(final By by, final long seconds) throws RobotestException {
         boolean resultado = true;
         try {
-            new WebDriverWait(this.getDriver(), seconds).until(ExpectedConditions.invisibilityOfElementLocated(by));
+            new WebDriverWait(getDriver(), seconds).until(ExpectedConditions.invisibilityOfElementLocated(by));
         } catch (TimeoutException e) {
             resultado = false;
         }
@@ -221,7 +218,7 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
      */
     public int getNumElementsVisible(final By by) throws RobotestException {
         int numberOfElements = 0;
-        for (WebElement element : this.getDriver().findElements(by)) {
+        for (WebElement element : getDriver().findElements(by)) {
             if (element.isDisplayed()) {
                 numberOfElements += 1;
             }
@@ -240,7 +237,7 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
      */
     public List<WebElement> getElementsVisible(final By by) throws RobotestException {
         List<WebElement> listaReturn = new ArrayList<>();
-        for (WebElement element : this.getDriver().findElements(by)) {
+        for (WebElement element : getDriver().findElements(by)) {
             if (element.isDisplayed()) {
                 listaReturn.add(element);
             }
@@ -276,8 +273,7 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
     }
 
     /**
-     * Validate if search element is clicable in a time period.
-     * If 0 timeout passed, will do not wait.
+     * Validate if search element is clicable in a time period. If 0 timeout passed, will do not wait.
      *
      * @param by
      *            By search
@@ -290,7 +286,7 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
     public boolean isElementClickableUntil(final By by, final long seconds) throws RobotestException {
         boolean resultado = true;
         try {
-            new WebDriverWait(this.getDriver(), seconds).until(ExpectedConditions.elementToBeClickable(by));
+            new WebDriverWait(getDriver(), seconds).until(ExpectedConditions.elementToBeClickable(by));
         } catch (TimeoutException e) {
             resultado = false;
         }
@@ -298,8 +294,7 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
     }
 
     /**
-     * Validate if search element is NOT clicable in a time period.
-     * If 0 timeout passed, will do not wait.
+     * Validate if search element is NOT clicable in a time period. If 0 timeout passed, will do not wait.
      *
      * @param by
      *            By search
@@ -312,7 +307,7 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
     public boolean isElementNoClickableUntil(final By by, final long seconds) throws RobotestException {
         boolean resultado = true;
         try {
-            new WebDriverWait(this.getDriver(),
+            new WebDriverWait(getDriver(),
                               seconds).until(ExpectedConditions.not(ExpectedConditions.elementToBeClickable(by)));
         } catch (TimeoutException e) {
             resultado = false;
@@ -331,14 +326,13 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
      *             Selenium Driver unavailable or error
      */
     public void clickUntilLoadPage(final WebElement link, final long pageLoadingWaitSeconds) throws RobotestException {
-        this.click(link);
-        this.waitForPageLoaded(pageLoadingWaitSeconds);
+        click(link);
+        waitForPageLoaded(pageLoadingWaitSeconds);
     }
 
     /**
-     * Forzes click of search element.
-     * First do wait for element clicable and after, do the click, expecting page loading event.
-     * If 0 timeout passed, will do not wait.
+     * Forzes click of search element. First do wait for element clicable and after, do the click, expecting page
+     * loading event. If 0 timeout passed, will do not wait.
      *
      * @param waitForLinkToClick
      *            timeout element clicable
@@ -355,16 +349,15 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
         boolean timeout = false;
         if (waitForLinkToClick > 0) {
             try {
-                new WebDriverWait(this.getDriver(),
-                                  waitForLinkToClick).until(ExpectedConditions.elementToBeClickable(by));
+                new WebDriverWait(getDriver(), waitForLinkToClick).until(ExpectedConditions.elementToBeClickable(by));
             } catch (TimeoutException e) {
                 timeout = true;
             }
         }
         if (!timeout) {
-            WebElement link = this.getDriver().findElement(by);
-            this.click(link);
-            this.waitForPageLoaded(pageLoadingWaitSeconds);
+            WebElement link = getDriver().findElement(by);
+            click(link);
+            waitForPageLoaded(pageLoadingWaitSeconds);
         }
         return timeout;
     }
@@ -382,7 +375,7 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
             link.click();
         } catch (WebDriverException e) {
             try {
-                JavascriptExecutor executor = (JavascriptExecutor) this.getDriver();
+                JavascriptExecutor executor = (JavascriptExecutor) getDriver();
                 executor.executeScript("arguments[0].click();", link);
             } catch (JavascriptException e2) {
                 throw new RobotestException("NOT CLICABLE ELEMENT", e2);
@@ -400,10 +393,10 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
      */
     public void moveToElement(final WebElement search) throws RobotestException {
         try {
-            Actions mover = new Actions(this.getDriver());
+            Actions mover = new Actions(getDriver());
             mover.moveToElement(search).build().perform();
         } catch (MoveTargetOutOfBoundsException e) {
-            ((JavascriptExecutor) this.getDriver()).executeScript("arguments[0].scrollIntoView(true);", search);
+            ((JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView(true);", search);
         }
     }
 
@@ -416,8 +409,8 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
      *             Selenium Driver unavailable or error
      */
     public void moveToLinkAndClick(final WebElement link) throws RobotestException {
-        this.moveToElement(link);
-        this.click(link);
+        moveToElement(link);
+        click(link);
     }
 
     /**
@@ -435,10 +428,10 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
     public void sendKeysWithRetry(final int numRetry, final By by, final String keys) throws RobotestException {
         int i = 0;
         do {
-            this.getDriver().findElement(by).clear();
-            this.getDriver().findElement(by).sendKeys(keys);
+            getDriver().findElement(by).clear();
+            getDriver().findElement(by).sendKeys(keys);
             i += 1;
-        } while (this.getDriver().findElement(by).getAttribute("value").compareTo(keys) != 0 && i < numRetry);
+        } while (getDriver().findElement(by).getAttribute("value").compareTo(keys) != 0 && i < numRetry);
     }
 
     /**
@@ -455,7 +448,7 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
         if (selectElement.getAttribute("value").compareTo(value) != 0) {
             selectElement.sendKeys(value);
             if (selectElement.getAttribute("value").compareTo(value) != 0) {
-                JavascriptExecutor executor = (JavascriptExecutor) this.getDriver();
+                JavascriptExecutor executor = (JavascriptExecutor) getDriver();
                 executor.executeScript("const textToFind = '" + value + "';" + "const dd = arguments[0];"
                         + "dd.selectedIndex = [...dd.options].findIndex (option => option.text === textToFind);",
                                        selectElement);

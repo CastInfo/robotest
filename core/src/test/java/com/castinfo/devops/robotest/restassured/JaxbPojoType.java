@@ -15,11 +15,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * <p>
- * Clase Java para JaxbPojoType complex type.
+ * <p> Clase Java para JaxbPojoType complex type.
  *
- * <p>
- * El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p> El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  *
  * <pre>
  * &lt;complexType name="JaxbPojoType">
@@ -46,25 +44,22 @@ public class JaxbPojoType {
     /**
      * Obtiene el valor de la propiedad echo.
      *
-     * @return
-     *         possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      *
      */
     public String getEcho() {
-        return this.echo;
+        return echo;
     }
 
     /**
      * Define el valor de la propiedad echo.
      *
      * @param value
-     *            allowed object is
-     *            {@link String }
+     *            allowed object is {@link String }
      *
      */
     public void setEcho(final String value) {
-        this.echo = value;
+        echo = value;
     }
 
 }

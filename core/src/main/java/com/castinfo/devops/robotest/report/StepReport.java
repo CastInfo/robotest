@@ -61,7 +61,7 @@ public class StepReport {
                       final List<ConfigEntry> stepConfig,
                       final long initMillis) {
         this.stepOrder = stepOrder;
-        this.validationOrder = new AtomicInteger(0);
+        validationOrder = new AtomicInteger(0);
         this.id = id;
         this.description = description;
         this.stepConfig = new ConfigReport(stepConfig);
@@ -70,17 +70,18 @@ public class StepReport {
 
     /**
      * Getter method for id.
-     * 
+     *
      * @return the id
      */
     public String getId() {
-        return this.id;
+        return id;
     }
 
     /**
      * Setter method for the id.
-     * 
-     * @param id the id to set
+     *
+     * @param id
+     *            the id to set
      */
     public void setId(final String id) {
         this.id = id;
@@ -88,17 +89,18 @@ public class StepReport {
 
     /**
      * Getter method for description.
-     * 
+     *
      * @return the description
      */
     public String getDescription() {
-        return this.description;
+        return description;
     }
 
     /**
      * Setter method for the description.
-     * 
-     * @param description the description to set
+     *
+     * @param description
+     *            the description to set
      */
     public void setDescription(final String description) {
         this.description = description;
@@ -110,7 +112,7 @@ public class StepReport {
      * @return the additional
      */
     public List<ValidationEntry> getAdditional() {
-        return this.additional;
+        return additional;
     }
 
     /**
@@ -129,7 +131,7 @@ public class StepReport {
      * @return the stepStatus
      */
     public StepStatus getStepStatus() {
-        return this.stepStatus;
+        return stepStatus;
     }
 
     /**
@@ -148,7 +150,7 @@ public class StepReport {
      * @return the stepConfig
      */
     public ConfigReport getStepConfig() {
-        return this.stepConfig;
+        return stepConfig;
     }
 
     /**
@@ -167,7 +169,7 @@ public class StepReport {
      * @return the initMillis
      */
     public long getInitMillis() {
-        return this.initMillis;
+        return initMillis;
     }
 
     /**
@@ -186,7 +188,7 @@ public class StepReport {
      * @return the endMillis
      */
     public long getEndMillis() {
-        return this.endMillis;
+        return endMillis;
     }
 
     /**
@@ -205,7 +207,7 @@ public class StepReport {
      * @return the stepOrder
      */
     public int getStepOrder() {
-        return this.stepOrder;
+        return stepOrder;
     }
 
     /**
@@ -224,7 +226,7 @@ public class StepReport {
      * @return the validationOrder
      */
     public AtomicInteger getValidationOrder() {
-        return this.validationOrder;
+        return validationOrder;
     }
 
     /**
@@ -246,8 +248,8 @@ public class StepReport {
      *            end step timemillis.
      */
     public void endStep(final StepStatus status, final long millis) {
-        this.stepStatus = status;
-        this.endMillis = millis;
+        stepStatus = status;
+        endMillis = millis;
     }
 
     /**
@@ -261,18 +263,18 @@ public class StepReport {
     public void writeStep(final JsonGenerator jGenerator) throws RobotestException {
         try {
             jGenerator.writeStartObject();
-            jGenerator.writeNumberField("order", this.stepOrder);
-            jGenerator.writeStringField("step", this.id);
-            jGenerator.writeStringField("description", this.description);
-            jGenerator.writeNumberField("initMillis", this.initMillis);
-            jGenerator.writeNumberField("endMillis", this.endMillis);
-            jGenerator.writeStringField("status", this.stepStatus.name());
+            jGenerator.writeNumberField("order", stepOrder);
+            jGenerator.writeStringField("step", id);
+            jGenerator.writeStringField("description", description);
+            jGenerator.writeNumberField("initMillis", initMillis);
+            jGenerator.writeNumberField("endMillis", endMillis);
+            jGenerator.writeStringField("status", stepStatus.name());
 
-            this.stepConfig.writeConfig(jGenerator, "config");
+            stepConfig.writeConfig(jGenerator, "config");
 
             jGenerator.writeFieldName("validations");
             jGenerator.writeStartArray();
-            for (ValidationEntry toadd : this.additional) {
+            for (ValidationEntry toadd : additional) {
                 toadd.writeValidation(jGenerator);
             }
             jGenerator.writeEndArray();

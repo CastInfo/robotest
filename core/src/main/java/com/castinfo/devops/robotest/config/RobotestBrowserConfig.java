@@ -66,7 +66,7 @@ public class RobotestBrowserConfig {
      */
     @JsonProperty("browserName")
     public String getBrowserName() {
-        return this.browserName;
+        return browserName;
     }
 
     /**
@@ -88,7 +88,7 @@ public class RobotestBrowserConfig {
      */
     @JsonProperty("headLess")
     public String getHeadLess() {
-        return this.headLess;
+        return headLess;
     }
 
     /**
@@ -109,7 +109,7 @@ public class RobotestBrowserConfig {
      */
     @JsonProperty("windowWidth")
     public String getWindowWidth() {
-        return this.windowWidth;
+        return windowWidth;
     }
 
     /**
@@ -130,7 +130,7 @@ public class RobotestBrowserConfig {
      */
     @JsonProperty("windowHeight")
     public String getWindowHeight() {
-        return this.windowHeight;
+        return windowHeight;
     }
 
     /**
@@ -152,7 +152,7 @@ public class RobotestBrowserConfig {
      */
     @JsonProperty("maximized")
     public String getMaximized() {
-        return this.maximized;
+        return maximized;
     }
 
     /**
@@ -175,7 +175,7 @@ public class RobotestBrowserConfig {
      */
     @JsonProperty("consoleLogLevel")
     public String getConsoleLogLevel() {
-        return this.consoleLogLevel;
+        return consoleLogLevel;
     }
 
     /**
@@ -187,7 +187,7 @@ public class RobotestBrowserConfig {
      */
     @JsonProperty("consoleLogLevel")
     public void setConsoleLogLevel(final String level) {
-        this.consoleLogLevel = level;
+        consoleLogLevel = level;
     }
 
     /**
@@ -197,7 +197,7 @@ public class RobotestBrowserConfig {
      */
     @JsonProperty("proxy")
     public String getProxy() {
-        return this.proxy;
+        return proxy;
     }
 
     /**
@@ -218,7 +218,7 @@ public class RobotestBrowserConfig {
      */
     @JsonProperty("noproxyfor")
     public String getNoproxyfor() {
-        return this.noproxyfor;
+        return noproxyfor;
     }
 
     /**
@@ -239,9 +239,9 @@ public class RobotestBrowserConfig {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(this.browserName).append(this.headLess).append(this.windowWidth)
-                                    .append(this.windowHeight).append(this.maximized).append(this.consoleLogLevel)
-                                    .append(this.proxy).append(this.noproxyfor).toHashCode();
+        return new HashCodeBuilder().append(browserName).append(headLess).append(windowWidth).append(windowHeight)
+                                    .append(maximized).append(consoleLogLevel).append(proxy).append(noproxyfor)
+                                    .toHashCode();
     }
 
     @Override
@@ -253,11 +253,10 @@ public class RobotestBrowserConfig {
             return false;
         }
         RobotestBrowserConfig rhs = (RobotestBrowserConfig) other;
-        return new EqualsBuilder().append(this.browserName, rhs.browserName).append(this.headLess, rhs.headLess)
-                                  .append(this.windowWidth, rhs.windowWidth).append(this.windowHeight, rhs.windowHeight)
-                                  .append(this.maximized, rhs.maximized)
-                                  .append(this.consoleLogLevel, rhs.consoleLogLevel).append(this.proxy, rhs.proxy)
-                                  .append(this.noproxyfor, rhs.noproxyfor).isEquals();
+        return new EqualsBuilder().append(browserName, rhs.browserName).append(headLess, rhs.headLess)
+                                  .append(windowWidth, rhs.windowWidth).append(windowHeight, rhs.windowHeight)
+                                  .append(maximized, rhs.maximized).append(consoleLogLevel, rhs.consoleLogLevel)
+                                  .append(proxy, rhs.proxy).append(noproxyfor, rhs.noproxyfor).isEquals();
     }
 
 }

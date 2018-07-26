@@ -26,8 +26,7 @@ import org.slf4j.LoggerFactory;
 import com.castinfo.devops.robotest.RobotestExecutionContext;
 
 /**
- * Implements JUnit test execution listener.
- * Creates and destroy context for Suite and Case Robotest test executions.
+ * Implements JUnit test execution listener. Creates and destroy context for Suite and Case Robotest test executions.
  *
  */
 public class JUnitCaseListener extends RunListener {
@@ -43,7 +42,7 @@ public class JUnitCaseListener extends RunListener {
      *            the class of suite
      */
     public void setClazz(final Class<?> klass) {
-        this.suiteClazz = klass;
+        suiteClazz = klass;
     }
 
     /**
@@ -52,7 +51,7 @@ public class JUnitCaseListener extends RunListener {
      * @return suiteClazz
      */
     public Class<?> getClazz() {
-        return this.suiteClazz;
+        return suiteClazz;
     }
 
     /*
@@ -63,8 +62,8 @@ public class JUnitCaseListener extends RunListener {
     @Override
     public void testRunStarted(final Description description) throws Exception {
         for (Description descriptors : description.getChildren()) {
-            if (description.getTestClass().equals(this.getClazz())) {
-                RobotestExecutionContext.buildSuite(this.getClazz(), descriptors.getMethodName());
+            if (description.getTestClass().equals(getClazz())) {
+                RobotestExecutionContext.buildSuite(getClazz(), descriptors.getMethodName());
             }
         }
         super.testRunStarted(description);
@@ -78,7 +77,7 @@ public class JUnitCaseListener extends RunListener {
     @Override
     public void testRunFinished(final Result result) throws Exception {
         try {
-            RobotestExecutionContext.endSuite(this.getClazz());
+            RobotestExecutionContext.endSuite(getClazz());
         } catch (Exception e) {
             LOG.error("ERROR END SUITE", e);
         }
@@ -94,8 +93,8 @@ public class JUnitCaseListener extends RunListener {
      */
     @Override
     public void testStarted(final Description description) throws Exception {
-        if (description.getTestClass().equals(this.getClazz())) {
-            RobotestExecutionContext.buildCaseByMethod(this.getClazz(), description.getMethodName());
+        if (description.getTestClass().equals(getClazz())) {
+            RobotestExecutionContext.buildCaseByMethod(getClazz(), description.getMethodName());
         }
         super.testStarted(description);
     }
@@ -107,8 +106,8 @@ public class JUnitCaseListener extends RunListener {
      */
     @Override
     public void testFinished(final Description description) throws Exception {
-        if (description.getTestClass().equals(this.getClazz())) {
-            RobotestExecutionContext.endCaseByMethod(this.getClazz(), description.getMethodName());
+        if (description.getTestClass().equals(getClazz())) {
+            RobotestExecutionContext.endCaseByMethod(getClazz(), description.getMethodName());
         }
         super.testFinished(description);
     }

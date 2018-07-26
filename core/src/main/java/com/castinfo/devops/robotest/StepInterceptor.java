@@ -47,7 +47,7 @@ public class StepInterceptor implements MethodInterceptor {
         StepStatus resultadoStatusStep = StepStatus.INFO;
         PageObject pageFragment = (PageObject) obj;
         RobotestStep stepAnnot = method.getAnnotation(RobotestStep.class);
-        SuiteContext sCtx = this.atStartAnnotationActions(pageFragment, stepAnnot);
+        SuiteContext sCtx = atStartAnnotationActions(pageFragment, stepAnnot);
         try {
             resultado = proxy.invokeSuper(obj, args);
         } catch (Exception | AssertionError e) {
@@ -59,7 +59,7 @@ public class StepInterceptor implements MethodInterceptor {
                 sCtx.addAdditionalStepEntry(pageFragment,
                                             new ValidationEntry(resultadoStatusStep).withException(errorTest));
             }
-            this.atEndAnnotationActions(pageFragment, sCtx, stepAnnot, resultadoStatusStep);
+            atEndAnnotationActions(pageFragment, sCtx, stepAnnot, resultadoStatusStep);
             sCtx.endStep(pageFragment, resultadoStatusStep, System.currentTimeMillis());
         } else {
             if (null != errorTest) {

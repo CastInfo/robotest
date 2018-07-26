@@ -47,7 +47,7 @@ public class ValidationEntry {
      */
     public ValidationEntry(final StepStatus status) {
         this.status = status;
-        this.resource = new ArrayList<>();
+        resource = new ArrayList<>();
     }
 
     /**
@@ -76,7 +76,7 @@ public class ValidationEntry {
      * @return the status
      */
     public StepStatus getStatus() {
-        return this.status;
+        return status;
     }
 
     /**
@@ -95,7 +95,7 @@ public class ValidationEntry {
      * @return the resource
      */
     public List<String> getResource() {
-        return this.resource;
+        return resource;
     }
 
     /**
@@ -104,7 +104,7 @@ public class ValidationEntry {
      * @return the validationOrder
      */
     public int getValidationOrder() {
-        return this.validationOrder;
+        return validationOrder;
     }
 
     /**
@@ -123,7 +123,7 @@ public class ValidationEntry {
      * @return the type
      */
     public ValidationType getType() {
-        return this.type;
+        return type;
     }
 
     /**
@@ -134,7 +134,7 @@ public class ValidationEntry {
      * @return the fluent api object
      */
     public ValidationEntry withType(final ValidationType vt) {
-        this.type = vt;
+        type = vt;
         return this;
     }
 
@@ -202,12 +202,12 @@ public class ValidationEntry {
      *             If previous other type of resource is set.
      */
     public ValidationEntry withCapture(final File cptr) throws RobotestException {
-        if (null != this.type && !ValidationType.SCREENSHOT.equals(this.type)) {
-            throw new RobotestException("PREVIOUS TYPE VALIDATION WAS FOUND SETTING CAPTURE RESORCE: " + this.type);
+        if (null != type && !ValidationType.SCREENSHOT.equals(type)) {
+            throw new RobotestException("PREVIOUS TYPE VALIDATION WAS FOUND SETTING CAPTURE RESORCE: " + type);
         }
-        this.resource.clear();
-        this.resource.add(cptr.getName());
-        this.type = ValidationType.SCREENSHOT;
+        resource.clear();
+        resource.add(cptr.getName());
+        type = ValidationType.SCREENSHOT;
         return this;
     }
 
@@ -221,12 +221,12 @@ public class ValidationEntry {
      *             If previous other type of resource is set.
      */
     public ValidationEntry withHtmlSource(final File htmlSrc) throws RobotestException {
-        if (null != this.type && !ValidationType.HTML.equals(this.type)) {
-            throw new RobotestException("PREVIOUS TYPE VALIDATION WAS FOUND SETTING HTML RESOURCE: " + this.type);
+        if (null != type && !ValidationType.HTML.equals(type)) {
+            throw new RobotestException("PREVIOUS TYPE VALIDATION WAS FOUND SETTING HTML RESOURCE: " + type);
         }
-        this.resource.clear();
-        this.resource.add(htmlSrc.getName());
-        this.type = ValidationType.HTML;
+        resource.clear();
+        resource.add(htmlSrc.getName());
+        type = ValidationType.HTML;
         return this;
     }
 
@@ -240,11 +240,11 @@ public class ValidationEntry {
      *             If previous other type of resource is set.
      */
     public ValidationEntry withMessage(final String msg) throws RobotestException {
-        if (null != this.type && !ValidationType.TEXT.equals(this.type)) {
-            throw new RobotestException("PREVIOUS TYPE VALIDATION WAS FOUND SETTING TEXT RESOURCE: " + this.type);
+        if (null != type && !ValidationType.TEXT.equals(type)) {
+            throw new RobotestException("PREVIOUS TYPE VALIDATION WAS FOUND SETTING TEXT RESOURCE: " + type);
         }
-        this.resource.add(msg);
-        this.type = ValidationType.TEXT;
+        resource.add(msg);
+        type = ValidationType.TEXT;
         return this;
     }
 
@@ -259,14 +259,14 @@ public class ValidationEntry {
      */
     public ValidationEntry withException(final Throwable e) throws RobotestException {
         if (null == e) {
-            this.withMessage("NO STACKTRACE PROVIDED");
+            withMessage("NO STACKTRACE PROVIDED");
         }
         List<Throwable> exList = ExceptionUtils.getThrowableList(e);
         if (null == exList || exList.isEmpty()) {
-            this.withMessage("NO STACKTRACE PROVIDED");
+            withMessage("NO STACKTRACE PROVIDED");
         } else {
             for (Throwable ex : exList) {
-                this.withMessage(ValidationEntry.throwableToString(ex));
+                withMessage(ValidationEntry.throwableToString(ex));
             }
         }
         return this;
@@ -331,12 +331,11 @@ public class ValidationEntry {
      *             If previous other type of resource is set.
      */
     public ValidationEntry withConsole(final String log) throws RobotestException {
-        if (null != this.type && !ValidationType.CONSOLE.equals(this.type)) {
-            throw new RobotestException("PREVIOUS TYPE OF VALIDATION: " + this.type
-                    + " WAS FOUND SETTING CONSOLE RESOURCE");
+        if (null != type && !ValidationType.CONSOLE.equals(type)) {
+            throw new RobotestException("PREVIOUS TYPE OF VALIDATION: " + type + " WAS FOUND SETTING CONSOLE RESOURCE");
         }
-        this.resource.add(log);
-        this.type = ValidationType.CONSOLE;
+        resource.add(log);
+        type = ValidationType.CONSOLE;
         return this;
     }
 
@@ -351,12 +350,12 @@ public class ValidationEntry {
     public void writeValidation(final JsonGenerator jGenerator) throws RobotestException {
         try {
             jGenerator.writeStartObject();
-            jGenerator.writeNumberField("order", this.getValidationOrder());
-            jGenerator.writeStringField("status", this.getStatus().name());
-            jGenerator.writeStringField("type", this.getType().name());
-            if (null != this.getResource()) {
+            jGenerator.writeNumberField("order", getValidationOrder());
+            jGenerator.writeStringField("status", getStatus().name());
+            jGenerator.writeStringField("type", getType().name());
+            if (null != getResource()) {
                 jGenerator.writeArrayFieldStart("resource");
-                for (String res : this.resource) {
+                for (String res : resource) {
                     jGenerator.writeObject(res);
                 }
                 jGenerator.writeEndArray();

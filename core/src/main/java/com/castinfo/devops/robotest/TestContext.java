@@ -41,7 +41,7 @@ public class TestContext {
      * @return the stepAnnot
      */
     public RobotestStep getStepAnnot() {
-        return this.stepAnnot;
+        return stepAnnot;
     }
 
     /**
@@ -60,7 +60,7 @@ public class TestContext {
      * @return the caseAnnot
      */
     public RobotestCase getCaseAnnot() {
-        return this.caseAnnot;
+        return caseAnnot;
     }
 
     /**
@@ -79,7 +79,7 @@ public class TestContext {
      * @return the suiteAnnot
      */
     public RobotestSuite getSuiteAnnot() {
-        return this.suiteAnnot;
+        return suiteAnnot;
     }
 
     /**
@@ -100,7 +100,7 @@ public class TestContext {
      *             if not suite initied.
      */
     public SuiteContext getSuiteContext() throws RobotestException {
-        SuiteContext sCtx = RobotestExecutionContext.getSuite(this.getSuiteAnnot());
+        SuiteContext sCtx = RobotestExecutionContext.getSuite(getSuiteAnnot());
         if (null == sCtx) {
             throw new RobotestException("SUITE NOT INITIED, REVISE CONFIGURATION PARAMS");
         }

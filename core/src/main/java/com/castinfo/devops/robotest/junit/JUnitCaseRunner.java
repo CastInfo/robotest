@@ -22,8 +22,7 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
 
 /**
- * JUnit listener implementation.
- * Build JUnitCaseListener to build contexts.
+ * JUnit listener implementation. Build JUnitCaseListener to build contexts.
  *
  */
 public class JUnitCaseRunner extends BlockJUnit4ClassRunner {
@@ -48,9 +47,9 @@ public class JUnitCaseRunner extends BlockJUnit4ClassRunner {
     @Override
     public void run(final RunNotifier notifier) {
         JUnitCaseListener jl = new JUnitCaseListener();
-        jl.setClazz(this.getTestClass().getJavaClass());
+        jl.setClazz(getTestClass().getJavaClass());
         notifier.addListener(jl);
-        notifier.fireTestRunStarted(this.getDescription());
+        notifier.fireTestRunStarted(getDescription());
         super.run(notifier);
     }
 }

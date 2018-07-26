@@ -12,17 +12,18 @@ public class AnnotatedCaseExample extends TestCase {
 
     /**
      * Getter method for pageObject.
-     * 
+     *
      * @return the pageObject
      */
     public AnnotatedPageObjectExample getPageObject() {
-        return this.pageObject;
+        return pageObject;
     }
 
     /**
      * Setter method for the pageObject.
-     * 
-     * @param pageObject the pageObject to set
+     *
+     * @param pageObject
+     *            the pageObject to set
      */
     public void setPageObject(final AnnotatedPageObjectExample pageObject) {
         this.pageObject = pageObject;
@@ -30,7 +31,7 @@ public class AnnotatedCaseExample extends TestCase {
 
     @RobotestCase(tag = "CASE_001", description = "CASE DESC")
     public void caseExample() throws RobotestException {
-        this.pageObject = this.buildPageObject(AnnotatedPageObjectExample.class);
+        pageObject = this.buildPageObject(AnnotatedPageObjectExample.class);
     }
 
     @RobotestCase(tag = "CASE_005", description = "CASE DESC")

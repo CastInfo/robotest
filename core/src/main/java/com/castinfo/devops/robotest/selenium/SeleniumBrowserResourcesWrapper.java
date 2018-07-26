@@ -74,7 +74,7 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
      *             Selenium Driver unavailable or error
      */
     public void openURL(final String url) throws RobotestException {
-        this.getDriver().get(url);
+        getDriver().get(url);
     }
 
     /**
@@ -88,14 +88,13 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
      *             Selenium Driver unavailable or error
      */
     public void openURLAndWaitLoad(final String url, final int timeoutInSeconds) throws RobotestException {
-        this.openURL(url);
-        this.waitForPageLoaded(timeoutInSeconds);
+        openURL(url);
+        waitForPageLoaded(timeoutInSeconds);
     }
 
     /**
      * Do wait for page load, this is not valid for AJAX invocations, in this cases expect presence of promise Ajax
-     * element page modifications.
-     * If timeout, escape in browser page loading is triggered.
+     * element page modifications. If timeout, escape in browser page loading is triggered.
      *
      * @param waitSeconds
      *            timout
@@ -103,27 +102,24 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
      *             Selenium Driver unavailable or error
      */
     public void waitForPageLoaded(final long waitSeconds) throws RobotestException {
-        ExpectedCondition<Boolean> expectation = new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(final WebDriver webdriverParam) {
-                Boolean pageLoaded = Boolean.FALSE;
-                try {
-                    JavascriptExecutor jsExe = (JavascriptExecutor) webdriverParam;
-                    Object noSafari = jsExe.executeScript("return window.performance.timing.domContentLoadedEventEnd");
-                    Object safari = jsExe.executeScript("return document.readyState");
-                    if ("complete".equals(safari) && !"0".equals(noSafari.toString())) {
-                        pageLoaded = Boolean.TRUE;
-                    }
-                } catch (JavascriptException e) {
-                    // always false
+        ExpectedCondition<Boolean> expectation = webdriverParam -> {
+            Boolean pageLoaded = Boolean.FALSE;
+            try {
+                JavascriptExecutor jsExe = (JavascriptExecutor) webdriverParam;
+                Object noSafari = jsExe.executeScript("return window.performance.timing.domContentLoadedEventEnd");
+                Object safari = jsExe.executeScript("return document.readyState");
+                if ("complete".equals(safari) && !"0".equals(noSafari.toString())) {
+                    pageLoaded = Boolean.TRUE;
                 }
-                return pageLoaded;
+            } catch (JavascriptException e) {
+                // always false
             }
+            return pageLoaded;
         };
         try {
-            new WebDriverWait(this.getDriver(), waitSeconds).until(expectation);
+            new WebDriverWait(getDriver(), waitSeconds).until(expectation);
         } catch (TimeoutException e) {
-            Actions action = new Actions(this.getDriver());
+            Actions action = new Actions(getDriver());
             action.sendKeys("Keys.ESCAPE").build().perform();
             throw new RobotestException("LOADING PAGE TIMEOUT", e);
         }
@@ -140,11 +136,11 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
      *             Selenium Driver unavailable or error
      */
     public void openLinkInNewTab(final By by, final long timeoutSeconds) throws RobotestException {
-        Actions a = new Actions(this.getDriver());
-        WebElement e = this.getDriver().findElement(by);
+        Actions a = new Actions(getDriver());
+        WebElement e = getDriver().findElement(by);
         a.moveToElement(e).keyDown(Keys.CONTROL).click().build().perform();
-        this.switchToAnotherWindow();
-        this.waitForPageLoaded(timeoutSeconds);
+        switchToAnotherWindow();
+        waitForPageLoaded(timeoutSeconds);
     }
 
     /**
@@ -162,10 +158,10 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
      */
     public void loadUrlInTabId(final String urlToLoad, final String tabId,
                                final int timeoutInSeconds) throws RobotestException {
-        JavascriptExecutor js = (JavascriptExecutor) this.getDriver();
+        JavascriptExecutor js = (JavascriptExecutor) getDriver();
         js.executeScript("window.open('" + urlToLoad + "', '" + tabId + "');");
-        this.getDriver().switchTo().window(tabId);
-        this.waitForPageLoaded(timeoutInSeconds);
+        getDriver().switchTo().window(tabId);
+        waitForPageLoaded(timeoutInSeconds);
     }
 
     /**
@@ -177,7 +173,7 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
      *             Selenium Driver unavailable or error
      */
     public void closeTabById(final String tabId) throws RobotestException {
-        JavascriptExecutor js = (JavascriptExecutor) this.getDriver();
+        JavascriptExecutor js = (JavascriptExecutor) getDriver();
         js.executeScript("window.close('" + tabId + "');");
     }
 
@@ -189,12 +185,11 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
      *             Selenium Driver unavailable or error
      */
     public String getCurrentUrl() throws RobotestException {
-        return this.getDriver().getCurrentUrl();
+        return getDriver().getCurrentUrl();
     }
 
     /**
-     * Search in time period, if TEXT exist in current opened URL.
-     * If 0 timeout passed, will do not wait.
+     * Search in time period, if TEXT exist in current opened URL. If 0 timeout passed, will do not wait.
      *
      * @param toSearchInUrl
      *            the search
@@ -205,15 +200,11 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
      *             Selenium Driver unavailable or error
      */
     public boolean currentURLContains(final String toSearchInUrl, final long seconds) throws RobotestException {
-        ExpectedCondition<Boolean> currentURLContains = new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(final WebDriver d) {
-                return Boolean.valueOf(d.getCurrentUrl().contains(toSearchInUrl));
-            }
-        };
+        ExpectedCondition<Boolean> currentURLContains = webdriverApplyParam -> Boolean.valueOf(webdriverApplyParam.getCurrentUrl()
+                                                                                                                  .contains(toSearchInUrl));
         boolean resultado = true;
         try {
-            new WebDriverWait(this.getDriver(), seconds).until(currentURLContains);
+            new WebDriverWait(getDriver(), seconds).until(currentURLContains);
         } catch (TimeoutException e) {
             resultado = false;
         }
@@ -221,8 +212,7 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
     }
 
     /**
-     * Validates in time period, if browser window title exist.
-     * If 0 timeout passed, will do not wait.
+     * Validates in time period, if browser window title exist. If 0 timeout passed, will do not wait.
      *
      * @param title
      *            title
@@ -235,7 +225,7 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
     public boolean pageTitleContainsUntil(final String title, final long seconds) throws RobotestException {
         boolean resultado = true;
         try {
-            new WebDriverWait(this.getDriver(), seconds).until(ExpectedConditions.titleContains(title));
+            new WebDriverWait(getDriver(), seconds).until(ExpectedConditions.titleContains(title));
         } catch (TimeoutException e) {
             resultado = false;
         }
@@ -252,7 +242,7 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
     public boolean isAlertPresent() throws RobotestException {
         boolean resultado = true;
         try {
-            this.getDriver().switchTo().alert();
+            getDriver().switchTo().alert();
         } catch (NoAlertPresentException e) {
             resultado = false;
         }
@@ -269,7 +259,7 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
      *             if Selenium Driver unavailable
      */
     public String closeAlertAndGetItsText(final boolean clickAccept) throws RobotestException {
-        Alert alert = this.getDriver().switchTo().alert();
+        Alert alert = getDriver().switchTo().alert();
         String alertText = alert.getText();
         if (clickAccept) {
             alert.accept();
@@ -289,12 +279,12 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
      */
     public String switchToAnotherWindow() throws RobotestException {
         String popupHandle = "";
-        Set<String> s = this.getDriver().getWindowHandles();
+        Set<String> s = getDriver().getWindowHandles();
         Iterator<String> ite = s.iterator();
         while (ite.hasNext()) {
             popupHandle = ite.next();
-            if (!popupHandle.contains(this.getDriver().getWindowHandle())) {
-                this.getDriver().switchTo().window(popupHandle);
+            if (!popupHandle.contains(getDriver().getWindowHandle())) {
+                getDriver().switchTo().window(popupHandle);
                 break;
             }
         }
@@ -311,17 +301,17 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
      *             Selenium Driver unavailable or error
      */
     public boolean switchToWindowThatContainsTitle(final String title) throws RobotestException {
-        String windowParent = this.getDriver().getWindowHandle();
-        Iterator<String> availableWindows = this.getDriver().getWindowHandles().iterator();
+        String windowParent = getDriver().getWindowHandle();
+        Iterator<String> availableWindows = getDriver().getWindowHandles().iterator();
         boolean resultado = false;
         while (!resultado && availableWindows.hasNext()) {
             String window = availableWindows.next();
             if (!windowParent.equals(window)) {
-                this.getDriver().switchTo().window(window);
-                if (this.getDriver().getTitle().toLowerCase().contains(title)) {
+                getDriver().switchTo().window(window);
+                if (getDriver().getTitle().toLowerCase().contains(title)) {
                     resultado = true;
                 } else {
-                    this.getDriver().switchTo().window(windowParent);
+                    getDriver().switchTo().window(windowParent);
                 }
             }
         }
@@ -340,7 +330,7 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
      */
     public void addCookie(final String cookieName, final String cookieValue) throws RobotestException {
         Cookie ck = new Cookie(cookieName, cookieValue);
-        this.getDriver().manage().addCookie(ck);
+        getDriver().manage().addCookie(ck);
     }
 
     /**
@@ -354,7 +344,7 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
      */
     public String getCookieValueByName(final String cookieName) throws RobotestException {
         String resultado = null;
-        Cookie c = this.getDriver().manage().getCookieNamed(cookieName);
+        Cookie c = getDriver().manage().getCookieNamed(cookieName);
         if (null != c) {
             resultado = c.getValue();
         }
@@ -369,7 +359,7 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
      *             Selenium Driver unavailable or error
      */
     public Set<Cookie> listOfCookiesAvailable() throws RobotestException {
-        return this.getDriver().manage().getCookies();
+        return getDriver().manage().getCookies();
     }
 
     /**
@@ -381,11 +371,11 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
      */
     public byte[] takeScreenShoot() throws RobotestException {
         try {
-            WebDriver captureDriver = this.getDriver();
+            WebDriver captureDriver = getDriver();
             if (captureDriver instanceof RemoteWebDriver) {
                 new Augmenter().augment(captureDriver);
             }
-            return ((TakesScreenshot) this.getDriver()).getScreenshotAs(OutputType.BYTES);
+            return ((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.BYTES);
         } catch (WebDriverException e) {
             throw new RobotestException("CAPTURE SCREEN SHOOT ERROR", e);
         }
@@ -401,7 +391,7 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
      */
     public String takePageSource() throws RobotestException {
         try {
-            return this.getDriver().getPageSource();
+            return getDriver().getPageSource();
         } catch (WebDriverException e) {
             throw new RobotestException("CAPTURE PAGE SOURCE ERROR", e);
         }
@@ -409,9 +399,8 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
 
     /**
      * Returns a limited list of ValidationEntrys of WebDriver visible log from browser CONSOLE with desired level of
-     * any kind
-     * (JavaScript, CSS, network, etc).
-     * The retrived Level status equivalence is WARNING for WARNING, ERROR for &gt; WARNING &amp; INFO for &lt; WARNING.
+     * any kind (JavaScript, CSS, network, etc). The retrived Level status equivalence is WARNING for WARNING, ERROR for
+     * &gt; WARNING &amp; INFO for &lt; WARNING.
      *
      * @param desiredLogLevel
      *            log level desired
@@ -423,7 +412,7 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
         List<ValidationEntry> resultado = new ArrayList<>();
         ValidationEntry tmpValidationEntry = null;
         try {
-            Logs logs = this.getDriver().manage().logs();
+            Logs logs = getDriver().manage().logs();
             Iterator<String> itTiposLog = logs.getAvailableLogTypes().iterator();
             while (itTiposLog.hasNext()) {
                 String tipoLog = itTiposLog.next();

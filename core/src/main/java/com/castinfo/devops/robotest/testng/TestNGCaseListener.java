@@ -30,8 +30,7 @@ import com.castinfo.devops.robotest.RobotestException;
 import com.castinfo.devops.robotest.RobotestExecutionContext;
 
 /**
- * Implements TestNG test execution listener.
- * Creates and destroy context for Suite and Case Robotest test executions.
+ * Implements TestNG test execution listener. Creates and destroy context for Suite and Case Robotest test executions.
  *
  */
 public class TestNGCaseListener implements IInvokedMethodListener, ITestListener {

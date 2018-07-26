@@ -37,8 +37,8 @@ import com.castinfo.devops.robotest.selenium.SeleniumElementsWrapper;
  * Classes that extends this object will have available access to the ROBOTEST Test Tooling utilities: Selenium Driver
  * and Reporting.
  *
- * Implements Selenium most used test utilities, to simplify tests, but it is not mandatory, feel free to see source
- * and improve your own utilites. If you you may be wan't enrich this utilities, please pull request ROBOTEST with you
+ * Implements Selenium most used test utilities, to simplify tests, but it is not mandatory, feel free to see source and
+ * improve your own utilites. If you you may be wan't enrich this utilities, please pull request ROBOTEST with you
  * proposes.
  *
  */
@@ -62,11 +62,11 @@ public class PageObject extends SeleniumElementsWrapper {
      */
     @Override
     public <T> T getTestCfg(final String configKey) throws RobotestException {
-        T scopedConfig = this.getTestCfgInScope(this.getSuiteContext(), this.getStepAnnot(), configKey);
+        T scopedConfig = this.getTestCfgInScope(getSuiteContext(), getStepAnnot(), configKey);
         if (null == scopedConfig) {
-            scopedConfig = this.getTestCfgInScope(this.getSuiteContext(), this.getCaseAnnot(), configKey);
+            scopedConfig = this.getTestCfgInScope(getSuiteContext(), getCaseAnnot(), configKey);
             if (null == scopedConfig) {
-                scopedConfig = this.getTestCfgInScope(this.getSuiteContext(), this.getSuiteAnnot(), configKey);
+                scopedConfig = this.getTestCfgInScope(getSuiteContext(), getSuiteAnnot(), configKey);
             }
         }
         return scopedConfig;
@@ -79,8 +79,8 @@ public class PageObject extends SeleniumElementsWrapper {
      */
     @Override
     public WebDriver getDriver() throws RobotestException {
-        SuiteContext sCtx = this.getSuiteContext();
-        WebDriver wD = sCtx.getDriverByCase(this.getCaseAnnot());
+        SuiteContext sCtx = getSuiteContext();
+        WebDriver wD = sCtx.getDriverByCase(getCaseAnnot());
         if (null == wD) {
             throw new RobotestException("WEBDRIVER NOT FOUND, REVISE CONFIGURATION PARAMS");
         }
@@ -95,7 +95,7 @@ public class PageObject extends SeleniumElementsWrapper {
      *             If suite initialitation problems happens.
      */
     protected SuiteReport getReporter() throws RobotestException {
-        SuiteContext sCtx = this.getSuiteContext();
+        SuiteContext sCtx = getSuiteContext();
         SuiteReport sR = sCtx.getReporter();
         if (null == sR) {
             throw new RobotestException("REPORTER NOT FOUND, REVISE CONFIGURATION PARAMS");
@@ -114,11 +114,10 @@ public class PageObject extends SeleniumElementsWrapper {
      */
     private ValidationEntry addValidationToReport(final ValidationEntry validation) throws RobotestException {
         ValidationEntry resultado;
-        if (null == this.getStepAnnot()) {
-            resultado = this.getReporter().addCaseValidationEntry(this.getCaseAnnot().tag(), validation);
+        if (null == getStepAnnot()) {
+            resultado = getReporter().addCaseValidationEntry(getCaseAnnot().tag(), validation);
         } else {
-            resultado = this.getReporter().addStepValidationEntry(this.getCaseAnnot().tag(), this.getStepAnnot().tag(),
-                                                                  validation);
+            resultado = getReporter().addStepValidationEntry(getCaseAnnot().tag(), getStepAnnot().tag(), validation);
         }
         return resultado;
     }
@@ -132,7 +131,7 @@ public class PageObject extends SeleniumElementsWrapper {
      */
     public ValidationEntry addDebugToReport() throws RobotestException {
         ValidationEntry v = ValidationEntry.buildDebug();
-        return this.addValidationToReport(v);
+        return addValidationToReport(v);
     }
 
     /**
@@ -144,7 +143,7 @@ public class PageObject extends SeleniumElementsWrapper {
      */
     public ValidationEntry addInfoToReport() throws RobotestException {
         ValidationEntry v = ValidationEntry.buildInfo();
-        return this.addValidationToReport(v);
+        return addValidationToReport(v);
     }
 
     /**
@@ -156,7 +155,7 @@ public class PageObject extends SeleniumElementsWrapper {
      */
     public ValidationEntry addWarningToReport() throws RobotestException {
         ValidationEntry v = ValidationEntry.buildWarning();
-        return this.addValidationToReport(v);
+        return addValidationToReport(v);
     }
 
     /**
@@ -168,7 +167,7 @@ public class PageObject extends SeleniumElementsWrapper {
      */
     public ValidationEntry addErrorToReport() throws RobotestException {
         ValidationEntry v = ValidationEntry.buildError();
-        return this.addValidationToReport(v);
+        return addValidationToReport(v);
     }
 
     /**
@@ -180,7 +179,7 @@ public class PageObject extends SeleniumElementsWrapper {
      */
     public ValidationEntry addDefectToReport() throws RobotestException {
         ValidationEntry v = ValidationEntry.buildDefect();
-        return this.addValidationToReport(v);
+        return addValidationToReport(v);
     }
 
     /**
@@ -192,7 +191,7 @@ public class PageObject extends SeleniumElementsWrapper {
      */
     public ValidationEntry addCriticalToReport() throws RobotestException {
         ValidationEntry v = ValidationEntry.buildCritical();
-        return this.addValidationToReport(v);
+        return addValidationToReport(v);
     }
 
     /**
@@ -208,10 +207,10 @@ public class PageObject extends SeleniumElementsWrapper {
     public void addScreenShotToReport(final StepStatus status, final String customName) throws RobotestException {
         ValidationEntry validation = new ValidationEntry(status);
         validation.withCapture(this.takeScreenShoot(customName));
-        if (null == this.getStepAnnot()) {
+        if (null == getStepAnnot()) {
             throw new RobotestException("Can't add screen shot to report out of step context");
         }
-        this.getReporter().addStepValidationEntry(this.getCaseAnnot().tag(), this.getStepAnnot().tag(), validation);
+        getReporter().addStepValidationEntry(getCaseAnnot().tag(), getStepAnnot().tag(), validation);
     }
 
     /**
@@ -227,10 +226,10 @@ public class PageObject extends SeleniumElementsWrapper {
     public void addPageSourceToReport(final StepStatus status, final String customName) throws RobotestException {
         ValidationEntry validation = new ValidationEntry(status);
         validation.withHtmlSource(this.takePageSource(customName));
-        if (null == this.getStepAnnot()) {
+        if (null == getStepAnnot()) {
             throw new RobotestException("Can't add page source to report out of step context");
         }
-        this.getReporter().addStepValidationEntry(this.getCaseAnnot().tag(), this.getStepAnnot().tag(), validation);
+        getReporter().addStepValidationEntry(getCaseAnnot().tag(), getStepAnnot().tag(), validation);
     }
 
     /**
@@ -279,8 +278,8 @@ public class PageObject extends SeleniumElementsWrapper {
     /**
      *
      * Uses @see com.castinfo.devops.robotest.selenium.SeleniumElementsWrapper#takeScreenShoot() to return File results:
-     * - The path of the image will be relative to the System Property ROBOTEST_REPORT_BASE.
-     * - Robotest keep you from worrying with repetible names adding a secure counter to this name.
+     * - The path of the image will be relative to the System Property ROBOTEST_REPORT_BASE. - Robotest keep you from
+     * worrying with repetible names adding a secure counter to this name.
      *
      * @param fileName
      *            name of file without extension
@@ -290,7 +289,7 @@ public class PageObject extends SeleniumElementsWrapper {
      */
     public File takeScreenShoot(final String fileName) throws RobotestException {
         try {
-            return this.takeEvidence(this.getSuiteContext().getConfig().getConfigBasic().getReportFilePath(), fileName,
+            return this.takeEvidence(getSuiteContext().getConfig().getConfigBasic().getReportFilePath(), fileName,
                                      ".png", this.takeScreenShoot());
         } catch (IOException e) {
             throw new RobotestException("TAKE SCREENSHOT PAGE SOURCE ERROR", e);
@@ -298,9 +297,9 @@ public class PageObject extends SeleniumElementsWrapper {
     }
 
     /**
-     * Save browser present HTML page source with user passed file name.
-     * The path of saved HTML will be relative to the System Property ROBOTEST_REPORT_BASE.
-     * Robotest keep you from worrying with repetible names adding a secure counter to this name.
+     * Save browser present HTML page source with user passed file name. The path of saved HTML will be relative to the
+     * System Property ROBOTEST_REPORT_BASE. Robotest keep you from worrying with repetible names adding a secure
+     * counter to this name.
      *
      * @param fileName
      *            name of file without extension.
@@ -311,8 +310,8 @@ public class PageObject extends SeleniumElementsWrapper {
     public File takePageSource(final String fileName) throws RobotestException {
         File resultado = null;
         try {
-            resultado = this.takeEvidence(this.getSuiteContext().getConfig().getConfigBasic().getReportFilePath(),
-                                          fileName, ".html", this.takePageSource().getBytes("UTF-8"));
+            resultado = this.takeEvidence(getSuiteContext().getConfig().getConfigBasic().getReportFilePath(), fileName,
+                                          ".html", this.takePageSource().getBytes("UTF-8"));
         } catch (IOException e) {
             throw new RobotestException("TAKE PAGE SOURCE ERROR", e);
         }
@@ -320,9 +319,9 @@ public class PageObject extends SeleniumElementsWrapper {
     }
 
     /**
-     * Utility method for developer own evidence reporting.
-     * The path of saved HTML will be relative to the System Property ROBOTEST_REPORT_BASE.
-     * Robotest keep you from worrying with repetible names adding a secure counter to this name.
+     * Utility method for developer own evidence reporting. The path of saved HTML will be relative to the System
+     * Property ROBOTEST_REPORT_BASE. Robotest keep you from worrying with repetible names adding a secure counter to
+     * this name.
      *
      * @param fileName
      *            Name of file without extension.
@@ -338,8 +337,8 @@ public class PageObject extends SeleniumElementsWrapper {
                              final byte[] content) throws RobotestException {
         File resultado = null;
         try {
-            resultado = this.takeEvidence(this.getSuiteContext().getConfig().getConfigBasic().getReportFilePath(),
-                                          fileName, extension, content);
+            resultado = this.takeEvidence(getSuiteContext().getConfig().getConfigBasic().getReportFilePath(), fileName,
+                                          extension, content);
         } catch (IOException e) {
             throw new RobotestException("TAKE PAGE SOURCE ERROR", e);
         }
@@ -347,8 +346,8 @@ public class PageObject extends SeleniumElementsWrapper {
     }
 
     /**
-     * Utility method for developer own evidence reporting.
-     * Robotest keep you from worrying with repetible names adding a secure counter to this name.
+     * Utility method for developer own evidence reporting. Robotest keep you from worrying with repetible names adding
+     * a secure counter to this name.
      *
      * @param reportPath
      *            Path to save method.
@@ -375,9 +374,9 @@ public class PageObject extends SeleniumElementsWrapper {
     }
 
     /**
-     * Returns a limited list of ValidationEntrys of WebDriver visible log from browser CONSOLE of any kind
-     * (JavaScript, CSS, network, etc), with the log level defined in basic configuration robotest parameters.
-     * The retrived Level status equivalence is WARNING for WARNING, ERROR for &gt; WARNING &amp; INFO for &lt; WARNING.
+     * Returns a limited list of ValidationEntrys of WebDriver visible log from browser CONSOLE of any kind (JavaScript,
+     * CSS, network, etc), with the log level defined in basic configuration robotest parameters. The retrived Level
+     * status equivalence is WARNING for WARNING, ERROR for &gt; WARNING &amp; INFO for &lt; WARNING.
      *
      * @return The retrived browser CONSOLE log list.
      * @throws RobotestException

@@ -59,9 +59,9 @@ public class RestAssuredWrapper {
      * Constructor.
      */
     public RestAssuredWrapper() {
-        this.requestSpecBuilder = new RequestSpecBuilder();
-        this.responseSpecBuilder = new ResponseSpecBuilder();
-        this.requestSpec = null;
+        requestSpecBuilder = new RequestSpecBuilder();
+        responseSpecBuilder = new ResponseSpecBuilder();
+        requestSpec = null;
     }
 
     /**
@@ -70,7 +70,7 @@ public class RestAssuredWrapper {
      * @return the request
      */
     public RequestSpecBuilder getRequestBuilder() {
-        return this.requestSpecBuilder;
+        return requestSpecBuilder;
     }
 
     /**
@@ -79,7 +79,7 @@ public class RestAssuredWrapper {
      * @return the response
      */
     public ResponseSpecBuilder getResponseBuilder() {
-        return this.responseSpecBuilder;
+        return responseSpecBuilder;
     }
 
     /**
@@ -88,7 +88,7 @@ public class RestAssuredWrapper {
      * @return the response
      */
     public Response getResponse() {
-        return this.response;
+        return response;
     }
 
     /**
@@ -99,7 +99,7 @@ public class RestAssuredWrapper {
      * @return The same object for fluent api.
      */
     public RestAssuredWrapper withHeaders(final Map<String, String> headers) {
-        this.requestSpecBuilder.addHeaders(headers);
+        requestSpecBuilder.addHeaders(headers);
         return this;
     }
 
@@ -111,7 +111,7 @@ public class RestAssuredWrapper {
      * @return The same object for fluent api.
      */
     public RestAssuredWrapper withCookies(final Cookies cookies) {
-        this.requestSpecBuilder.addCookies(cookies);
+        requestSpecBuilder.addCookies(cookies);
         return this;
     }
 
@@ -123,7 +123,7 @@ public class RestAssuredWrapper {
      * @return The same object for fluent api.
      */
     public RestAssuredWrapper withPathParams(final Map<String, ?> pathParams) {
-        this.requestSpecBuilder.addPathParams(pathParams);
+        requestSpecBuilder.addPathParams(pathParams);
         return this;
     }
 
@@ -135,7 +135,7 @@ public class RestAssuredWrapper {
      * @return The same object for fluent api.
      */
     public RestAssuredWrapper withQueryParams(final Map<String, ?> queryParams) {
-        this.requestSpecBuilder.addQueryParams(queryParams);
+        requestSpecBuilder.addQueryParams(queryParams);
         return this;
     }
 
@@ -147,7 +147,7 @@ public class RestAssuredWrapper {
      * @return The same object for fluent api.
      */
     public RestAssuredWrapper withBodyParams(final Map<String, ?> bodyParams) {
-        this.requestSpecBuilder.addParams(bodyParams);
+        requestSpecBuilder.addParams(bodyParams);
         return this;
     }
 
@@ -159,7 +159,7 @@ public class RestAssuredWrapper {
      * @return The same object for fluent api.
      */
     public RestAssuredWrapper withFormParams(final Map<String, ?> formParams) {
-        this.requestSpecBuilder.addFormParams(formParams);
+        requestSpecBuilder.addFormParams(formParams);
         return this;
     }
 
@@ -171,7 +171,7 @@ public class RestAssuredWrapper {
      * @return The same object for fluent api.
      */
     public RestAssuredWrapper withContentType(final ContentType contentType) {
-        this.loadGivenSpecWhen().contentType(contentType);
+        loadGivenSpecWhen().contentType(contentType);
         return this;
     }
 
@@ -185,7 +185,7 @@ public class RestAssuredWrapper {
      * @return The same object for fluent api.
      */
     public RestAssuredWrapper withDigest(final String username, final String password) {
-        this.loadGivenSpecWhen().auth().digest(username, password);
+        loadGivenSpecWhen().auth().digest(username, password);
         return this;
     }
 
@@ -199,7 +199,7 @@ public class RestAssuredWrapper {
      * @return The same object for fluent api.
      */
     public RestAssuredWrapper withBasicPreemptive(final String username, final String password) {
-        this.loadGivenSpecWhen().auth().preemptive().basic(username, password);
+        loadGivenSpecWhen().auth().preemptive().basic(username, password);
         return this;
     }
 
@@ -213,7 +213,7 @@ public class RestAssuredWrapper {
      * @return The same object for fluent api.
      */
     public RestAssuredWrapper withChallengedBasic(final String username, final String password) {
-        this.loadGivenSpecWhen().auth().basic(username, password);
+        loadGivenSpecWhen().auth().basic(username, password);
         return this;
     }
 
@@ -259,9 +259,9 @@ public class RestAssuredWrapper {
                                            final String username, final String password,
                                            final Map<String, ?> additionalFields) {
         FormAuthConfig formConfig = new FormAuthConfig(formName, usernameInputName, passwordInputName);
-        this.formAdditionalFieldNames(formConfig, additionalFields);
+        formAdditionalFieldNames(formConfig, additionalFields);
         given().auth().form(username, password, formConfig).when().get(authFormUrl).then().statusCode(HttpStatus.SC_OK);
-        this.loadGivenSpecWhen();
+        loadGivenSpecWhen();
         return this;
     }
 
@@ -283,10 +283,10 @@ public class RestAssuredWrapper {
     public RestAssuredWrapper withFormSpringSecurityAuth(final String authFormUrl, final String username,
                                                          final String password, final Map<String, ?> additionalFields) {
         FormAuthConfig formConfig = FormAuthConfig.springSecurity();
-        this.formAdditionalFieldNames(formConfig, additionalFields);
+        formAdditionalFieldNames(formConfig, additionalFields);
         given().auth().form(username, password, formConfig).formParams(additionalFields).when().get(authFormUrl).then()
                .statusCode(HttpStatus.SC_OK);
-        this.loadGivenSpecWhen();
+        loadGivenSpecWhen();
         return this;
     }
 
@@ -308,10 +308,10 @@ public class RestAssuredWrapper {
     public RestAssuredWrapper withFormCSRF(final String authFormUrl, final String username, final String password,
                                            final Map<String, ?> additionalFields) {
         FormAuthConfig formConfig = formAuthConfig().withAutoDetectionOfCsrf();
-        this.formAdditionalFieldNames(formConfig, additionalFields);
+        formAdditionalFieldNames(formConfig, additionalFields);
         given().auth().form(username, password, formConfig).formParams(additionalFields).when().get(authFormUrl).then()
                .statusCode(HttpStatus.SC_OK);
-        this.loadGivenSpecWhen();
+        loadGivenSpecWhen();
         return this;
     }
 
@@ -344,7 +344,7 @@ public class RestAssuredWrapper {
         }
         given().auth().form(username, password, formConfig).formParams(additionalFields).when().get(authFormUrl).then()
                .statusCode(HttpStatus.SC_OK);
-        this.loadGivenSpecWhen();
+        loadGivenSpecWhen();
         return this;
     }
 
@@ -365,7 +365,7 @@ public class RestAssuredWrapper {
      */
     public RestAssuredWrapper withOAuth(final String consumerKey, final String consumerSecret, final String accessToken,
                                         final String secretToken) {
-        this.loadGivenSpecWhen().auth().oauth(consumerKey, consumerSecret, accessToken, secretToken);
+        loadGivenSpecWhen().auth().oauth(consumerKey, consumerSecret, accessToken, secretToken);
         return this;
     }
 
@@ -378,7 +378,7 @@ public class RestAssuredWrapper {
      * @return The same object for fluent api.
      */
     public RestAssuredWrapper withOAuth2(final String accessToken) {
-        this.loadGivenSpecWhen().auth().oauth2(accessToken);
+        loadGivenSpecWhen().auth().oauth2(accessToken);
         return this;
     }
 
@@ -388,10 +388,10 @@ public class RestAssuredWrapper {
      * @return Rspec {@link RequestSpecification}
      */
     private RequestSpecification loadGivenSpecWhen() {
-        if (null == this.requestSpec) {
-            this.requestSpec = given().spec(this.requestSpecBuilder.build()).when();
+        if (null == requestSpec) {
+            requestSpec = given().spec(requestSpecBuilder.build()).when();
         }
-        return this.requestSpec;
+        return requestSpec;
     }
 
     /**
@@ -402,10 +402,10 @@ public class RestAssuredWrapper {
      *             This method can only be invoked once per call, and be reset after call.
      */
     public RestAssuredWrapper buildRequest() throws RobotestException {
-        if (null != this.requestSpec) {
+        if (null != requestSpec) {
             throw new RobotestException("BUILD WHEN CAN ONLY BE INVOKED ONCE PER CALL");
         }
-        this.loadGivenSpecWhen();
+        loadGivenSpecWhen();
         return this;
     }
 
@@ -419,23 +419,23 @@ public class RestAssuredWrapper {
      * @return The same object for fluent api.
      */
     public RestAssuredWrapper doCall(final String url, final Method httpMethod) {
-        this.loadGivenSpecWhen();
+        loadGivenSpecWhen();
         if (Method.GET.equals(httpMethod)) {
-            this.response = this.requestSpec.get(url);
+            response = requestSpec.get(url);
         } else if (Method.POST.equals(httpMethod)) {
-            this.response = this.requestSpec.post(url);
+            response = requestSpec.post(url);
         } else if (Method.PUT.equals(httpMethod)) {
-            this.response = this.requestSpec.put(url);
+            response = requestSpec.put(url);
         } else if (Method.DELETE.equals(httpMethod)) {
-            this.response = this.requestSpec.delete(url);
+            response = requestSpec.delete(url);
         } else if (Method.PATCH.equals(httpMethod)) {
-            this.response = this.requestSpec.patch(url);
+            response = requestSpec.patch(url);
         } else if (Method.OPTIONS.equals(httpMethod)) {
-            this.response = this.requestSpec.options(url);
+            response = requestSpec.options(url);
         } else {
-            this.response = this.requestSpec.head(url);
+            response = requestSpec.head(url);
         }
-        this.requestSpec = null;
+        requestSpec = null;
         return this;
     }
 
@@ -443,13 +443,14 @@ public class RestAssuredWrapper {
      * Utility method for aply response spec specified object.
      *
      * @return The same object for fluent api.
-     * @throws RobotestException only call this method if doCall is already invoked
+     * @throws RobotestException
+     *             only call this method if doCall is already invoked
      */
     public RestAssuredWrapper thenResponseSpec() throws RobotestException {
-        if (null == this.response) {
+        if (null == response) {
             throw new RobotestException("doCall METHOD NOT INVOKED");
         }
-        this.response.then().spec(this.responseSpecBuilder.build());
+        response.then().spec(responseSpecBuilder.build());
         return this;
     }
 

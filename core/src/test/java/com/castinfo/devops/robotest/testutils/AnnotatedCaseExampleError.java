@@ -12,7 +12,7 @@ public class AnnotatedCaseExampleError extends TestCase {
 
     @RobotestCase(tag = "CASE_001", description = "CASE DESC")
     public void caseExample() throws RobotestException {
-        this.pageObject = this.buildPageObject(AnnotatedPageObjectExample.class);
+        pageObject = this.buildPageObject(AnnotatedPageObjectExample.class);
     }
 
     @RobotestCase(tag = "CASE_004", description = "CASE DESC")

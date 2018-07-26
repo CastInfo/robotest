@@ -36,8 +36,7 @@ import com.castinfo.devops.robotest.report.ValidationEntry;
 
 /**
  * This class brings acces to execution context of ROBOTEST Suites and Cases, buildin and stoping all that objects
- * needed and make
- * posible to retrive this load objects internally throught Suite - Case - Steps execution.
+ * needed and make posible to retrive this load objects internally throught Suite - Case - Steps execution.
  *
  * Another responsability is doclet validations of Suite an Case user test implementations.
  *
@@ -127,12 +126,9 @@ public final class RobotestExecutionContext {
     }
 
     /**
-     * Is invoked by TestNG and JUnit execution testing lyfe cicle listeners at test start, to build
-     * internal resources with configuation, for example, reporting system and Selenium Web Driver in Docker.
-     * Applyed validations are:
-     * - Case tag must be unique.
-     * - Suite tag must be unique.
-     * - Tag patter must acomplish TAG_PATTERN.
+     * Is invoked by TestNG and JUnit execution testing lyfe cicle listeners at test start, to build internal resources
+     * with configuation, for example, reporting system and Selenium Web Driver in Docker. Applyed validations are: -
+     * Case tag must be unique. - Suite tag must be unique. - Tag patter must acomplish TAG_PATTERN.
      *
      * @param suiteClazz
      *            Suite class.
@@ -188,8 +184,7 @@ public final class RobotestExecutionContext {
     }
 
     /**
-     * Stops all the docker containers associated to testCase annotation.
-     * Can only be called by JUnit/TestNG Listeners.
+     * Stops all the docker containers associated to testCase annotation. Can only be called by JUnit/TestNG Listeners.
      *
      */
     public static void forceStopLostResources() {
@@ -240,8 +235,7 @@ public final class RobotestExecutionContext {
     }
 
     /**
-     * Retrieve Suite Class RobotestSuite Doclet.
-     * Validate Doclet exists and tag attibute conform TAG_PATTERN.
+     * Retrieve Suite Class RobotestSuite Doclet. Validate Doclet exists and tag attibute conform TAG_PATTERN.
      *
      * @param klass
      *            the class.
@@ -262,8 +256,8 @@ public final class RobotestExecutionContext {
     }
 
     /**
-     * Is invoked by TestNG and JUnit execution testing lyfe cicle listeners at test start, to build
-     * internal resources with configuation.
+     * Is invoked by TestNG and JUnit execution testing lyfe cicle listeners at test start, to build internal resources
+     * with configuation.
      *
      * @param clazz
      *            Suite Class.

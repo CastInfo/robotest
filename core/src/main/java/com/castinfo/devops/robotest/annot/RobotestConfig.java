@@ -23,8 +23,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * ROBOTEST Annotation.
- * This annotation makes posible to configure a free user config resource for Suites, Cases and Steps.
+ * ROBOTEST Annotation. This annotation makes posible to configure a free user config resource for Suites, Cases and
+ * Steps.
  *
  */
 @Retention(RetentionPolicy.RUNTIME)

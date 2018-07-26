@@ -60,7 +60,7 @@ public class RobotestBasicConfig {
      */
     @JsonProperty("browser")
     public RobotestBrowserConfig getBrowser() {
-        return this.browser;
+        return browser;
     }
 
     /**
@@ -83,13 +83,13 @@ public class RobotestBasicConfig {
      */
     @JsonProperty("generalTimeout")
     public String getGeneralTimeout() {
-        return this.generalTimeout;
+        return generalTimeout;
     }
 
     private static final int ONE_SECOND_IN_MILLIS = 1000;
 
     public long getGeneralTimeoutInSeconds() {
-        long millis = Long.parseLong(this.generalTimeout);
+        long millis = Long.parseLong(generalTimeout);
         return millis / ONE_SECOND_IN_MILLIS;
     }
 
@@ -102,7 +102,7 @@ public class RobotestBasicConfig {
      */
     @JsonProperty("generalTimeout")
     public void setGeneralTimeout(final String waitTimeout) {
-        this.generalTimeout = waitTimeout;
+        generalTimeout = waitTimeout;
     }
 
     /**
@@ -113,7 +113,7 @@ public class RobotestBasicConfig {
      */
     @JsonProperty("env")
     public String getEnv() {
-        return this.env;
+        return env;
     }
 
     /**
@@ -135,7 +135,7 @@ public class RobotestBasicConfig {
      */
     @JsonProperty("reportFilePath")
     public String getReportFilePath() {
-        return this.reportFilePath;
+        return reportFilePath;
     }
 
     /**
@@ -157,7 +157,7 @@ public class RobotestBasicConfig {
      */
     @JsonProperty("docker")
     public DockerConfig getDocker() {
-        return this.docker;
+        return docker;
     }
 
     /**
@@ -178,7 +178,7 @@ public class RobotestBasicConfig {
      */
     @JsonProperty("browserStack")
     public BrowserStackConfig getBrowserStack() {
-        return this.browserStack;
+        return browserStack;
     }
 
     /**
@@ -199,9 +199,8 @@ public class RobotestBasicConfig {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(this.env).append(this.generalTimeout).append(this.browser)
-                                    .append(this.reportFilePath).append(this.docker).append(this.browserStack)
-                                    .toHashCode();
+        return new HashCodeBuilder().append(env).append(generalTimeout).append(browser).append(reportFilePath)
+                                    .append(docker).append(browserStack).toHashCode();
     }
 
     @Override
@@ -213,10 +212,9 @@ public class RobotestBasicConfig {
             return false;
         }
         RobotestBasicConfig rhs = (RobotestBasicConfig) other;
-        return new EqualsBuilder().append(this.generalTimeout, rhs.generalTimeout).append(this.env, rhs.env)
-                                  .append(this.browser, rhs.browser).append(this.reportFilePath, rhs.reportFilePath)
-                                  .append(this.docker, rhs.docker).append(this.browserStack, rhs.browserStack)
-                                  .isEquals();
+        return new EqualsBuilder().append(generalTimeout, rhs.generalTimeout).append(env, rhs.env)
+                                  .append(browser, rhs.browser).append(reportFilePath, rhs.reportFilePath)
+                                  .append(docker, rhs.docker).append(browserStack, rhs.browserStack).isEquals();
     }
 
 }

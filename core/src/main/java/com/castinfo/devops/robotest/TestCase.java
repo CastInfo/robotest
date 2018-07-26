@@ -45,7 +45,7 @@ public class TestCase extends ConfigurationAccess {
      */
     public TestCase() {
         try {
-            this.setSuiteAnnot(RobotestExecutionContext.getSuiteAnnotation(this.getClass()));
+            setSuiteAnnot(RobotestExecutionContext.getSuiteAnnotation(this.getClass()));
         } catch (RobotestException e) {
             LOG.error("NO SUITE ANNOTATION FOUND, EXECUTION MAY FAIL", e);
         }
@@ -132,10 +132,8 @@ public class TestCase extends ConfigurationAccess {
     }
 
     /**
-     * You will use to Build WebFragment/PageObject context to execute.
-     * Validations applied are:
-     * - RobotestStep annotation tag attribute will acomplish TAG_PATTERN.
-     * - RobotestStep tag must be unique in PageObject/PageObject.
+     * You will use to Build WebFragment/PageObject context to execute. Validations applied are: - RobotestStep
+     * annotation tag attribute will acomplish TAG_PATTERN. - RobotestStep tag must be unique in PageObject/PageObject.
      *
      * @param pageObject
      *            WebFragment
@@ -147,13 +145,13 @@ public class TestCase extends ConfigurationAccess {
      */
     public <T> T buildPageObject(final Class<T> pageObject) throws RobotestException {
         this.isPageObject(pageObject);
-        this.setCaseAnnot(this.searchInvokerCaseTag());
+        setCaseAnnot(searchInvokerCaseTag());
         Method[] pageObjectMethods = pageObject.getMethods();
         String pfTagAnnot = null;
         for (Method m : pageObjectMethods) {
             if (m.isAnnotationPresent(RobotestStep.class)) {
                 pfTagAnnot = m.getAnnotation(RobotestStep.class).tag();
-                this.pageFragmentAnnotationValidations(pageObject, this.getCaseAnnot().tag(), pfTagAnnot, m);
+                pageFragmentAnnotationValidations(pageObject, getCaseAnnot().tag(), pfTagAnnot, m);
                 TestCase.pageFragmentTagClasses.put(pfTagAnnot, pageObject.getName() + "." + m.getName());
             }
         }
@@ -175,8 +173,8 @@ public class TestCase extends ConfigurationAccess {
         enhancer.setSuperclass(pageObject);
         enhancer.setCallback(new StepInterceptor());
         PageObject enhaced = (PageObject) enhancer.create();
-        enhaced.setSuiteAnnot(this.getSuiteAnnot());
-        enhaced.setCaseAnnot(this.getCaseAnnot());
+        enhaced.setSuiteAnnot(getSuiteAnnot());
+        enhaced.setCaseAnnot(getCaseAnnot());
         return (T) enhaced;
     }
 
@@ -187,10 +185,10 @@ public class TestCase extends ConfigurationAccess {
      */
     @Override
     public <T> T getTestCfg(final String configKey) throws RobotestException {
-        SuiteContext sContext = this.getSuiteContext();
-        T scopedConfig = this.getTestCfgInScope(sContext, this.getCaseAnnot(), configKey);
+        SuiteContext sContext = getSuiteContext();
+        T scopedConfig = this.getTestCfgInScope(sContext, getCaseAnnot(), configKey);
         if (null == scopedConfig) {
-            scopedConfig = this.getTestCfgInScope(sContext, this.getSuiteAnnot(), configKey);
+            scopedConfig = this.getTestCfgInScope(sContext, getSuiteAnnot(), configKey);
         }
         return scopedConfig;
     }

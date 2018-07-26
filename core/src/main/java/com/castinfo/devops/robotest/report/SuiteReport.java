@@ -64,7 +64,7 @@ public class SuiteReport {
             reportFile.getParentFile().mkdirs();
             this.suiteOrder = suiteOrder;
             JsonFactory jfactory = new JsonFactory();
-            this.jGenerator = jfactory.createGenerator(reportFile, JsonEncoding.UTF8);
+            jGenerator = jfactory.createGenerator(reportFile, JsonEncoding.UTF8);
             synchronized (SuiteReport.WRITER_BLOCKER) {
                 if (null == SuiteReport.suitesListReporter) {
                     File suiteReporterFile = new File(reportFile.getParentFile().getAbsolutePath()
@@ -84,7 +84,7 @@ public class SuiteReport {
      * @return the suiteOrder
      */
     public int getSuiteOrder() {
-        return this.suiteOrder;
+        return suiteOrder;
     }
 
     /**
@@ -103,7 +103,7 @@ public class SuiteReport {
      * @return the caseOrder
      */
     public AtomicInteger getCaseOrder() {
-        return this.caseOrder;
+        return caseOrder;
     }
 
     /**
@@ -122,7 +122,7 @@ public class SuiteReport {
      * @return the stepOrder
      */
     public AtomicInteger getStepOrder() {
-        return this.stepOrder;
+        return stepOrder;
     }
 
     /**
@@ -141,7 +141,7 @@ public class SuiteReport {
      * @return the jGenerator
      */
     public JsonGenerator getjGenerator() {
-        return this.jGenerator;
+        return jGenerator;
     }
 
     /**
@@ -160,7 +160,7 @@ public class SuiteReport {
      * @return the suiteConfig
      */
     public ConfigReport getSuiteConfig() {
-        return this.suiteConfig;
+        return suiteConfig;
     }
 
     /**
@@ -179,7 +179,7 @@ public class SuiteReport {
      * @return the caseReports
      */
     public List<CaseReport> getCaseReports() {
-        return this.caseReports;
+        return caseReports;
     }
 
     /**
@@ -198,7 +198,7 @@ public class SuiteReport {
      * @return the outCaseErrors
      */
     public List<ValidationEntry> getOutCaseErrors() {
-        return this.outCaseErrors;
+        return outCaseErrors;
     }
 
     /**
@@ -228,18 +228,18 @@ public class SuiteReport {
     public void initSuite(final String suiteId, final String suiteDescription, final long initMillis,
                           final List<ConfigEntry> config) throws RobotestException {
         try {
-            this.caseOrder = new AtomicInteger(0);
-            this.jGenerator.writeStartObject();
-            this.jGenerator.writeNumberField("order", this.suiteOrder);
-            this.jGenerator.writeStringField("suite", suiteId);
-            this.jGenerator.writeStringField("description", suiteDescription);
-            this.jGenerator.writeNumberField("initMillis", initMillis);
+            caseOrder = new AtomicInteger(0);
+            jGenerator.writeStartObject();
+            jGenerator.writeNumberField("order", suiteOrder);
+            jGenerator.writeStringField("suite", suiteId);
+            jGenerator.writeStringField("description", suiteDescription);
+            jGenerator.writeNumberField("initMillis", initMillis);
 
-            this.suiteConfig = new ConfigReport(config);
-            this.suiteConfig.writeConfig(this.jGenerator, "config");
+            suiteConfig = new ConfigReport(config);
+            suiteConfig.writeConfig(jGenerator, "config");
 
-            this.jGenerator.writeFieldName("cases");
-            this.jGenerator.writeStartArray();
+            jGenerator.writeFieldName("cases");
+            jGenerator.writeStartArray();
         } catch (IOException e) {
             throw new RobotestException("ROBOTEST REPORTER ERROR", e);
         }
@@ -255,27 +255,27 @@ public class SuiteReport {
      */
     public void endSuite(final long time) throws RobotestException {
         try {
-            this.jGenerator.writeEndArray();
+            jGenerator.writeEndArray();
 
-            this.jGenerator.writeFieldName("suiteOutCaseErrors");
-            this.jGenerator.writeStartArray();
-            for (ValidationEntry toadd : this.outCaseErrors) {
-                this.jGenerator.writeStartObject();
-                this.jGenerator.writeStringField("status", toadd.getStatus().name());
+            jGenerator.writeFieldName("suiteOutCaseErrors");
+            jGenerator.writeStartArray();
+            for (ValidationEntry toadd : outCaseErrors) {
+                jGenerator.writeStartObject();
+                jGenerator.writeStringField("status", toadd.getStatus().name());
                 if (null != toadd.getResource()) {
-                    this.jGenerator.writeArrayFieldStart("resource");
+                    jGenerator.writeArrayFieldStart("resource");
                     for (String res : toadd.getResource()) {
-                        this.jGenerator.writeObject(res);
+                        jGenerator.writeObject(res);
                     }
-                    this.jGenerator.writeEndArray();
+                    jGenerator.writeEndArray();
                 }
-                this.jGenerator.writeEndObject();
+                jGenerator.writeEndObject();
             }
-            this.jGenerator.writeEndArray();
+            jGenerator.writeEndArray();
 
-            this.jGenerator.writeNumberField("endMillis", time);
-            this.jGenerator.writeEndObject();
-            this.jGenerator.close();
+            jGenerator.writeNumberField("endMillis", time);
+            jGenerator.writeEndObject();
+            jGenerator.close();
         } catch (IOException e) {
             throw new RobotestException("ROBOTEST ERROR REPORT", e);
         }
@@ -295,9 +295,8 @@ public class SuiteReport {
      */
     public void initCase(final String caseId, final String caseDescription, final long initMillis,
                          final List<ConfigEntry> caseConfig) {
-        this.stepOrder = new AtomicInteger(0);
-        this.caseReports.add(new CaseReport(this.caseOrder.getAndIncrement(), caseId, caseDescription, initMillis,
-                                            caseConfig));
+        stepOrder = new AtomicInteger(0);
+        caseReports.add(new CaseReport(caseOrder.getAndIncrement(), caseId, caseDescription, initMillis, caseConfig));
     }
 
     /**
@@ -311,11 +310,11 @@ public class SuiteReport {
      *             Errors, probably IO.
      */
     public void endCase(final String caseId, final long endMillis) throws RobotestException {
-        for (CaseReport caseReport : this.caseReports) {
+        for (CaseReport caseReport : caseReports) {
             if (caseReport.getId().equals(caseId)) {
                 caseReport.endCase(endMillis);
                 synchronized (SuiteReport.WRITER_BLOCKER) {
-                    caseReport.writeCase(this.jGenerator);
+                    caseReport.writeCase(jGenerator);
                 }
             }
         }
@@ -338,9 +337,9 @@ public class SuiteReport {
      */
     public void initStep(final String caseId, final String stepId, final String stepDescription,
                          final List<ConfigEntry> stepConfig, final long initMillis) {
-        for (CaseReport caseReport : this.caseReports) {
+        for (CaseReport caseReport : caseReports) {
             if (caseReport.getId().equals(caseId)) {
-                caseReport.addStep(new StepReport(this.stepOrder.getAndIncrement(), stepId, stepDescription, stepConfig,
+                caseReport.addStep(new StepReport(stepOrder.getAndIncrement(), stepId, stepDescription, stepConfig,
                                                   initMillis));
             }
         }
@@ -359,7 +358,7 @@ public class SuiteReport {
      */
     public ValidationEntry addStepValidationEntry(final String caseId, final String stepId,
                                                   final ValidationEntry validationEntry) {
-        for (CaseReport caseReport : this.caseReports) {
+        for (CaseReport caseReport : caseReports) {
             if (caseReport.getId().equals(caseId)) {
                 for (StepReport stepReport : caseReport.getStepReports()) {
                     if (null != stepReport.getId() && stepReport.getId().equals(stepId)) {
@@ -382,7 +381,7 @@ public class SuiteReport {
      * @return The validation entry to fluent api purposes.
      */
     public ValidationEntry addCaseValidationEntry(final String caseId, final ValidationEntry validationEntry) {
-        for (CaseReport caseReport : this.caseReports) {
+        for (CaseReport caseReport : caseReports) {
             if (caseReport.getId().equals(caseId)) {
                 caseReport.getOutStepErrors().add(validationEntry);
             }
@@ -397,7 +396,7 @@ public class SuiteReport {
      *            entry.
      */
     public void addSuiteValidationEntry(final ValidationEntry validationEntry) {
-        this.outCaseErrors.add(validationEntry);
+        outCaseErrors.add(validationEntry);
     }
 
     /**
@@ -414,7 +413,7 @@ public class SuiteReport {
      */
     public void endStep(final String caseId, final String stepId, final StepStatus resultadoStep,
                         final long endMillis) {
-        for (CaseReport caseReport : this.caseReports) {
+        for (CaseReport caseReport : caseReports) {
             if (caseReport.getId().equals(caseId)) {
                 for (StepReport stepReport : caseReport.getStepReports()) {
                     if (stepReport.getId().equals(stepId)) {

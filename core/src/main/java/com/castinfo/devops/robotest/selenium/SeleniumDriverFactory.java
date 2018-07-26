@@ -90,15 +90,15 @@ public class SeleniumDriverFactory {
      *            robotest config of browserCfg
      */
     public SeleniumDriverFactory(final RobotestBasicConfig browserCfg) {
-        this.basicCfg = browserCfg;
+        basicCfg = browserCfg;
     }
 
     private RobotestBasicConfig getBasicCfg() {
-        return this.basicCfg;
+        return basicCfg;
     }
 
     private RobotestBrowserConfig getBrowserConfig() {
-        return this.basicCfg.getBrowser();
+        return basicCfg.getBrowser();
     }
 
     /**
@@ -159,8 +159,8 @@ public class SeleniumDriverFactory {
     }
 
     /**
-     * Build a Selenium WebDriver of a browserCfg type to associated by Robotest Docker Selenium HUB.
-     * Docker CHROME &amp; FIREFOX are supported
+     * Build a Selenium WebDriver of a browserCfg type to associated by Robotest Docker Selenium HUB. Docker CHROME
+     * &amp; FIREFOX are supported
      *
      * @param dockerCfg
      *            docker config with hub info.
@@ -172,23 +172,23 @@ public class SeleniumDriverFactory {
         WebDriver webdriver = null;
         DesiredCapabilities capabilities = null;
         try {
-            if (SeleniumBrowser.FIREFOX.name().equalsIgnoreCase(this.getBrowserConfig().getBrowserName())) {
+            if (SeleniumBrowser.FIREFOX.name().equalsIgnoreCase(getBrowserConfig().getBrowserName())) {
                 capabilities = DesiredCapabilities.firefox();
-            } else if (SeleniumBrowser.CHROME.name().equalsIgnoreCase(this.getBrowserConfig().getBrowserName())) {
+            } else if (SeleniumBrowser.CHROME.name().equalsIgnoreCase(getBrowserConfig().getBrowserName())) {
                 capabilities = DesiredCapabilities.chrome();
             } else {
                 throw new RobotestException("NOT DOCKER AVAILABLE FOR THIS BROWSER. REVISE ROBOTEST_BROWSER CONFIG: "
-                        + this.getBrowserConfig().getBrowserName());
+                        + getBrowserConfig().getBrowserName());
             }
             if (null == dockerCfg || StringUtils.isEmpty(dockerCfg.getHub())) {
                 throw new RobotestException("SELENIUM DRIVER DOCKER HUB CONFIG NOT FOUND.");
             }
 
-            this.preCreationDriverCapabilities(capabilities);
+            preCreationDriverCapabilities(capabilities);
 
             webdriver = new RemoteWebDriver(new URL(dockerCfg.getHub()), capabilities);
 
-            this.postCreationDriverCapabilities(webdriver, capabilities, false);
+            postCreationDriverCapabilities(webdriver, capabilities, false);
 
         } catch (IOException | UnreachableBrowserException e) {
             throw new RobotestException("DOCKER HUB SELENIUM DRIVER CREATION ERROR", e);
@@ -215,9 +215,9 @@ public class SeleniumDriverFactory {
         if (null == browserStackCfg) {
             throw new RobotestException("BROWSERSTACK CONFIG IS MANDATORY! REVISE BASIC CONFIG.");
         }
-        this.browserStackCfgValidations(suiteName, caseName, browserStackCfg);
+        browserStackCfgValidations(suiteName, caseName, browserStackCfg);
         WebDriver webdriver = null;
-        DesiredCapabilities capabilities = this.browserStackCapabilities(suiteName, caseName, browserStackCfg);
+        DesiredCapabilities capabilities = browserStackCapabilities(suiteName, caseName, browserStackCfg);
         try {
             webdriver = new RemoteWebDriver(new URL("http://" + browserStackCfg.getLogin() + ":"
                     + browserStackCfg.getAccessKey() + "@hub-cloud.browserstack.com/wd/hub"), capabilities);
@@ -241,10 +241,9 @@ public class SeleniumDriverFactory {
      */
     protected void browserStackCfgValidations(final String suiteName, final String caseName,
                                               final BrowserStackConfig browserStackCfg) throws RobotestException {
-        if (!"IPHONE".equals(this.getBrowserConfig().getBrowserName())
-                && !"IPAD".equals(this.getBrowserConfig().getBrowserName())
-                && !"ANDROID".equals(this.getBrowserConfig().getBrowserName())) {
-            throw new RobotestException("BROWSERSTACK BROWSER NOT SUPORTED: " + this.getBrowserConfig().getBrowserName()
+        if (!"IPHONE".equals(getBrowserConfig().getBrowserName()) && !"IPAD".equals(getBrowserConfig().getBrowserName())
+                && !"ANDROID".equals(getBrowserConfig().getBrowserName())) {
+            throw new RobotestException("BROWSERSTACK BROWSER NOT SUPORTED: " + getBrowserConfig().getBrowserName()
                     + " [ONLY IPAD,IPHONE,ANDROID] REVISE BASIC CONFIG.");
         }
         if (StringUtils.isEmpty(browserStackCfg.getDevice())) {
@@ -259,7 +258,7 @@ public class SeleniumDriverFactory {
         if (StringUtils.isEmpty(browserStackCfg.getAccessKey())) {
             throw new RobotestException("BROWSERSTACK ACCESSKEY IS MANDATORY! REVISE BASIC CONFIG.");
         }
-        this.browserStackCfgValidationsNames(suiteName, caseName);
+        browserStackCfgValidationsNames(suiteName, caseName);
     }
 
     private void browserStackCfgValidationsNames(final String suiteName,
@@ -287,9 +286,9 @@ public class SeleniumDriverFactory {
                                                            final BrowserStackConfig browserStackCfg) {
         DesiredCapabilities capabilities = new DesiredCapabilities();
         String bsAdaptedBroserName;
-        if ("IPHONE".equals(this.getBrowserConfig().getBrowserName())) {
+        if ("IPHONE".equals(getBrowserConfig().getBrowserName())) {
             bsAdaptedBroserName = "iPhone";
-        } else if ("IPAD".equals(this.getBrowserConfig().getBrowserName())) {
+        } else if ("IPAD".equals(getBrowserConfig().getBrowserName())) {
             bsAdaptedBroserName = "iPad";
         } else {
             bsAdaptedBroserName = "android";
@@ -312,9 +311,8 @@ public class SeleniumDriverFactory {
     /**
      * Build a local browserCfg instance with https://github.com/bonigarcia/webdrivermanager facilities for development.
      *
-     * IMPORTANT NOTES!
-     * CI *nix systems not suport native browsers without X systems.
-     * Native browserCfg version have is correspondent native driver managed
+     * IMPORTANT NOTES! CI *nix systems not suport native browsers without X systems. Native browserCfg version have is
+     * correspondent native driver managed
      *
      * @return WebDriver
      * @throws RobotestException
@@ -322,33 +320,32 @@ public class SeleniumDriverFactory {
      */
     public WebDriver buildLocalNativeWebDriver() throws RobotestException {
         Pair<WebDriver, DesiredCapabilities> localDriver;
-        LOG.info("TRY TO UP NATIVE DRIVER: {}", this.getBrowserConfig());
+        LOG.info("TRY TO UP NATIVE DRIVER: {}", getBrowserConfig());
         try {
-            if (SeleniumBrowser.CHROME.name().equalsIgnoreCase(this.getBrowserConfig().getBrowserName())) {
+            if (SeleniumBrowser.CHROME.name().equalsIgnoreCase(getBrowserConfig().getBrowserName())) {
                 if (!SeleniumDriverFactory.isNativeChromeInitied()) {
                     WebDriverManager.chromedriver().setup();
                     SeleniumDriverFactory.setNativeChromeInitied(true);
                 }
-                localDriver = this.buildChromeNativeDriver();
-            } else if (SeleniumBrowser.FIREFOX.name().equalsIgnoreCase(this.getBrowserConfig().getBrowserName())) {
+                localDriver = buildChromeNativeDriver();
+            } else if (SeleniumBrowser.FIREFOX.name().equalsIgnoreCase(getBrowserConfig().getBrowserName())) {
                 if (!SeleniumDriverFactory.isNativeFirefoxInitied()) {
                     WebDriverManager.firefoxdriver().setup();
                     SeleniumDriverFactory.setNativeFirefoxInitied(true);
                 }
-                localDriver = this.buildFirefoxNativeDriver();
-            } else if (SeleniumBrowser.INTERNET_EXPLORER.name()
-                                                        .equalsIgnoreCase(this.getBrowserConfig().getBrowserName())) {
+                localDriver = buildFirefoxNativeDriver();
+            } else if (SeleniumBrowser.INTERNET_EXPLORER.name().equalsIgnoreCase(getBrowserConfig().getBrowserName())) {
                 if (!SeleniumDriverFactory.isNativeInternetExplorerInitied()) {
                     WebDriverManager.iedriver().setup();
                     SeleniumDriverFactory.setNativeInternetExplorerInitied(true);
                 }
-                localDriver = this.buildInternetExplorerNativeDriver();
+                localDriver = buildInternetExplorerNativeDriver();
             } else {
                 throw new RobotestException("NATIVE DRIVER NOT IMPLEMENTED. REVISE ROBOTEST_BROWSER BASE CONFIG.");
             }
-            LOG.info("NATIVE DRIVER CREATED: {} HEADLESS: {}", this.getBrowserConfig().getBrowserName(),
-                     this.getBrowserConfig().getHeadLess());
-            this.postCreationDriverCapabilities(localDriver.getLeft(), localDriver.getRight(), true);
+            LOG.info("NATIVE DRIVER CREATED: {} HEADLESS: {}", getBrowserConfig().getBrowserName(),
+                     getBrowserConfig().getHeadLess());
+            postCreationDriverCapabilities(localDriver.getLeft(), localDriver.getRight(), true);
         } catch (WebDriverManagerException | WebDriverException | IllegalStateException e) {
             throw new RobotestException("NATIVE DRIVER CREATION ERROR", e);
         }
@@ -363,17 +360,17 @@ public class SeleniumDriverFactory {
     private Pair<WebDriver, DesiredCapabilities> buildChromeNativeDriver() {
         WebDriver driver;
         DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-        this.preCreationDriverCapabilities(capabilities);
+        preCreationDriverCapabilities(capabilities);
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.merge(capabilities);
         List<String> arguments = new ArrayList<>();
         arguments.add("--no-sandbox");
-        if ("true".equals(this.getBrowserConfig().getHeadLess())) {
+        if ("true".equals(getBrowserConfig().getHeadLess())) {
             arguments.add("--headless");
             arguments.add("--disable-gpu");
         }
-        arguments.add("--window-size=" + this.getBrowserConfig().getWindowWidth() + ","
-                + this.getBrowserConfig().getWindowHeight());
+        arguments.add("--window-size=" + getBrowserConfig().getWindowWidth() + ","
+                + getBrowserConfig().getWindowHeight());
         chromeOptions.addArguments(arguments);
         driver = new ChromeDriver(chromeOptions);
         return new ImmutablePair<>(driver, capabilities);
@@ -387,15 +384,15 @@ public class SeleniumDriverFactory {
     private Pair<WebDriver, DesiredCapabilities> buildFirefoxNativeDriver() {
         WebDriver driver;
         DesiredCapabilities capabilities = DesiredCapabilities.firefox();
-        this.preCreationDriverCapabilities(capabilities);
+        preCreationDriverCapabilities(capabilities);
         FirefoxOptions firefoxOptions = new FirefoxOptions();
         firefoxOptions.merge(capabilities);
         List<String> arguments = new ArrayList<>();
-        if ("true".equals(this.getBrowserConfig().getHeadLess())) {
+        if ("true".equals(getBrowserConfig().getHeadLess())) {
             arguments.add("-headless");
         }
-        arguments.add("-width " + this.getBrowserConfig().getWindowWidth());
-        arguments.add("-height " + this.getBrowserConfig().getWindowHeight());
+        arguments.add("-width " + getBrowserConfig().getWindowWidth());
+        arguments.add("-height " + getBrowserConfig().getWindowHeight());
         firefoxOptions.addArguments(arguments);
         driver = new FirefoxDriver(firefoxOptions);
         return new ImmutablePair<>(driver, capabilities);
@@ -411,7 +408,7 @@ public class SeleniumDriverFactory {
         DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
         capabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
         capabilities.setCapability("ignoreZoomSetting", true);
-        this.preCreationDriverCapabilities(capabilities);
+        preCreationDriverCapabilities(capabilities);
         InternetExplorerOptions ieOptions = new InternetExplorerOptions();
         ieOptions.merge(capabilities);
         driver = new InternetExplorerDriver(ieOptions);
@@ -425,30 +422,30 @@ public class SeleniumDriverFactory {
      *            current capabilities
      */
     protected void preCreationDriverCapabilities(final DesiredCapabilities capabilities) {
-        this.configureBrowserLogs(capabilities);
+        configureBrowserLogs(capabilities);
         if (!SeleniumBrowser.INTERNET_EXPLORER.name().equalsIgnoreCase(capabilities.getBrowserName())) {
             capabilities.setAcceptInsecureCerts(true);
         }
-        if (StringUtils.isEmpty(this.getBrowserConfig().getProxy())) {
+        if (StringUtils.isEmpty(getBrowserConfig().getProxy())) {
             capabilities.setCapability(CapabilityType.ForSeleniumServer.AVOIDING_PROXY, true);
         } else {
             if (!SeleniumBrowser.FIREFOX.name().equalsIgnoreCase(capabilities.getBrowserName())) {
                 Proxy proxy = new Proxy();
                 proxy.setProxyType(ProxyType.MANUAL);
-                proxy.setHttpProxy(this.getBrowserConfig().getProxy());
-                proxy.setSslProxy(this.getBrowserConfig().getProxy());
-                proxy.setNoProxy(this.getBrowserConfig().getNoproxyfor());
+                proxy.setHttpProxy(getBrowserConfig().getProxy());
+                proxy.setSslProxy(getBrowserConfig().getProxy());
+                proxy.setNoProxy(getBrowserConfig().getNoproxyfor());
                 capabilities.setCapability(CapabilityType.PROXY, proxy);
             }
         }
         capabilities.setCapability(CapabilityType.ForSeleniumServer.ENSURING_CLEAN_SESSION, true);
         com.google.gson.JsonObject timeouts = new com.google.gson.JsonObject();
         timeouts.addProperty("implicit", 0);
-        timeouts.addProperty("pageLoad", Integer.parseInt(this.getBasicCfg().getGeneralTimeout()));
-        timeouts.addProperty("script", Integer.parseInt(this.getBasicCfg().getGeneralTimeout()));
+        timeouts.addProperty("pageLoad", Integer.parseInt(getBasicCfg().getGeneralTimeout()));
+        timeouts.addProperty("script", Integer.parseInt(getBasicCfg().getGeneralTimeout()));
         capabilities.setCapability("timeouts", timeouts);
-        this.preDriverCreationChromeCapabilites(capabilities);
-        this.preDriverCreationFirefoxCapabilities(capabilities);
+        preDriverCreationChromeCapabilites(capabilities);
+        preDriverCreationFirefoxCapabilities(capabilities);
     }
 
     /**
@@ -459,12 +456,12 @@ public class SeleniumDriverFactory {
      */
     protected void configureBrowserLogs(final DesiredCapabilities capabilities) {
         LoggingPreferences logs = new LoggingPreferences();
-        logs.enable(LogType.BROWSER, Level.parse(this.getBrowserConfig().getConsoleLogLevel()));
-        logs.enable(LogType.CLIENT, Level.parse(this.getBrowserConfig().getConsoleLogLevel()));
-        logs.enable(LogType.DRIVER, Level.parse(this.getBrowserConfig().getConsoleLogLevel()));
-        logs.enable(LogType.PERFORMANCE, Level.parse(this.getBrowserConfig().getConsoleLogLevel()));
-        logs.enable(LogType.PROFILER, Level.parse(this.getBrowserConfig().getConsoleLogLevel()));
-        logs.enable(LogType.SERVER, Level.parse(this.getBrowserConfig().getConsoleLogLevel()));
+        logs.enable(LogType.BROWSER, Level.parse(getBrowserConfig().getConsoleLogLevel()));
+        logs.enable(LogType.CLIENT, Level.parse(getBrowserConfig().getConsoleLogLevel()));
+        logs.enable(LogType.DRIVER, Level.parse(getBrowserConfig().getConsoleLogLevel()));
+        logs.enable(LogType.PERFORMANCE, Level.parse(getBrowserConfig().getConsoleLogLevel()));
+        logs.enable(LogType.PROFILER, Level.parse(getBrowserConfig().getConsoleLogLevel()));
+        logs.enable(LogType.SERVER, Level.parse(getBrowserConfig().getConsoleLogLevel()));
         capabilities.setCapability(CapabilityType.LOGGING_PREFS, logs);
     }
 
@@ -487,7 +484,7 @@ public class SeleniumDriverFactory {
             // fp.setPreference("media.windows-media-foundation.enabled", false); // video-off
             fp.setPreference("toolkit.startup.max_resumed_crashes", -1); // Desactivar el Safe Mode
             fp.setPreference("browserCfg.sessionstore.postdata", -1); // Desactivar el "Document Expired"
-            if (StringUtils.isEmpty(this.getBrowserConfig().getProxy())) {
+            if (StringUtils.isEmpty(getBrowserConfig().getProxy())) {
                 fp.setPreference("network.proxy.type", 0); // Sin proxy
             } else {
                 // JsonObject json = new JsonObject();
@@ -497,14 +494,14 @@ public class SeleniumDriverFactory {
                 // json.addProperty("noProxy", this.getBrowserConfig().getNoproxyfor());
                 // capabilities.setCapability("proxy", json);
                 // WORKAROUND related to https://github.com/SeleniumHQ/selenium/issues/5004
-                String proxyServer = this.getBrowserConfig().getProxy().split(":")[0];
-                String proxyPort = this.getBrowserConfig().getProxy().split(":")[1];
+                String proxyServer = getBrowserConfig().getProxy().split(":")[0];
+                String proxyPort = getBrowserConfig().getProxy().split(":")[1];
                 fp.setPreference("network.proxy.type", 1);
                 fp.setPreference("network.proxy.http", proxyServer);
                 fp.setPreference("network.proxy.http_port", Integer.parseInt(proxyPort));
                 fp.setPreference("network.proxy.ssl", proxyServer);
                 fp.setPreference("network.proxy.ssl_port", Integer.parseInt(proxyPort));
-                fp.setPreference("network.proxy.no_proxies_on", this.getBrowserConfig().getNoproxyfor());
+                fp.setPreference("network.proxy.no_proxies_on", getBrowserConfig().getNoproxyfor());
 
             }
             fp.setPreference("browserCfg.cache.disk.enable", true);
@@ -544,9 +541,9 @@ public class SeleniumDriverFactory {
      */
     protected void postCreationDriverCapabilities(final WebDriver webdriver, final DesiredCapabilities capabilities,
                                                   final boolean localNative) {
-        this.deleteCookiesAndSetTimemouts(webdriver);
-        if ("true".equals(this.getBrowserConfig().getMaximized())) {
-            this.forzeMaximizeWindow(webdriver, capabilities, localNative);
+        deleteCookiesAndSetTimemouts(webdriver);
+        if ("true".equals(getBrowserConfig().getMaximized())) {
+            forzeMaximizeWindow(webdriver, capabilities, localNative);
         }
     }
 
@@ -575,9 +572,9 @@ public class SeleniumDriverFactory {
      */
     protected void deleteCookiesAndSetTimemouts(final WebDriver webdriver) {
         webdriver.manage().deleteAllCookies();
-        webdriver.manage().timeouts().pageLoadTimeout((int) this.getBasicCfg().getGeneralTimeoutInSeconds(),
+        webdriver.manage().timeouts().pageLoadTimeout((int) getBasicCfg().getGeneralTimeoutInSeconds(),
                                                       TimeUnit.SECONDS);
-        webdriver.manage().timeouts().setScriptTimeout((int) this.getBasicCfg().getGeneralTimeoutInSeconds(),
+        webdriver.manage().timeouts().setScriptTimeout((int) getBasicCfg().getGeneralTimeoutInSeconds(),
                                                        TimeUnit.SECONDS);
         webdriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
     }

@@ -46,8 +46,8 @@ public class SuitesListReport {
      */
     public SuitesListReport(final File reportFile) throws RobotestException {
         try {
-            this.suitesListFile = reportFile;
-            this.mapper.writeValue(this.suitesListFile, this.suiteListMapper);
+            suitesListFile = reportFile;
+            mapper.writeValue(suitesListFile, suiteListMapper);
         } catch (IOException e) {
             throw new RobotestException("ERROR CREATING SUITE LIST REPORT", e);
         }
@@ -55,16 +55,16 @@ public class SuitesListReport {
 
     /**
      * Getter method for suitesListFile.
-     * 
+     *
      * @return the suitesListFile
      */
     public File getSuitesListFile() {
-        return this.suitesListFile;
+        return suitesListFile;
     }
 
     /**
      * Setter method for the suitesListFile.
-     * 
+     *
      * @param suitesListFile
      *            the suitesListFile to set
      */
@@ -74,16 +74,16 @@ public class SuitesListReport {
 
     /**
      * Getter method for mapper.
-     * 
+     *
      * @return the mapper
      */
     public ObjectMapper getMapper() {
-        return this.mapper;
+        return mapper;
     }
 
     /**
      * Setter method for the mapper.
-     * 
+     *
      * @param mapper
      *            the mapper to set
      */
@@ -93,16 +93,16 @@ public class SuitesListReport {
 
     /**
      * Getter method for suiteListMapper.
-     * 
+     *
      * @return the suiteListMapper
      */
     public SuiteListMapper getSuiteListMapper() {
-        return this.suiteListMapper;
+        return suiteListMapper;
     }
 
     /**
      * Setter method for the suiteListMapper.
-     * 
+     *
      * @param suiteListMapper
      *            the suiteListMapper to set
      */
@@ -112,16 +112,16 @@ public class SuitesListReport {
 
     /**
      * Getter method for printer.
-     * 
+     *
      * @return the printer
      */
     public DefaultPrettyPrinter getPrinter() {
-        return this.printer;
+        return printer;
     }
 
     /**
      * Setter method for the printer.
-     * 
+     *
      * @param printer
      *            the printer to set
      */
@@ -139,10 +139,10 @@ public class SuitesListReport {
      */
     public void appendToSuiteListReport(final String suiteReportFileName) throws RobotestException {
         try {
-            final SuiteListMapper suitesList = this.getSuiteListReportContent();
+            final SuiteListMapper suitesList = getSuiteListReportContent();
             suitesList.getSuites().add(suiteReportFileName);
-            ObjectWriter writer = this.mapper.writer(this.printer);
-            writer.writeValue(this.suitesListFile, suitesList);
+            ObjectWriter writer = mapper.writer(printer);
+            writer.writeValue(suitesListFile, suitesList);
         } catch (IOException e) {
             throw new RobotestException("ERROR APPEND SUITE LIST REPORT", e);
         }
@@ -157,7 +157,7 @@ public class SuitesListReport {
      */
     public SuiteListMapper getSuiteListReportContent() throws RobotestException {
         try {
-            return this.mapper.readValue(this.suitesListFile, SuiteListMapper.class);
+            return mapper.readValue(suitesListFile, SuiteListMapper.class);
         } catch (IOException e) {
             throw new RobotestException("ERROR GET SUITE LIST REPORT CONTENT", e);
         }

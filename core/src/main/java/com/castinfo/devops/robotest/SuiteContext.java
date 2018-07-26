@@ -39,8 +39,8 @@ import com.castinfo.devops.robotest.report.ValidationEntry;
 import com.castinfo.devops.robotest.selenium.SeleniumDriverFactory;
 
 /**
- * This class contains context object needed for Robotest Suite execution, for example, Report, Selenium Web Driver
- * and Selenium associated Dockers.
+ * This class contains context object needed for Robotest Suite execution, for example, Report, Selenium Web Driver and
+ * Selenium associated Dockers.
  *
  */
 public class SuiteContext {
@@ -63,22 +63,20 @@ public class SuiteContext {
      *             errors in IO or timeout Docker Host.
      */
     public void initSuite(final int order) throws RobotestException {
-        RobotestExecutionContext.getBrowserDockers().put(this.suiteAnnotation, new HashMap<>());
-        this.cfg.loadBasic(this.suiteAnnotation);
-        File reportFile = new File(this.cfg.getConfigBasic().getReportFilePath() + "/robotest-report-" + order
-                + ".json");
-        this.reporter = new SuiteReport(order, reportFile);
+        RobotestExecutionContext.getBrowserDockers().put(suiteAnnotation, new HashMap<>());
+        cfg.loadBasic(suiteAnnotation);
+        File reportFile = new File(cfg.getConfigBasic().getReportFilePath() + "/robotest-report-" + order + ".json");
+        reporter = new SuiteReport(order, reportFile);
         try {
-            this.cfg.loadAnnotationScopeConfig(this.suiteAnnotation.configElements(), this.suiteAnnotation);
-            if (null != this.cfg.getConfigBasic().getDocker()
-                    && StringUtils.isNotEmpty(this.cfg.getConfigBasic().getDocker().getHost())) {
-                RobotestExecutionContext.initDockerFarmBuilder(this.cfg.getConfigBasic().getDocker());
+            cfg.loadAnnotationScopeConfig(suiteAnnotation.configElements(), suiteAnnotation);
+            if (null != cfg.getConfigBasic().getDocker()
+                    && StringUtils.isNotEmpty(cfg.getConfigBasic().getDocker().getHost())) {
+                RobotestExecutionContext.initDockerFarmBuilder(cfg.getConfigBasic().getDocker());
             }
         } finally {
-            List<ConfigEntry> cfgs = this.cfg.toReportConfigEntries(this.suiteAnnotation);
-            cfgs.add(new ConfigEntry("ROBOTEST_CONFIG_BASIC", this.cfg.getConfigBasic()));
-            this.reporter.initSuite(this.suiteAnnotation.tag(), this.suiteAnnotation.description(),
-                                    System.currentTimeMillis(), cfgs);
+            List<ConfigEntry> cfgs = cfg.toReportConfigEntries(suiteAnnotation);
+            cfgs.add(new ConfigEntry("ROBOTEST_CONFIG_BASIC", cfg.getConfigBasic()));
+            reporter.initSuite(suiteAnnotation.tag(), suiteAnnotation.description(), System.currentTimeMillis(), cfgs);
         }
     }
 
@@ -90,7 +88,7 @@ public class SuiteContext {
      */
     public void endSuite() throws RobotestException {
         try {
-            this.reporter.endSuite(System.currentTimeMillis());
+            reporter.endSuite(System.currentTimeMillis());
         } catch (RobotestException e) {
             throw new RobotestException("ROBOTEST END OF SUITE ERRORS", e);
         }
@@ -101,8 +99,8 @@ public class SuiteContext {
      *
      */
     protected void forzeSeleniumDriversDestroy() {
-        if (null != this.caseDrivers) {
-            for (WebDriver driver : this.caseDrivers.values()) {
+        if (null != caseDrivers) {
+            for (WebDriver driver : caseDrivers.values()) {
                 try {
                     driver.quit();
                 } catch (Exception e) {
@@ -120,7 +118,7 @@ public class SuiteContext {
      * @return WebDriver.
      */
     protected WebDriver getDriverByCase(final RobotestCase caseAnnot) {
-        return this.caseDrivers.get(caseAnnot);
+        return caseDrivers.get(caseAnnot);
     }
 
     /**
@@ -129,7 +127,7 @@ public class SuiteContext {
      * @return the suiteAnnotation
      */
     public RobotestSuite getSuiteAnnotation() {
-        return this.suiteAnnotation;
+        return suiteAnnotation;
     }
 
     /**
@@ -148,7 +146,7 @@ public class SuiteContext {
      * @return the reporter
      */
     public SuiteReport getReporter() {
-        return this.reporter;
+        return reporter;
     }
 
     /**
@@ -167,12 +165,12 @@ public class SuiteContext {
      * @return RobotestConfiguration.
      */
     public IRobotestConfiguration getConfig() {
-        return this.cfg;
+        return cfg;
     }
 
     /**
-     * Inits Case test with anotation. Load new Selenium Docker if and connect WebDriver or direct creates
-     * local driver without Docker.
+     * Inits Case test with anotation. Load new Selenium Docker if and connect WebDriver or direct creates local driver
+     * without Docker.
      *
      * @param testCaseAnnot
      *            Case annot.
@@ -183,17 +181,17 @@ public class SuiteContext {
      */
     public void initTestCase(final RobotestSuite suiteAnnot,
                              final RobotestCase testCaseAnnot) throws RobotestException {
-        this.getConfig().loadAnnotationScopeConfig(testCaseAnnot.configElements(), testCaseAnnot);
-        List<ConfigEntry> lCfgs = this.cfg.toReportConfigEntries(testCaseAnnot);
+        getConfig().loadAnnotationScopeConfig(testCaseAnnot.configElements(), testCaseAnnot);
+        List<ConfigEntry> lCfgs = cfg.toReportConfigEntries(testCaseAnnot);
         WebDriver wd = null;
-        RobotestBasicConfig basicCfg = this.cfg.getConfigBasic();
+        RobotestBasicConfig basicCfg = cfg.getConfigBasic();
         try {
             SeleniumDriverFactory selFactory = new SeleniumDriverFactory(basicCfg);
 
             if (null != basicCfg.getDocker() && StringUtils.isNotEmpty(basicCfg.getDocker().getHost())) {
                 DockerConfig docker = RobotestExecutionContext.getDockerFarmBuilder()
                                                               .createBrowser(basicCfg.getBrowser().getBrowserName());
-                RobotestExecutionContext.getBrowserDockers().get(this.suiteAnnotation).put(testCaseAnnot, docker);
+                RobotestExecutionContext.getBrowserDockers().get(suiteAnnotation).put(testCaseAnnot, docker);
                 ConfigEntry cEntry = new ConfigEntry("DOCKER_BROWSER_INSTANCE", docker);
                 lCfgs.add(cEntry);
                 wd = selFactory.buildDockerHubWebDriver(docker);
@@ -203,9 +201,9 @@ public class SuiteContext {
             } else {
                 wd = selFactory.buildLocalNativeWebDriver();
             }
-            this.caseDrivers.put(testCaseAnnot, wd);
+            caseDrivers.put(testCaseAnnot, wd);
         } finally {
-            this.reporter.initCase(testCaseAnnot.tag(), testCaseAnnot.description(), System.currentTimeMillis(), lCfgs);
+            reporter.initCase(testCaseAnnot.tag(), testCaseAnnot.description(), System.currentTimeMillis(), lCfgs);
         }
     }
 
@@ -220,13 +218,13 @@ public class SuiteContext {
     public void endTestCase(final RobotestCase testCaseAnnot) throws RobotestException {
         StringBuilder errorResult = new StringBuilder();
         try {
-            this.reporter.endCase(testCaseAnnot.tag(), System.currentTimeMillis());
+            reporter.endCase(testCaseAnnot.tag(), System.currentTimeMillis());
         } catch (RobotestException e) {
             errorResult.append("IMPOSIBLE END CASE REPORT: ");
             errorResult.append(ValidationEntry.throwableToString(e));
             errorResult.append(" ");
         }
-        WebDriver driver = this.caseDrivers.remove(testCaseAnnot);
+        WebDriver driver = caseDrivers.remove(testCaseAnnot);
         if (null != driver) {
             try {
                 driver.quit();
@@ -236,8 +234,7 @@ public class SuiteContext {
                 errorResult.append(" ");
             }
         }
-        DockerConfig docker = RobotestExecutionContext.getBrowserDockers().get(this.suiteAnnotation)
-                                                      .remove(testCaseAnnot);
+        DockerConfig docker = RobotestExecutionContext.getBrowserDockers().get(suiteAnnotation).remove(testCaseAnnot);
         if (null != docker) {
             try {
                 RobotestExecutionContext.getDockerFarmBuilder().stopNode(docker.getIdContainer());
@@ -266,9 +263,9 @@ public class SuiteContext {
      */
     public void initStep(final PageObject pf, final long initMillis) throws RobotestException {
         IRobotestConfiguration suiteCfg = RobotestExecutionContext.getSuite(pf.getSuiteAnnot()).getConfig();
-        this.getConfig().loadAnnotationScopeConfig(pf.getStepAnnot().configElements(), pf.getStepAnnot());
-        this.getReporter().initStep(pf.getCaseAnnot().tag(), pf.getStepAnnot().tag(), pf.getStepAnnot().description(),
-                                    suiteCfg.toReportConfigEntries(pf.getStepAnnot()), initMillis);
+        getConfig().loadAnnotationScopeConfig(pf.getStepAnnot().configElements(), pf.getStepAnnot());
+        getReporter().initStep(pf.getCaseAnnot().tag(), pf.getStepAnnot().tag(), pf.getStepAnnot().description(),
+                               suiteCfg.toReportConfigEntries(pf.getStepAnnot()), initMillis);
         SuiteContext.LOG.info("STARTING STEP: {} OF {} OF {}", pf.getStepAnnot().tag(), pf.getSuiteAnnot().tag(),
                               pf.getCaseAnnot().tag());
     }
@@ -296,13 +293,12 @@ public class SuiteContext {
     public void addCustomStepToReport(final PageObject pf, final String idStep, final String stepDescription,
                                       final long startMillis, final long endMillis, final StepStatus status,
                                       final List<ValidationEntry> listValidationEntries) throws RobotestException {
-        this.getReporter().initStep(pf.getCaseAnnot().tag(), idStep, stepDescription,
-                                    pf.getSuiteContext().getConfig().toReportConfigEntries(pf.getStepAnnot()),
-                                    startMillis);
+        getReporter().initStep(pf.getCaseAnnot().tag(), idStep, stepDescription,
+                               pf.getSuiteContext().getConfig().toReportConfigEntries(pf.getStepAnnot()), startMillis);
         for (ValidationEntry validationEntry : listValidationEntries) {
-            this.getReporter().addStepValidationEntry(pf.getCaseAnnot().tag(), idStep, validationEntry);
+            getReporter().addStepValidationEntry(pf.getCaseAnnot().tag(), idStep, validationEntry);
         }
-        this.getReporter().endStep(pf.getCaseAnnot().tag(), idStep, status, endMillis);
+        getReporter().endStep(pf.getCaseAnnot().tag(), idStep, status, endMillis);
         SuiteContext.LOG.info("ADD CUSTOM STEP: {} OF {} OF {}", idStep, pf.getCaseAnnot().tag(),
                               pf.getSuiteAnnot().tag());
     }
@@ -318,7 +314,7 @@ public class SuiteContext {
      *            end time.
      */
     public void endStep(final PageObject pf, final StepStatus resultadoStatusStep, final long endMillis) {
-        this.getReporter().endStep(pf.getCaseAnnot().tag(), pf.getStepAnnot().tag(), resultadoStatusStep, endMillis);
+        getReporter().endStep(pf.getCaseAnnot().tag(), pf.getStepAnnot().tag(), resultadoStatusStep, endMillis);
         SuiteContext.LOG.info("ENDING STEP: {} OF {} OF {}", pf.getStepAnnot().tag(), pf.getCaseAnnot().tag(),
                               pf.getSuiteAnnot().tag());
     }
@@ -332,19 +328,19 @@ public class SuiteContext {
      *            additional entry.
      */
     public void addAdditionalStepEntry(final PageObject pf, final ValidationEntry additionalEntry) {
-        this.getReporter().addStepValidationEntry(pf.getCaseAnnot().tag(), pf.getStepAnnot().tag(), additionalEntry);
+        getReporter().addStepValidationEntry(pf.getCaseAnnot().tag(), pf.getStepAnnot().tag(), additionalEntry);
     }
 
     /**
-     * Put Report Suite out case initialitation errors.
-     * If no reporter available, validation entry is redirected to CONSOLE.
+     * Put Report Suite out case initialitation errors. If no reporter available, validation entry is redirected to
+     * CONSOLE.
      *
      * @param validationEntry
      *            validation entry.
      */
     protected void putIntialitationSuiteError(final ValidationEntry validationEntry) {
         try {
-            this.getReporter().addSuiteValidationEntry(validationEntry);
+            getReporter().addSuiteValidationEntry(validationEntry);
         } catch (Exception e) {
             SuiteContext.LOG.info("ERROR WRITING SUITE OUT CASE ERROR: {} CAUSE: {}", validationEntry.getResource(),
                                   e.getMessage());
@@ -360,7 +356,7 @@ public class SuiteContext {
      *            validation entry.
      */
     protected void putCaseError(final RobotestCase caseAnnot, final ValidationEntry validationEntry) {
-        this.getReporter().addCaseValidationEntry(caseAnnot.tag(), validationEntry);
+        getReporter().addCaseValidationEntry(caseAnnot.tag(), validationEntry);
 
     }
 

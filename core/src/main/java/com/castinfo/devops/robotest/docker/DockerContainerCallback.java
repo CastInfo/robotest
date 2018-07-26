@@ -49,7 +49,7 @@ public class DockerContainerCallback extends LogContainerResultCallback {
      * @return the serverSeleniumLoaded
      */
     public boolean isServerSeleniumLoaded() {
-        return this.serverSeleniumLoaded;
+        return serverSeleniumLoaded;
     }
 
     /**
@@ -65,14 +65,13 @@ public class DockerContainerCallback extends LogContainerResultCallback {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * com.github.dockerjava.core.command.LogContainerResultCallback#onNext(com.github.dockerjava.api.model.Frame)
+     * @see com.github.dockerjava.core.command.LogContainerResultCallback#onNext(com.github.dockerjava.api.model.Frame)
      */
     @Override
     public void onNext(final Frame item) {
         DockerContainerCallback.LOGGER.info("DOCKER LOGGER: {}", item);
-        if (item.toString().indexOf(this.loadedServerText) != -1) {
-            this.serverSeleniumLoaded = true;
+        if (item.toString().indexOf(loadedServerText) != -1) {
+            serverSeleniumLoaded = true;
         }
 
         super.onNext(item);

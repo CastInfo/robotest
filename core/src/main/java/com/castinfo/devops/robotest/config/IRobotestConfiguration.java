@@ -32,8 +32,10 @@ import com.castinfo.devops.robotest.report.ConfigEntry;
 public interface IRobotestConfiguration {
 
     /**
-     * Load basic configuration for Suite marshalled in RobotestBasicConfig object.
-     * There are some customized by user System properties added to this config object defined in RobotestConfigKeys:
+     * Load basic configuration for Suite marshalled in RobotestBasicConfig object. There are some customized by user
+     * System properties added to this config object defined in RobotestConfigKeys:
+     *
+     * <pre>
      *
      * ROBOTEST_REPORT_BASE: path of the ROBOTEST generated report, defaults to "java.io.tmpdir" Java System Property.
      * ROBOTEST_ENV: environment name, feel free, if no value robotest defaults to local.
@@ -69,9 +71,10 @@ public interface IRobotestConfiguration {
      * versions
      * wdm.targetPath Native driver manager download directory
      *
+     * </pre>
      *
-     * Docker takes precendence of browserstack, if two configurations set, Docker WebDriver will be selected
-     * to avoid problems in CI *nix environments.
+     * Docker takes precendence of browserstack, if two configurations set, Docker WebDriver will be selected to avoid
+     * problems in CI *nix environments.
      *
      * @param suiteAnnot
      *            annotSuite

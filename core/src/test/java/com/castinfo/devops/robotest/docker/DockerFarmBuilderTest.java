@@ -85,7 +85,7 @@ public class DockerFarmBuilderTest {
         Mockito.when(inspectRes.getNetworkSettings()).thenReturn(netsettings);
         Ports ports = Mockito.mock(Ports.class);
         Mockito.when(netsettings.getPorts()).thenReturn(ports);
-        Map<ExposedPort, Binding[]> bindings = new HashMap<ExposedPort, Binding[]>();
+        Map<ExposedPort, Binding[]> bindings = new HashMap<>();
         Binding[] bind = { new Binding("", "4444") };
         bindings.put(ExposedPort.tcp(Integer.parseInt(cfgBrowser.getExposePort())), bind);
         Mockito.when(ports.getBindings()).thenReturn(bindings);

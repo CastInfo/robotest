@@ -71,13 +71,14 @@ public class CaseReport {
      * @return the id
      */
     public String getId() {
-        return this.id;
+        return id;
     }
 
     /**
      * Setter method for the id.
      *
-     * @param id the id to set
+     * @param id
+     *            the id to set
      */
     public void setId(final String id) {
         this.id = id;
@@ -89,13 +90,14 @@ public class CaseReport {
      * @return the description
      */
     public String getDescription() {
-        return this.description;
+        return description;
     }
 
     /**
      * Setter method for the description.
      *
-     * @param description the description to set
+     * @param description
+     *            the description to set
      */
     public void setDescription(final String description) {
         this.description = description;
@@ -107,7 +109,7 @@ public class CaseReport {
      * @return the caseConfig
      */
     public ConfigReport getCaseConfig() {
-        return this.caseConfig;
+        return caseConfig;
     }
 
     /**
@@ -126,7 +128,7 @@ public class CaseReport {
      * @return the initMillis
      */
     public long getInitMillis() {
-        return this.initMillis;
+        return initMillis;
     }
 
     /**
@@ -145,7 +147,7 @@ public class CaseReport {
      * @return the endMillis
      */
     public long getEndMillis() {
-        return this.endMillis;
+        return endMillis;
     }
 
     /**
@@ -164,7 +166,7 @@ public class CaseReport {
      * @return the caseOrder
      */
     public int getCaseOrder() {
-        return this.caseOrder;
+        return caseOrder;
     }
 
     /**
@@ -183,7 +185,7 @@ public class CaseReport {
      * @return the stepReports
      */
     public List<StepReport> getStepReports() {
-        return this.stepReports;
+        return stepReports;
     }
 
     /**
@@ -202,7 +204,7 @@ public class CaseReport {
      * @return the outStepErrors
      */
     public List<ValidationEntry> getOutStepErrors() {
-        return this.outStepErrors;
+        return outStepErrors;
     }
 
     /**
@@ -222,7 +224,7 @@ public class CaseReport {
      *            end case timemillis.
      */
     public void endCase(final long millis) {
-        this.endMillis = millis;
+        endMillis = millis;
     }
 
     /**
@@ -232,7 +234,7 @@ public class CaseReport {
      *            step report.
      */
     public void addStep(final StepReport stepReport) {
-        this.stepReports.add(stepReport);
+        stepReports.add(stepReport);
     }
 
     /**
@@ -246,16 +248,16 @@ public class CaseReport {
     public void writeCase(final JsonGenerator jGenerator) throws RobotestException {
         try {
             jGenerator.writeStartObject();
-            jGenerator.writeNumberField("order", this.caseOrder);
-            jGenerator.writeStringField("case", this.id);
-            jGenerator.writeStringField("description", this.description);
-            jGenerator.writeNumberField("initMillis", this.initMillis);
+            jGenerator.writeNumberField("order", caseOrder);
+            jGenerator.writeStringField("case", id);
+            jGenerator.writeStringField("description", description);
+            jGenerator.writeNumberField("initMillis", initMillis);
 
-            this.caseConfig.writeConfig(jGenerator, "config");
+            caseConfig.writeConfig(jGenerator, "config");
 
             jGenerator.writeFieldName("caseOutStepErrors");
             jGenerator.writeStartArray();
-            for (ValidationEntry toadd : this.outStepErrors) {
+            for (ValidationEntry toadd : outStepErrors) {
                 jGenerator.writeStartObject();
                 jGenerator.writeStringField("status", toadd.getStatus().name());
                 if (null != toadd.getResource()) {
@@ -271,11 +273,11 @@ public class CaseReport {
 
             jGenerator.writeFieldName("steps");
             jGenerator.writeStartArray();
-            for (StepReport step : this.stepReports) {
+            for (StepReport step : stepReports) {
                 step.writeStep(jGenerator);
             }
             jGenerator.writeEndArray();
-            jGenerator.writeNumberField("endMillis", this.endMillis);
+            jGenerator.writeNumberField("endMillis", endMillis);
             jGenerator.writeEndObject();
         } catch (IOException e) {
             throw new RobotestException("ROBOTEST REPORTER ERROR CASE", e);
@@ -285,12 +287,15 @@ public class CaseReport {
     /**
      * Put informatin status and endMillis to step object.
      *
-     * @param caseId annotation step or custom id
-     * @param endMs end millisecons
-     * @param status final status of step.
+     * @param caseId
+     *            annotation step or custom id
+     * @param endMs
+     *            end millisecons
+     * @param status
+     *            final status of step.
      */
     public void endStep(final String caseId, final long endMs, final StepStatus status) {
-        for (StepReport stepReport : this.stepReports) {
+        for (StepReport stepReport : stepReports) {
             if (stepReport.getId().equals(caseId)) {
                 stepReport.endStep(status, endMs);
             }

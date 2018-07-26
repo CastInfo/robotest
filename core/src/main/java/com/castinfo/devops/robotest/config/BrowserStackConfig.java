@@ -63,7 +63,7 @@ public class BrowserStackConfig {
      */
     @JsonProperty("platform")
     public String getPlatform() {
-        return this.platform;
+        return platform;
     }
 
     /**
@@ -84,7 +84,7 @@ public class BrowserStackConfig {
      */
     @JsonProperty("device")
     public String getDevice() {
-        return this.device;
+        return device;
     }
 
     /**
@@ -105,7 +105,7 @@ public class BrowserStackConfig {
      */
     @JsonProperty("login")
     public String getLogin() {
-        return this.login;
+        return login;
     }
 
     /**
@@ -125,7 +125,7 @@ public class BrowserStackConfig {
      * @return the accessKey
      */
     public String getAccessKey() {
-        return this.accessKey;
+        return accessKey;
     }
 
     /**
@@ -145,7 +145,7 @@ public class BrowserStackConfig {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(this.device).append(this.platform).append(this.login).toHashCode();
+        return new HashCodeBuilder().append(device).append(platform).append(login).toHashCode();
     }
 
     @Override
@@ -157,8 +157,8 @@ public class BrowserStackConfig {
             return false;
         }
         BrowserStackConfig rhs = (BrowserStackConfig) other;
-        return new EqualsBuilder().append(this.device, rhs.device).append(this.platform, rhs.platform)
-                                  .append(this.login, rhs.login).isEquals();
+        return new EqualsBuilder().append(device, rhs.device).append(platform, rhs.platform).append(login, rhs.login)
+                                  .isEquals();
     }
 
 }

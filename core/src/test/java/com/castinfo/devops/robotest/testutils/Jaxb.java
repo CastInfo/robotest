@@ -9,12 +9,12 @@ public class Jaxb {
     String value;
 
     public String getValue() {
-        return this.value;
+        return value;
     }
 
     @XmlValue
     public void setValue(final String codigo) {
-        this.value = codigo;
+        value = codigo;
     }
 
 }

@@ -36,15 +36,15 @@ public class ConfigReport {
 
     /**
      * Constructor.
-     * 
+     *
      * @param cfg
      *            config list.
      *
      */
     public ConfigReport(final List<ConfigEntry> cfg) {
-        this.configs = cfg;
-        this.mapper = new ObjectMapper();
-        this.mapper.registerModule(new JaxbAnnotationModule());
+        configs = cfg;
+        mapper = new ObjectMapper();
+        mapper.registerModule(new JaxbAnnotationModule());
     }
 
     /**
@@ -53,7 +53,7 @@ public class ConfigReport {
      * @return the configs
      */
     public List<ConfigEntry> getConfigs() {
-        return this.configs;
+        return configs;
     }
 
     /**
@@ -72,7 +72,7 @@ public class ConfigReport {
      * @return the mapper
      */
     public ObjectMapper getMapper() {
-        return this.mapper;
+        return mapper;
     }
 
     /**
@@ -99,8 +99,8 @@ public class ConfigReport {
         try {
             jGenerator.writeFieldName(cfgName);
             jGenerator.writeStartArray();
-            for (ConfigEntry cfg : this.configs) {
-                this.writeConfigTraverse(jGenerator, cfg);
+            for (ConfigEntry cfg : configs) {
+                writeConfigTraverse(jGenerator, cfg);
             }
             jGenerator.writeEndArray();
         } catch (IOException e) {
@@ -135,7 +135,7 @@ public class ConfigReport {
         } else {
             jGenerator.writeStartObject();
             jGenerator.writeFieldName(cfg.getId());
-            this.mapper.writeValue(jGenerator, cfg.getValue());
+            mapper.writeValue(jGenerator, cfg.getValue());
             jGenerator.writeEndObject();
         }
     }

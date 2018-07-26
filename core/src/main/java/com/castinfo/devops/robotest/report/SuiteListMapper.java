@@ -37,7 +37,7 @@ public class SuiteListMapper {
      */
     @JsonProperty("suites")
     public List<String> getSuites() {
-        return this.suites;
+        return suites;
     }
 
     /**
@@ -48,6 +48,6 @@ public class SuiteListMapper {
      */
     @JsonProperty("suites")
     public void setSuites(final List<String> suitesList) {
-        this.suites = suitesList;
+        suites = suitesList;
     }
 }

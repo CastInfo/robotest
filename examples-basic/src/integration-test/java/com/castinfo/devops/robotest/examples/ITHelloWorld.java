@@ -12,6 +12,9 @@ import com.castinfo.devops.robotest.annot.RobotestConfig;
 import com.castinfo.devops.robotest.annot.RobotestSuite;
 import com.castinfo.devops.robotest.junit.JUnitCaseRunner;
 
+import io.restassured.http.Method;
+import io.restassured.response.Response;
+
 @RobotestSuite(tag = "HELLO_WORLD_ROBOTEST",
                description = "Navegación estándar Mango Shop",
                configElements = { @RobotestConfig(key = "WEB_TO_TEST",

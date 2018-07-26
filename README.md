@@ -27,6 +27,7 @@ ACTUAL RELEASE: 2.0.0
     + [Suite/Case Implementation elements](#suite-case-implementation-elements)
   * [The PageObject with steps and validations.](#the-pageobject-with-steps-and-validations)
     + [Suite/Case Implementation elements](#suite-case-implementation-elements-1)
+- [HELLO WORLD JAVA CODE FOR REST](#hello-world-java-code-for-rest)    
 - [HELLO WORLD CONFIGURATION](#hello-world-configuration)
   * [Basic configuration defined in Java System Properties](#basic-configuration-defined-in-java-system-properties)
   * [Suite, Case & Step annotaded extended configuration](#suite--case---step-annotaded-extended-configuration)
@@ -118,7 +119,9 @@ https://github.com/rest-assured/rest-assured/wiki/Usage
 - Assertions of the business logic of POJO mapped data with included RestAssured assertion API's or else JUnit, TestNG, etc.
 - XPath and JSONPath value validations of JSON, XML or HTML.
 
-To enforce this we try to develop a wrapper (com.castinfo.devops.robotest.restassured.RestAssuredWrapper). To see examples of use we develop test examples in ROBOTEST core (com.castinfo.devops.robotest.restassured.RestTest)
+To enforce this we try to develop a wrapper (com.castinfo.devops.robotest.restassured.RestAssuredWrapper). 
+
+To see examples of use we develop test examples in ROBOTEST core (com.castinfo.devops.robotest.restassured.RestTest)
 
 XML Schema and JSON Schema can generate mapping POJO's for auto mapping. You can do:
 
@@ -348,6 +351,47 @@ public class HelloWorldPageObject extends PageObject {
 `@RobotestStep`: All steps of ROBOTEST Page Object must be created in methods of this class and annotated with this tag. ROBOTEST load the necessary elements of context to be developer accessible (WebDriver & Report), and wraps utility methods accessible by developer to do habitual e2e testing script.
 
 Validations: Validations are Assertions with the Selenium API browser information available, under step or case you can do programmatic validations with the JUnit/TestNG provided tools and report the results. ROBOTEST implements utilities like screen shoot, page source o console logs and provide report methods in your Page Object implementation to add to the report. Some of this can be do it with simple @RobotestStep annotation attributes.
+
+# HELLO WORLD JAVA CODE FOR REST
+
+If you need to validate a REST service with ROBOTEST you have available RestAssured APIs.
+
+See [recomendations](#api-rest-testing--api-testing-) and [examples of use](https://github.com/CastInfo/robotest/blob/master/core/src/test/java/com/castinfo/devops/robotest/restassured/RestTest.java)
+
+You can use following RestAssured examples in https://github.com/rest-assured/rest-assured 
+
+```Java
+given().
+    param("key1", "value1").
+    param("key2", "value2").
+when().
+    post("/somewhere").
+then().
+    body(containsString("OK"));
+```
+
+Or in a ROBOTEST `PageObject` or `TestCase` you can obtain a simplified wrapper:
+
+```Java
+
+import static org.hamcrest.Matchers.*;
+
+//...
+public class HelloWorldPageObject extends PageObject {
+
+//...
+    @RobotestStep(tag = "HELLO_WORLD_STEP_003",
+                  description = "Check rest service",
+                  captureScreenShootAtEndStep = false,
+                  captureScreenShootAtStartStep = false)
+    public void checkRest() throws RobotestException {
+        Response response = getRestAssuredWrapper().doCall("https://reqres.in/api/users/2", Method.GET).buildRequest()
+                                                   .getResponse();
+        response.then().statusCode(200).body("data.id", equalTo(2));
+        addInfoToReport().withMessage("JSON Response: " + response.body().asString());
+    }
+
+```
 
 # HELLO WORLD CONFIGURATION
 

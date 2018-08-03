@@ -142,17 +142,21 @@ public class RobotestConfiguration implements IRobotestConfiguration {
         browserConfig.setMaximized(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_MAXIMIZED));
         RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_MAXIMIZED: {}", basicCfg.getBrowser().getMaximized());
 
-        browserConfig.setProxy(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_PROXY, ""));
-        if (StringUtils.isNotEmpty(browserConfig.getProxy())
-                && basicCfg.getBrowser().getProxy().split(":").length != 2) {
-            RobotestConfiguration.LOG.error("ROBOTEST_BROWSER_PROXY format ERROR!: {}",
-                                            basicCfg.getBrowser().getProxy());
-            browserConfig.setProxy("");
-        }
-        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_PROXY: {}", basicCfg.getBrowser().getProxy());
+        browserConfig.setProxyHost(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_PROXY_HOST, ""));
+        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_PROXY_HOST: {}", basicCfg.getBrowser().getProxyHost());
+
+        browserConfig.setProxyPort(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_PROXY_PORT, ""));
+        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_PROXY_PORT: {}", basicCfg.getBrowser().getProxyPort());
 
         browserConfig.setNoproxyfor(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_NOPROXYFOR, ""));
         RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_NOPROXYFOR: {}", basicCfg.getBrowser().getNoproxyfor());
+
+        browserConfig.setProxyUser(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_PROXY_AUTH_USER, ""));
+        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_PROXY_AUTH_USER: {}", basicCfg.getBrowser().getProxyUser());
+
+        browserConfig.setProxySecret(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_PROXY_AUTH_SECRET, ""));
+        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_PROXY_AUTH_SECRET: {}",
+                                       basicCfg.getBrowser().getProxySecret());
     }
 
     /**

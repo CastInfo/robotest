@@ -438,14 +438,14 @@ public class SeleniumDriverFactory {
         if (!SeleniumBrowser.INTERNET_EXPLORER.name().equalsIgnoreCase(capabilities.getBrowserName())) {
             capabilities.setAcceptInsecureCerts(true);
         }
-        if (StringUtils.isEmpty(getBrowserConfig().getProxy())) {
+        if (StringUtils.isEmpty(getBrowserConfig().getProxyHost())) {
             capabilities.setCapability(CapabilityType.ForSeleniumServer.AVOIDING_PROXY, true);
         } else {
             if (!SeleniumBrowser.FIREFOX.name().equalsIgnoreCase(capabilities.getBrowserName())) {
                 Proxy proxy = new Proxy();
                 proxy.setProxyType(ProxyType.MANUAL);
-                proxy.setHttpProxy(getBrowserConfig().getProxy());
-                proxy.setSslProxy(getBrowserConfig().getProxy());
+                proxy.setHttpProxy(getBrowserConfig().getProxyHostAndPort());
+                proxy.setSslProxy(getBrowserConfig().getProxyHostAndPort());
                 proxy.setNoProxy(getBrowserConfig().getNoproxyfor());
                 capabilities.setCapability(CapabilityType.PROXY, proxy);
             }
@@ -496,7 +496,7 @@ public class SeleniumDriverFactory {
             // fp.setPreference("media.windows-media-foundation.enabled", false); // video-off
             fp.setPreference("toolkit.startup.max_resumed_crashes", -1); // Desactivar el Safe Mode
             fp.setPreference("browserCfg.sessionstore.postdata", -1); // Desactivar el "Document Expired"
-            if (StringUtils.isEmpty(getBrowserConfig().getProxy())) {
+            if (StringUtils.isEmpty(getBrowserConfig().getProxyHost())) {
                 fp.setPreference("network.proxy.type", 0); // Sin proxy
             } else {
                 // JsonObject json = new JsonObject();
@@ -506,13 +506,11 @@ public class SeleniumDriverFactory {
                 // json.addProperty("noProxy", this.getBrowserConfig().getNoproxyfor());
                 // capabilities.setCapability("proxy", json);
                 // WORKAROUND related to https://github.com/SeleniumHQ/selenium/issues/5004
-                String proxyServer = getBrowserConfig().getProxy().split(":")[0];
-                String proxyPort = getBrowserConfig().getProxy().split(":")[1];
                 fp.setPreference("network.proxy.type", 1);
-                fp.setPreference("network.proxy.http", proxyServer);
-                fp.setPreference("network.proxy.http_port", Integer.parseInt(proxyPort));
-                fp.setPreference("network.proxy.ssl", proxyServer);
-                fp.setPreference("network.proxy.ssl_port", Integer.parseInt(proxyPort));
+                fp.setPreference("network.proxy.http", getBrowserConfig().getProxyHost());
+                fp.setPreference("network.proxy.http_port", Integer.parseInt(getBrowserConfig().getProxyPort()));
+                fp.setPreference("network.proxy.ssl", getBrowserConfig().getProxyHost());
+                fp.setPreference("network.proxy.ssl_port", Integer.parseInt(getBrowserConfig().getProxyPort()));
                 fp.setPreference("network.proxy.no_proxies_on", getBrowserConfig().getNoproxyfor());
 
             }

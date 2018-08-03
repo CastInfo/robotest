@@ -19,17 +19,54 @@ package com.castinfo.devops.robotest;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.ProxySelector;
+import java.net.SocketAddress;
+import java.net.URI;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpException;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpRequest;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.conn.params.ConnRoutePNames;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.SystemDefaultHttpClient;
+import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
+import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.HttpContext;
 import org.openqa.selenium.WebDriver;
 
+import com.castinfo.devops.robotest.config.RobotestBasicConfig;
+import com.castinfo.devops.robotest.config.RobotestBrowserConfig;
 import com.castinfo.devops.robotest.report.SuiteReport;
 import com.castinfo.devops.robotest.report.ValidationEntry;
 import com.castinfo.devops.robotest.restassured.RestAssuredWrapper;
 import com.castinfo.devops.robotest.selenium.SeleniumElementsWrapper;
+
+import io.restassured.RestAssured;
+import io.restassured.specification.ProxySpecification;
+import static io.restassured.config.ConnectionConfig.*;
+import static io.restassured.config.HttpClientConfig.*;
 
 /**
  * This class is used to PageObject/PageObject test orienting.
@@ -269,12 +306,67 @@ public class PageObject extends SeleniumElementsWrapper {
     }
 
     /**
-     * Builds a integrated wrapper for RestAssured REST API client tester.
+     * Builds a integrated wrapper for RestAssured REST API client tester with proxy and timeout ROBOTEST configured
+     * settings.
+     *
+     *
      *
      * @return The wrapper of RestAssured.
+     * @throws RobotestException
+     *             If suite initialization problems happens.
      */
-    public RestAssuredWrapper getRestAssuredWrapper() {
-        return new RestAssuredWrapper();
+    public RestAssuredWrapper getRestAssuredWrapper() throws RobotestException {
+        RestAssuredWrapper restClient = new RestAssuredWrapper();
+        RobotestBrowserConfig browserConfig = this.getBasicCfg().getBrowser();
+        int timeoutInMillis = Integer.parseInt(this.getBasicCfg().getGeneralTimeout());
+        RestAssured.config = RestAssured.config().httpClient(httpClientConfig().httpClientFactory(() -> {
+            /*
+             * HttpClientBuilder dosn't return RA expected AbstractHttpClient!
+             *
+             * Expecting resolved issue we comment lines of builder code.
+             *
+             * RequestConfig timeoutParams = RequestConfig.custom() .setConnectTimeout(timeoutInMillis)
+             * .setConnectionRequestTimeout(timeoutInMillis) .setSocketTimeout(timeoutInMillis) .build();
+             *
+             * HttpClientBuilder builder = HttpClientBuilder.create().setDefaultRequestConfig(timeoutParams);
+             */
+            HttpParams timeoutParams = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(timeoutParams, timeoutInMillis);
+            HttpConnectionParams.setSoTimeout(timeoutParams, timeoutInMillis);
+            DefaultHttpClient httpclient = new DefaultHttpClient(timeoutParams);
+            if (StringUtils.isNotEmpty(browserConfig.getProxyHost())) {
+                HttpHost proxy = new HttpHost(browserConfig.getProxyHost(),
+                                              Integer.parseInt(browserConfig.getProxyPort()),
+                                              HttpHost.DEFAULT_SCHEME_NAME);
+                // httpclient.setProxy(proxy);
+                httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+                if (StringUtils.isNotEmpty(browserConfig.getNoproxyfor())) {
+                    List<String> proxyExceptions = Arrays.asList(browserConfig.getNoproxyfor().split(","));
+                    DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy) {
+                        @Override
+                        protected HttpHost determineProxy(final HttpHost target,
+                                                          final HttpRequest request,
+                                                          final HttpContext context) throws HttpException {
+                            return proxyExceptions.contains(target.getHostName()) ? null : proxy;
+                        }
+                    };
+                    httpclient.setRoutePlanner(routePlanner);
+                }
+                if (StringUtils.isEmpty(browserConfig.getProxyUser())) {
+                    Credentials credentials = new UsernamePasswordCredentials(browserConfig.getProxyUser(),
+                                                                              browserConfig.getProxySecret());
+                    AuthScope authScope = new AuthScope(browserConfig.getProxyHost(),
+                                                        Integer.parseInt(browserConfig.getProxyPort()));
+                    CredentialsProvider credsProvider = new BasicCredentialsProvider();
+                    credsProvider.setCredentials(authScope, credentials);
+                    // httpclient.setDefaultCredentialsProvider(credsProvider);
+                    httpclient.setCredentialsProvider(credsProvider);
+                }
+            }
+            // return httpclient.build();
+            return httpclient;
+        }));
+        return restClient;
     }
 
     /**

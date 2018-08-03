@@ -34,6 +34,7 @@ import io.restassured.http.ContentType;
 import io.restassured.http.Cookies;
 import io.restassured.http.Method;
 import io.restassured.response.Response;
+import io.restassured.specification.ProxySpecification;
 import io.restassured.specification.RequestSpecification;
 
 /**
@@ -160,6 +161,18 @@ public class RestAssuredWrapper {
      */
     public RestAssuredWrapper withFormParams(final Map<String, ?> formParams) {
         requestSpecBuilder.addFormParams(formParams);
+        return this;
+    }
+
+    /**
+     * Add proxy to rest connect.
+     *
+     * @param proxySpecification
+     *            Proxy conf
+     * @return The same object for fluent api.
+     */
+    public RestAssuredWrapper withProxy(final ProxySpecification proxySpecification) {
+        loadGivenSpecWhen().proxy(proxySpecification);
         return this;
     }
 

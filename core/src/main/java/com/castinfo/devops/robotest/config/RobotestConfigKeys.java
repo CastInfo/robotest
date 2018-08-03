@@ -132,13 +132,25 @@ public final class RobotestConfigKeys {
      */
     public static final String ROBOTEST_REPORT_BASE = "ROBOTEST_REPORT_BASE";
     /**
-     * Robotest browser proxy
+     * Robotest proxy host
      */
-    public static final String ROBOTEST_BROWSER_PROXY = "ROBOTEST_BROWSER_PROXY";
+    public static final String ROBOTEST_BROWSER_PROXY_HOST = "ROBOTEST_BROWSER_PROXY_HOST";
     /**
-     * Robotest browser no proxy for
+     * Robotest proxy port
+     */
+    public static final String ROBOTEST_BROWSER_PROXY_PORT = "ROBOTEST_BROWSER_PROXY_PORT";
+    /**
+     * Robotest non-proxy for hosts
      */
     public static final String ROBOTEST_BROWSER_NOPROXYFOR = "ROBOTEST_BROWSER_NOPROXYFOR";
+    /**
+     * Robotest proxy username authentication
+     */
+    public static final String ROBOTEST_BROWSER_PROXY_AUTH_USER = "ROBOTEST_BROWSER_PROXY_AUTH_USER";
+    /**
+     * Robotest proxy password authentication
+     */
+    public static final String ROBOTEST_BROWSER_PROXY_AUTH_SECRET = "ROBOTEST_BROWSER_PROXY_AUTH_SECRET";
     /**
      * Robotest docker registry url
      */

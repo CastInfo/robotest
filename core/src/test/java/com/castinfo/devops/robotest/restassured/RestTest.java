@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.littleshoot.proxy.HttpProxyServer;
@@ -21,6 +22,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.castinfo.devops.robotest.config.RobotestHttpConnConfig;
 
+import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.http.Method;
 import io.restassured.path.xml.XmlPath;
@@ -46,17 +48,24 @@ public class RestTest {
     private final String xmlSchema = "echo.xsd";
     private final String keyEcho = "echo";
 
+    RestAssuredWrapper restClient = null;
+
     private String getUrlApi(final String service) {
         return localhost + port + service;
     }
 
+    @Before
+    public void prepareClient() {
+        restClient = new RestAssuredWrapper();
+        restClient.getResponseSpecBuilder()
+                  .expectStatusCode(200);
+    }
+
     @Test
     public void doHtmlRestTest() {
-        RestAssuredWrapper restClient = new RestAssuredWrapper();
         String html = restClient.withContentType(ContentType.HTML)
                                 .when("https://www.cast-info.es",
                                       Method.GET)
-                                .getResponse()
                                 .then()
                                 .extract()
                                 .asString();
@@ -69,11 +78,9 @@ public class RestTest {
 
     @Test
     public void doPingTextGet() {
-        RestAssuredWrapper restClient = new RestAssuredWrapper();
         String pingService = getUrlApi("/ping");
         ValidatableResponse responseThen = restClient.when(pingService,
                                                            Method.GET)
-                                                     .getResponse()
                                                      .then();
         Assert.assertTrue(responseThen.extract()
                                       .asByteArray().length > 0);
@@ -84,7 +91,6 @@ public class RestTest {
 
     @Test
     public void doEchoTextGet() {
-        RestAssuredWrapper restClient = new RestAssuredWrapper();
         String echoService = getUrlApi("/echo");
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put(keyEcho,
@@ -92,7 +98,6 @@ public class RestTest {
         ValidatableResponse responseThen = restClient.withQueryParams(queryParams)
                                                      .when(echoService,
                                                            Method.GET)
-                                                     .getResponse()
                                                      .then();
         Assert.assertTrue(responseThen.extract()
                                       .asByteArray().length > 0);
@@ -106,8 +111,7 @@ public class RestTest {
         RestAssuredWrapper restClient = new RestAssuredWrapper();
         String jacksonService = getUrlApi("/jackson");
         Response response = restClient.when(jacksonService,
-                                            Method.GET)
-                                      .getResponse();
+                                            Method.GET);
         response.then()
                 .assertThat()
                 .body("echo",
@@ -121,15 +125,13 @@ public class RestTest {
 
     @Test
     public void doEchoJsonGet() {
-        RestAssuredWrapper restClient = new RestAssuredWrapper();
         String jacksonService = getUrlApi("/jacksonEcho");
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put(keyEcho,
                         "TEST");
         Response response = restClient.withQueryParams(queryParams)
                                       .when(jacksonService,
-                                            Method.GET)
-                                      .getResponse();
+                                            Method.GET);
         response.then()
                 .assertThat()
                 .body("echo",
@@ -143,11 +145,9 @@ public class RestTest {
 
     @Test
     public void doPingXmlGet() {
-        RestAssuredWrapper restClient = new RestAssuredWrapper();
         String jaxbService = getUrlApi("/xmljaxb");
         Response response = restClient.when(jaxbService,
-                                            Method.GET)
-                                      .getResponse();
+                                            Method.GET);
         response.then()
                 .assertThat()
                 .body("response.echo",
@@ -163,15 +163,13 @@ public class RestTest {
 
     @Test
     public void doEchoXmlGet() {
-        RestAssuredWrapper restClient = new RestAssuredWrapper();
         String jaxbEchoService = getUrlApi("/xmljaxbEcho");
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put(keyEcho,
                         "TEST");
         Response response = restClient.withQueryParams(queryParams)
                                       .when(jaxbEchoService,
-                                            Method.GET)
-                                      .getResponse();
+                                            Method.GET);
         Assert.assertTrue(response.as(JaxbPojoType.class)
                                   .getEcho()
                                   .equals(queryParams.get(keyEcho)));
@@ -186,11 +184,12 @@ public class RestTest {
         httpConfig.setGeneralTimeout("1000");
         httpConfig.setProxyHost("localhost");
         httpConfig.setProxyPort("" + proxyPort);
-        RestAssuredWrapper restClient = new RestAssuredWrapper(httpConfig);
+        restClient = new RestAssuredWrapper(httpConfig);
+        restClient.getResponseSpecBuilder()
+                  .expectStatusCode(200);
         String pingService = getUrlApi("/ping");
         ValidatableResponse responseThen = restClient.when(pingService,
                                                            Method.GET)
-                                                     .getResponse()
                                                      .then();
         Assert.assertTrue(responseThen.extract()
                                       .asByteArray().length > 0);

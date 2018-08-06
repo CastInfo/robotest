@@ -304,6 +304,7 @@ public class PageObject extends SeleniumElementsWrapper {
      *
      * @return The wrapper of RestAssured.
      * @throws RobotestException
+     *             If suite initialization problems happens.
      */
     public RestAssuredWrapper givenRestAssuredWithHttpSettings() throws RobotestException {
         return new RestAssuredWrapper(this.getBasicCfg()

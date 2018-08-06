@@ -50,8 +50,7 @@ public class HelloWorldPageObject extends PageObject {
                   captureScreenShootAtStartStep = false)
     public void checkRest() throws RobotestException {
         Response response = givenRestAssured().when("https://reqres.in/api/users/2",
-                                                    Method.GET)
-                                              .getResponse();
+                                                    Method.GET);
         response.then()
                 .statusCode(200)
                 .body("data.id",

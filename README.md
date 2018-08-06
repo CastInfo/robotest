@@ -385,8 +385,7 @@ public class HelloWorldPageObject extends PageObject {
                   captureScreenShootAtEndStep = false,
                   captureScreenShootAtStartStep = false)
     public void checkRest() throws RobotestException {
-        Response response = getRestAssuredWrapper().doCall("https://reqres.in/api/users/2", Method.GET).buildRequest()
-                                                   .getResponse();
+        Response response = givenRestAssured().when("https://reqres.in/api/users/2", Method.GET);
         response.then().statusCode(200).body("data.id", equalTo(2));
         addInfoToReport().withMessage("JSON Response: " + response.body().asString());
     }

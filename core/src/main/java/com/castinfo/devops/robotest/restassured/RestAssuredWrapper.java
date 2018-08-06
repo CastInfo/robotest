@@ -92,7 +92,7 @@ public class RestAssuredWrapper {
      *
      * @return the request
      */
-    public RequestSpecBuilder getRequestBuilder() {
+    public RequestSpecBuilder getRequestSpecBuilder() {
         return requestSpecBuilder;
     }
 
@@ -101,17 +101,8 @@ public class RestAssuredWrapper {
      *
      * @return the response
      */
-    public ResponseSpecBuilder getResponseBuilder() {
+    public ResponseSpecBuilder getResponseSpecBuilder() {
         return responseSpecBuilder;
-    }
-
-    /**
-     * Getter method for response.
-     *
-     * @return the response
-     */
-    public Response getResponse() {
-        return response;
     }
 
     /**
@@ -492,31 +483,18 @@ public class RestAssuredWrapper {
     }
 
     /**
-     * Utility to minimize code.
+     * Do the Call with the spec request, url and method.
      *
-     * @return Rq {@link RequestSpecification}
-     * @throws RobotestException
-     *             This method can only be invoked once per call, and be reset after call.
-     */
-    public RestAssuredWrapper buildRequest() throws RobotestException {
-        if (null != requestSpec) {
-            throw new RobotestException("BUILD WHEN CAN ONLY BE INVOKED ONCE PER CALL");
-        }
-        loadGivenSpecWhen();
-        return this;
-    }
-
-    /**
-     * do the Call with the spec request, url and method.
+     * Be aware that wrapper can't execute N times this call, but you must control response specs reuse.
      *
      * @param url
      *            By default only relative path to http://localhost:80 you can specify you wan't.
      * @param httpMethod
      *            The RestAssured supported {@link Method}
-     * @return The same object for fluent api.
+     * @return The Response Object.
      */
-    public RestAssuredWrapper when(final String url,
-                                   final Method httpMethod) {
+    public Response when(final String url,
+                         final Method httpMethod) {
         loadGivenSpecWhen();
         if (Method.GET.equals(httpMethod)) {
             response = requestSpec.get(url);
@@ -533,24 +511,10 @@ public class RestAssuredWrapper {
         } else {
             response = requestSpec.head(url);
         }
-        requestSpec = null;
-        return this;
-    }
-
-    /**
-     * Utility method for apply response spec specified object.
-     *
-     * @return The same object for fluent api.
-     * @throws RobotestException
-     *             only call this method if doCall is already invoked
-     */
-    public RestAssuredWrapper thenResponseSpec() throws RobotestException {
-        if (null == response) {
-            throw new RobotestException("doCall METHOD NOT INVOKED");
-        }
         response.then()
                 .spec(responseSpecBuilder.build());
-        return this;
+        requestSpec = null;
+        return response;
     }
 
 }

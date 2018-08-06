@@ -247,7 +247,8 @@ public class StepReport {
      * @param millis
      *            end step timemillis.
      */
-    public void endStep(final StepStatus status, final long millis) {
+    public void endStep(final StepStatus status,
+                        final long millis) {
         stepStatus = status;
         endMillis = millis;
     }
@@ -263,14 +264,21 @@ public class StepReport {
     public void writeStep(final JsonGenerator jGenerator) throws RobotestException {
         try {
             jGenerator.writeStartObject();
-            jGenerator.writeNumberField("order", stepOrder);
-            jGenerator.writeStringField("step", id);
-            jGenerator.writeStringField("description", description);
-            jGenerator.writeNumberField("initMillis", initMillis);
-            jGenerator.writeNumberField("endMillis", endMillis);
-            jGenerator.writeStringField("status", stepStatus.name());
+            jGenerator.writeNumberField("order",
+                                        stepOrder);
+            jGenerator.writeStringField("step",
+                                        id);
+            jGenerator.writeStringField("description",
+                                        description);
+            jGenerator.writeNumberField("initMillis",
+                                        initMillis);
+            jGenerator.writeNumberField("endMillis",
+                                        endMillis);
+            jGenerator.writeStringField("status",
+                                        stepStatus.name());
 
-            stepConfig.writeConfig(jGenerator, "config");
+            stepConfig.writeConfig(jGenerator,
+                                   "config");
 
             jGenerator.writeFieldName("validations");
             jGenerator.writeStartArray();

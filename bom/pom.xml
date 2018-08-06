@@ -1,1191 +1,1221 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>com.cast-info.devops</groupId>
-    <artifactId>robotest-bom</artifactId>
-    <name>${project.groupId}:${project.artifactId}</name>
-    <description>ROBOTEST Bill of Materials.</description>
-    <url>https://github.com/CastInfo/robotest</url>
-    <version>2.0.1-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <licenses>
-        <license>
-            <name>GNU General Public License v3.0</name>
-            <url>https://github.com/CastInfo/robotest/blob/master/LICENSE</url>
-        </license>
-    </licenses>
-    <developers>
-        <developer>
-            <name>Jorge Muñoz</name>
-            <email>jorge.munoz@cast-info.es</email>
-            <organization>CAST-INFO</organization>
-            <organizationUrl>http://www.cast-info.es</organizationUrl>
-        </developer>
-        <developer>
-            <name>Jordi Artal</name>
-            <email>jordi.artal@cast-info.es</email>
-            <organization>CAST-INFO</organization>
-            <organizationUrl>http://www.cast-info.es</organizationUrl>
-        </developer>
-        <developer>
-            <name>Miguel Ruiz</name>
-            <email>miguel.ruiz@cast-info.es</email>
-            <organization>CAST-INFO</organization>
-            <organizationUrl>http://www.cast-info.es</organizationUrl>
-        </developer>
-    </developers>
-    <scm>
-        <connection>scm:git:https://github.com/CastInfo/robotest.git</connection>
-        <developerConnection>scm:git:https://github.com/CastInfo/robotest.git</developerConnection>
-        <url>https://github.com/CastInfo/robotest/tree/master</url>
-    </scm>
-    <properties>
-        <!-- ROBOTEST internal options for ROBOTEST build, you don't need same, except java.version :) -->
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <!-- Dependency versions -->
-        <surfire-failsafe.version>2.21.0</surfire-failsafe.version>
-        <junit.version>4.12</junit.version>
-        <testng.version>6.14.3</testng.version>
-        <spring-boot.version>1.5.7.RELEASE</spring-boot.version>
-        <testng.version>6.14.3</testng.version>
-        <restassured.version>3.1.0</restassured.version>
-        <!-- ROBOTEST DEVELOPER OPTIONS -->
-        <!-- BUILD phase Options -->
-        <robotest.integration.test.sources>src/integration-test/java</robotest.integration.test.sources>
-        <robotest.integration.test.resources>src/integration-test/resources</robotest.integration.test.resources>
-        <robotest.extractor.basedir>${project.basedir}</robotest.extractor.basedir>
-        <robotest.extractor.jenkins1.json>robotest_test_choice_jenkins1.json</robotest.extractor.jenkins1.json>
-        <robotest.extractor.jenkins2.json>robotest_test_choice_jenkins2.json</robotest.extractor.jenkins2.json>
-        <robotest.extractor.output>${robotest.integration.test.resources}</robotest.extractor.output>
-        <robotest.extractor.test-classes>target/test-classes/</robotest.extractor.test-classes>
-        <!-- RUN phase options -->
-        <robotest.failsafe.include.cases>**/*.*</robotest.failsafe.include.cases>
-        <robotest.failsafe.parallelProcess>1</robotest.failsafe.parallelProcess>
-        <robotest.failsafe.parallelBrowsersPerOneProcess>3</robotest.failsafe.parallelBrowsersPerOneProcess>
-        <!-- ROBOTEST_REPORT_BASE: path of the ROBOTEST generated report, defaults to "java.io.tmpdir" Java System Property. -->
-        <robotest.standalone-suite-report-ui.path>${project.build.directory}/failsafe-reports/robotest-suite-reports</robotest.standalone-suite-report-ui.path>
-        <robotest.report.path>${robotest.standalone-suite-report-ui.path}/assets/json/suites</robotest.report.path>
-        <!-- ROBOTEST_ENV: environment name, feel free, if no value robotest defaults to local. -->
-        <robotest.cfg.env>local</robotest.cfg.env>
-        <!-- ROBOTEST_BROWSER: browser, FIREFOX, CHROME (default), IPAD, IPHONE and ANDROID are supported. -->
-        <robotest.cfg.browser.name>CHROME</robotest.cfg.browser.name>
-        <!-- ROBOTEST_BROWSER_HEADLESS: true if you wan't headleass execution, only chrome > 58 and firefox > 59. -->
-        <robotest.cfg.headless>false</robotest.cfg.headless>
-        <!-- ROBOTEST_BROWSER_WIDTH: Browser windows width size, default 1024 -->
-        <robotest.cfg.browser.witdh>1024</robotest.cfg.browser.witdh>
-        <!-- ROBOTEST_BROWSER_HEIGHT: Browser windows height size, default 768 -->
-        <robotest.cfg.browser.height>768</robotest.cfg.browser.height>
-        <!-- ROBOTEST_BROWSER_MAXIMIZED: True if browser open in maximized mode -->
-        <robotest.cfg.browser.maximized>true</robotest.cfg.browser.maximized>
-        <!-- ROBOTEST_BROWSER_CONSOLE_LOG_LEVEL: Warning by default, values accepted are java.util.logging.Level values. -->
-        <robotest.cfg.browser.log.level>WARNING</robotest.cfg.browser.log.level>
-        <!-- ROBOTEST_BROWSER_PROXY: Proxy dns:port (without protocol) settings -->
-        <robotest.cfg.browser.proxy />
-        <!-- ROBOTEST_BROWSER_NOPROXYFOR: Proxy exclusions -->
-        <robotest.cfg.browser.noproxyfor /> 
-        <!-- ROBOTEST_BROWSER_PROXY_AUTH_USER: Proxy username authentication-->
-        <robotest.cfg.browser.proxy_auth_user />
-        <!-- ROBOTEST_BROWSER_PROXY_AUTH_PASSWORD: Proxy secret authentication -->
-        <robotest.cfg.browser.proxy_auth_secret />             
-        <!-- ROBOTEST_GENERAL_TIMEOUT: timeout general for Selenium Driver Api utilities, defaults to 10000ms. -->
-        <robotest.cfg.general.timeout>10000</robotest.cfg.general.timeout>
-        <!-- ROBOTEST_DOCKER_CONN: Docker host, tipical local instalation runs in tcp://192.168.99.100:2376 or unix:// -->
-        <robotest.cfg.docker.conn />
-        <!-- ROBOTEST_DOCKER_TLS: Use of tls to secure comunications with Docker host -->
-        <robotest.cfg.docker.tls />
-        <!-- ROBOTEST_DOCKER_CERTS: Docker certs path of docker remote host, defaults to "user.dir" Java System Property 
-            + .docker/machine/certs -->
-        <robotest.cfg.docker.certs />
-        <!-- ROBOTEST_DOCKER_PUBLIC_HOST: ip or dns used to publish outside docker machine the selenium hub based in docker, 
-            by default resolved dynamically -->
-        <robotest.cfg.docker.public_host />
-        <!-- ROBOTEST_DOCKER_NETWORK: network for Docker, valid values: bridge (default), none, host, container and custom 
-            subnet id. -->
-        <robotest.cfg.docker.network />
-         <!-- ROBOTEST_DOCKER_INSPECT_REAL_PORT: if false gets 4444 default port else if true or not defined inspect container real port -->
-        <robotest.cfg.docker.inspectrealport />
-         <!-- ROBOTEST_DOCKER_REGISTRY_URL: docker registry url -->
-        <robotest.cfg.docker.registry.url />
-        <!-- ROBOTEST_DOCKER_REGISTRY_USER: docker registry user -->
-        <robotest.cfg.docker.registry.user />
-        <!-- ROBOTEST_DOCKER_REGISTRY_SECRET: docker registry password -->
-        <robotest.cfg.docker.registry.secret />
-        <!-- ROBOTEST_DOCKER_PUBLIC_EMAIL: docker registry email -->
-        <robotest.cfg.docker.registry.email />
-        <!-- ROBOTEST_DOCKER_CONTAINER_EXEC_TAG: tag appended to default "robotest_" initial name of robotest containers 
-            to avoid paralelism naming conflict. -->
-        <robotest.cfg.docker.container.exec.tag />
-        <!-- ROBOTEST_DOCKER_LABELS: coma separated list key:value labels -->
-        <robotest.cfg.docker.labels />
-        <!-- ROBOTEST_DOCKER_DEBUG: true to activate Docker port for remote debug purposes. -->
-        <robotest.cfg.docker.debug />
-        <!-- ROBOTEST_CHROME_DOCKER_IMG_TAG: This is managed by default by robotest, but you can forze especific tag. -->
-        <robotest.cfg.docker.chrome.image />
-        <!-- ROBOTEST_CHROME_DOCKER_DEBUG_IMG_TAG: This is managed by default by robotest, but you can forze especific tag. -->
-        <robotest.cfg.docker.chrome.debug.image />
-        <!-- ROBOTEST_CHROME_FIREFOX_IMG_TAG: This is managed by default by robotest, but you can forze especific tag. -->
-        <robotest.cfg.docker.firefox.image />
-        <!-- ROBOTEST_CHROME_FIREFOX_DEBUG_IMG_TAG: This is managed by default by robotest, but you can forze especific tag. -->
-        <robotest.cfg.docker.firefox.debug.image />
-        <!-- ROBOTEST_BROWSERSTACK_USER_NAME: Browser Stack username -->
-        <robotest.cfg.browserstack.user.name />
-        <!-- ROBOTEST_BROWSERSTACK_ACCESS_KEY: Browser Stack accessKey -->
-        <robotest.cfg.browserstack.access.key />
-        <!-- ROBOTEST_BROWSERSTACK_DEVICE: See device list https://www.browserstack.com/list-of-browsers-and-platforms?product=automate. 
-            For example iPhone X -->
-        <robotest.cfg.browserstack.device />
-        <!-- ROBOTEST_BROWSERSTACK_PLATFORM: See platform list https://www.browserstack.com/list-of-browsers-and-platforms?product=automate. 
-            For example 11.0 -->
-        <robotest.cfg.browserstack.platform />
-        <!-- wdm.geckoDriverVersion: Forze version of native firefox driver manager download for specific user installed 
-            firefox versions -->
-        <robotest.cfg.wdm.geckoDriverVersion />
-        <!-- wdm.chromeDriverVersion: Forze version of native chrome driver manager download for specific user installed 
-            chrome versions -->
-        <robotest.cfg.wdm.chromeDriverVersion />
-        <!-- wdm.targetPath: Native driver manager download directory, default user.home -->
-        <robotest.cfg.wdm.targetPath />
-    </properties>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.cast-info.devops</groupId>
+	<artifactId>robotest-bom</artifactId>
+	<name>${project.groupId}:${project.artifactId}</name>
+	<description>ROBOTEST Bill of Materials.</description>
+	<url>https://github.com/CastInfo/robotest</url>
+	<version>2.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<licenses>
+		<license>
+			<name>GNU General Public License v3.0</name>
+			<url>https://github.com/CastInfo/robotest/blob/master/LICENSE</url>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<name>Jorge Muñoz</name>
+			<email>jorge.munoz@cast-info.es</email>
+			<organization>CAST-INFO</organization>
+			<organizationUrl>http://www.cast-info.es</organizationUrl>
+		</developer>
+		<developer>
+			<name>Jordi Artal</name>
+			<email>jordi.artal@cast-info.es</email>
+			<organization>CAST-INFO</organization>
+			<organizationUrl>http://www.cast-info.es</organizationUrl>
+		</developer>
+		<developer>
+			<name>Miguel Ruiz</name>
+			<email>miguel.ruiz@cast-info.es</email>
+			<organization>CAST-INFO</organization>
+			<organizationUrl>http://www.cast-info.es</organizationUrl>
+		</developer>
+	</developers>
+	<scm>
+		<connection>scm:git:https://github.com/CastInfo/robotest.git</connection>
+		<developerConnection>scm:git:https://github.com/CastInfo/robotest.git</developerConnection>
+		<url>https://github.com/CastInfo/robotest/tree/master</url>
+	</scm>
+	<properties>
+		<!-- ROBOTEST internal options for ROBOTEST build, you don't need same, 
+			except java.version :) -->
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<!-- Dependency versions -->
+		<surfire-failsafe.version>2.21.0</surfire-failsafe.version>
+		<junit.version>4.12</junit.version>
+		<testng.version>6.14.3</testng.version>
+		<spring-boot.version>1.5.7.RELEASE</spring-boot.version>
+		<testng.version>6.14.3</testng.version>
+		<restassured.version>3.1.0</restassured.version>
+		<!-- ROBOTEST DEVELOPER OPTIONS -->
+		<!-- BUILD phase Options -->
+		<robotest.integration.test.sources>src/integration-test/java</robotest.integration.test.sources>
+		<robotest.integration.test.resources>src/integration-test/resources</robotest.integration.test.resources>
+		<robotest.extractor.basedir>${project.basedir}</robotest.extractor.basedir>
+		<robotest.extractor.jenkins1.json>robotest_test_choice_jenkins1.json</robotest.extractor.jenkins1.json>
+		<robotest.extractor.jenkins2.json>robotest_test_choice_jenkins2.json</robotest.extractor.jenkins2.json>
+		<robotest.extractor.output>${robotest.integration.test.resources}</robotest.extractor.output>
+		<robotest.extractor.test-classes>target/test-classes/</robotest.extractor.test-classes>
+		<!-- RUN phase options -->
+		<robotest.failsafe.include.cases>**/*.*</robotest.failsafe.include.cases>
+		<robotest.failsafe.parallelProcess>1</robotest.failsafe.parallelProcess>
+		<robotest.failsafe.parallelBrowsersPerOneProcess>3</robotest.failsafe.parallelBrowsersPerOneProcess>
+		<!-- ROBOTEST_REPORT_BASE: path of the ROBOTEST generated report, defaults 
+			to "java.io.tmpdir" Java System Property. -->
+		<robotest.standalone-suite-report-ui.path>${project.build.directory}/failsafe-reports/robotest-suite-reports</robotest.standalone-suite-report-ui.path>
+		<robotest.report.path>${robotest.standalone-suite-report-ui.path}/assets/json/suites</robotest.report.path>
+		<!-- ROBOTEST_ENV: environment name, feel free, if no value robotest defaults 
+			to local. -->
+		<robotest.cfg.env>local</robotest.cfg.env>
+		<!-- ROBOTEST_BROWSER: browser, FIREFOX, CHROME (default), IPAD, IPHONE 
+			and ANDROID are supported. -->
+		<robotest.cfg.browser.name>CHROME</robotest.cfg.browser.name>
+		<!-- ROBOTEST_BROWSER_HEADLESS: true if you wan't headleass execution, 
+			only chrome > 58 and firefox > 59. -->
+		<robotest.cfg.headless>false</robotest.cfg.headless>
+		<!-- ROBOTEST_BROWSER_WIDTH: Browser windows width size, default 1024 -->
+		<robotest.cfg.browser.witdh>1024</robotest.cfg.browser.witdh>
+		<!-- ROBOTEST_BROWSER_HEIGHT: Browser windows height size, default 768 -->
+		<robotest.cfg.browser.height>768</robotest.cfg.browser.height>
+		<!-- ROBOTEST_BROWSER_MAXIMIZED: True if browser open in maximized mode -->
+		<robotest.cfg.browser.maximized>true</robotest.cfg.browser.maximized>
+		<!-- ROBOTEST_BROWSER_CONSOLE_LOG_LEVEL: Warning by default, values accepted 
+			are java.util.logging.Level values. -->
+		<robotest.cfg.browser.log.level>WARNING</robotest.cfg.browser.log.level>
+		<!-- ROBOTEST_BROWSER_PROXY: Proxy dns:port (without protocol) settings -->
+		<robotest.cfg.browser.proxy />
+		<!-- ROBOTEST_BROWSER_NOPROXYFOR: Proxy exclusions -->
+		<robotest.cfg.browser.noproxyfor />
+		<!-- ROBOTEST_BROWSER_PROXY_AUTH_USER: Proxy username authentication -->
+		<robotest.cfg.browser.proxy_auth_user />
+		<!-- ROBOTEST_BROWSER_PROXY_AUTH_PASSWORD: Proxy secret authentication -->
+		<robotest.cfg.browser.proxy_auth_secret />
+		<!-- ROBOTEST_GENERAL_TIMEOUT: timeout general for Selenium Driver Api 
+			utilities, defaults to 10000ms. -->
+		<robotest.cfg.general.timeout>10000</robotest.cfg.general.timeout>
+		<!-- ROBOTEST_DOCKER_CONN: Docker host, tipical local instalation runs 
+			in tcp://192.168.99.100:2376 or unix:// -->
+		<robotest.cfg.docker.conn />
+		<!-- ROBOTEST_DOCKER_TLS: Use of tls to secure comunications with Docker 
+			host -->
+		<robotest.cfg.docker.tls />
+		<!-- ROBOTEST_DOCKER_CERTS: Docker certs path of docker remote host, defaults 
+			to "user.dir" Java System Property + .docker/machine/certs -->
+		<robotest.cfg.docker.certs />
+		<!-- ROBOTEST_DOCKER_PUBLIC_HOST: ip or dns used to publish outside docker 
+			machine the selenium hub based in docker, by default resolved dynamically -->
+		<robotest.cfg.docker.public_host />
+		<!-- ROBOTEST_DOCKER_NETWORK: network for Docker, valid values: bridge 
+			(default), none, host, container and custom subnet id. -->
+		<robotest.cfg.docker.network />
+		<!-- ROBOTEST_DOCKER_INSPECT_REAL_PORT: if false gets 4444 default port 
+			else if true or not defined inspect container real port -->
+		<robotest.cfg.docker.inspectrealport />
+		<!-- ROBOTEST_DOCKER_REGISTRY_URL: docker registry url -->
+		<robotest.cfg.docker.registry.url />
+		<!-- ROBOTEST_DOCKER_REGISTRY_USER: docker registry user -->
+		<robotest.cfg.docker.registry.user />
+		<!-- ROBOTEST_DOCKER_REGISTRY_SECRET: docker registry password -->
+		<robotest.cfg.docker.registry.secret />
+		<!-- ROBOTEST_DOCKER_PUBLIC_EMAIL: docker registry email -->
+		<robotest.cfg.docker.registry.email />
+		<!-- ROBOTEST_DOCKER_CONTAINER_EXEC_TAG: tag appended to default "robotest_" 
+			initial name of robotest containers to avoid paralelism naming conflict. -->
+		<robotest.cfg.docker.container.exec.tag />
+		<!-- ROBOTEST_DOCKER_LABELS: coma separated list key:value labels -->
+		<robotest.cfg.docker.labels />
+		<!-- ROBOTEST_DOCKER_DEBUG: true to activate Docker port for remote debug 
+			purposes. -->
+		<robotest.cfg.docker.debug />
+		<!-- ROBOTEST_CHROME_DOCKER_IMG_TAG: This is managed by default by robotest, 
+			but you can forze especific tag. -->
+		<robotest.cfg.docker.chrome.image />
+		<!-- ROBOTEST_CHROME_DOCKER_DEBUG_IMG_TAG: This is managed by default by 
+			robotest, but you can forze especific tag. -->
+		<robotest.cfg.docker.chrome.debug.image />
+		<!-- ROBOTEST_CHROME_FIREFOX_IMG_TAG: This is managed by default by robotest, 
+			but you can forze especific tag. -->
+		<robotest.cfg.docker.firefox.image />
+		<!-- ROBOTEST_CHROME_FIREFOX_DEBUG_IMG_TAG: This is managed by default 
+			by robotest, but you can forze especific tag. -->
+		<robotest.cfg.docker.firefox.debug.image />
+		<!-- ROBOTEST_BROWSERSTACK_USER_NAME: Browser Stack username -->
+		<robotest.cfg.browserstack.user.name />
+		<!-- ROBOTEST_BROWSERSTACK_ACCESS_KEY: Browser Stack accessKey -->
+		<robotest.cfg.browserstack.access.key />
+		<!-- ROBOTEST_BROWSERSTACK_DEVICE: See device list https://www.browserstack.com/list-of-browsers-and-platforms?product=automate. 
+			For example iPhone X -->
+		<robotest.cfg.browserstack.device />
+		<!-- ROBOTEST_BROWSERSTACK_PLATFORM: See platform list https://www.browserstack.com/list-of-browsers-and-platforms?product=automate. 
+			For example 11.0 -->
+		<robotest.cfg.browserstack.platform />
+		<!-- wdm.geckoDriverVersion: Forze version of native firefox driver manager 
+			download for specific user installed firefox versions -->
+		<robotest.cfg.wdm.geckoDriverVersion />
+		<!-- wdm.chromeDriverVersion: Forze version of native chrome driver manager 
+			download for specific user installed chrome versions -->
+		<robotest.cfg.wdm.chromeDriverVersion />
+		<!-- wdm.targetPath: Native driver manager download directory, default 
+			user.home -->
+		<robotest.cfg.wdm.targetPath />
+	</properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.seleniumhq.selenium</groupId>
-                <artifactId>selenium-java</artifactId>
-                <version>3.12.0</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>23.6-jre</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.bonigarcia</groupId>
-                <artifactId>webdrivermanager</artifactId>
-                <version>2.2.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>3.6</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-text</artifactId>
-                <version>1.3</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>2.5</version>
-            </dependency>
-            <dependency>
-                <groupId>cglib</groupId>
-                <artifactId>cglib</artifactId>
-                <version>3.2.4</version>
-            </dependency>
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>1.2.3</version>
-            </dependency>
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.testng</groupId>
-                <artifactId>testng</artifactId>
-                <version>${testng.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-core</artifactId>
-                <version>2.13.0</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.docker-java</groupId>
-                <artifactId>docker-java</artifactId>
-                <version>3.0.14</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson</groupId>
-                <artifactId>jackson-bom</artifactId>
-                <version>2.8.10</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.jackson</groupId>
-                <artifactId>jackson-core-asl</artifactId>
-                <version>1.9.13</version>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.jackson</groupId>
-                <artifactId>jackson-mapper-asl</artifactId>
-                <version>1.9.13</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-web</artifactId>
-                <version>4.3.12.RELEASE</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-web</artifactId>
-                <version>${spring-boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-test</artifactId>
-                <version>${spring-boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpclient</artifactId>
-                <version>4.5.3</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>commons-logging</groupId>
-                        <artifactId>commons-logging</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpcore</artifactId>
-                <version>4.4.8</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpmime</artifactId>
-                <version>4.5.3</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.java-json-tools</groupId>
-                <artifactId>json-schema-validator</artifactId>
-                <version>2.2.8</version>
-            </dependency>
-            <dependency>
-                <groupId>com.jayway.jsonpath</groupId>
-                <artifactId>json-path</artifactId>
-                <version>2.2.0</version>
-            </dependency>
-            <dependency>
-                <groupId>com.jayway.jsonpath</groupId>
-                <artifactId>json-path-assert</artifactId>
-                <version>2.2.0</version>
-            </dependency>
-            <dependency>
-                <groupId>net.sourceforge.htmlcleaner</groupId>
-                <artifactId>htmlcleaner</artifactId>
-                <version>2.21</version>
-            </dependency>
-            <dependency>
-                <groupId>io.rest-assured</groupId>
-                <artifactId>rest-assured</artifactId>
-                <version>${restassured.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.rest-assured</groupId>
-                <artifactId>json-path</artifactId>
-                <version>${restassured.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.rest-assured</groupId>
-                <artifactId>xml-path</artifactId>
-                <version>${restassured.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.rest-assured</groupId>
-                <artifactId>json-schema-validator</artifactId>
-                <version>${restassured.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.seleniumhq.selenium</groupId>
+				<artifactId>selenium-java</artifactId>
+				<version>3.12.0</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>23.6-jre</version>
+			</dependency>
+			<dependency>
+				<groupId>io.github.bonigarcia</groupId>
+				<artifactId>webdrivermanager</artifactId>
+				<version>2.2.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>3.6</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-text</artifactId>
+				<version>1.3</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>2.5</version>
+			</dependency>
+			<dependency>
+				<groupId>cglib</groupId>
+				<artifactId>cglib</artifactId>
+				<version>3.2.4</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-classic</artifactId>
+				<version>1.2.3</version>
+			</dependency>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.testng</groupId>
+				<artifactId>testng</artifactId>
+				<version>${testng.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-core</artifactId>
+				<version>2.13.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.littleshoot</groupId>
+				<artifactId>littleproxy</artifactId>
+				<version>1.1.2</version>
+			</dependency>
+			<dependency>
+				<groupId>com.github.docker-java</groupId>
+				<artifactId>docker-java</artifactId>
+				<version>3.0.14</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson</groupId>
+				<artifactId>jackson-bom</artifactId>
+				<version>2.8.10</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
+			<dependency>
+				<groupId>org.codehaus.jackson</groupId>
+				<artifactId>jackson-core-asl</artifactId>
+				<version>1.9.13</version>
+			</dependency>
+			<dependency>
+				<groupId>org.codehaus.jackson</groupId>
+				<artifactId>jackson-mapper-asl</artifactId>
+				<version>1.9.13</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-web</artifactId>
+				<version>4.3.12.RELEASE</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-web</artifactId>
+				<version>${spring-boot.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-test</artifactId>
+				<version>${spring-boot.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>4.5.3</version>
+				<exclusions>
+					<exclusion>
+						<groupId>commons-logging</groupId>
+						<artifactId>commons-logging</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpcore</artifactId>
+				<version>4.4.8</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpmime</artifactId>
+				<version>4.5.3</version>
+			</dependency>
+			<dependency>
+				<groupId>com.github.java-json-tools</groupId>
+				<artifactId>json-schema-validator</artifactId>
+				<version>2.2.8</version>
+			</dependency>
+			<dependency>
+				<groupId>com.jayway.jsonpath</groupId>
+				<artifactId>json-path</artifactId>
+				<version>2.2.0</version>
+			</dependency>
+			<dependency>
+				<groupId>com.jayway.jsonpath</groupId>
+				<artifactId>json-path-assert</artifactId>
+				<version>2.2.0</version>
+			</dependency>
+			<dependency>
+				<groupId>net.sourceforge.htmlcleaner</groupId>
+				<artifactId>htmlcleaner</artifactId>
+				<version>2.21</version>
+			</dependency>
+			<dependency>
+				<groupId>io.rest-assured</groupId>
+				<artifactId>rest-assured</artifactId>
+				<version>${restassured.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.rest-assured</groupId>
+				<artifactId>json-path</artifactId>
+				<version>${restassured.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.rest-assured</groupId>
+				<artifactId>xml-path</artifactId>
+				<version>${restassured.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.rest-assured</groupId>
+				<artifactId>json-schema-validator</artifactId>
+				<version>${restassured.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
-    <build>
-        <pluginManagement>
-            <plugins>
-                <!-- Compiler config -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.7.0</version>
-                    <configuration>
-                        <source>${maven.compiler.source}</source>
-                        <target>${maven.compiler.target}</target>
-                        <encoding>${project.build.sourceEncoding}</encoding>
-                    </configuration>
-                </plugin>
-                <!-- Resource config -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.0.2</version>
-                    <configuration>
-                        <nonFilteredFileExtensions>
-                            <nonFilteredFileExtension>pdf</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>swf</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>ttf</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>eot</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>otf</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>woff</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>cur</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>png</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>jpg</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>bmp</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>jpeg</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>ico</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>psd</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>gif</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>zip</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>mpg</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>mpeg</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>avi</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>pem</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>crt</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>cert</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>db</nonFilteredFileExtension>
-                        </nonFilteredFileExtensions>
-                        <encoding>${project.build.sourceEncoding}</encoding>
-                        <configuration>
-                            <delimiters>
-                                <delimiter>@</delimiter>
-                            </delimiters>
-                            <useDefaultDelimiters>false</useDefaultDelimiters>
-                        </configuration>
-                    </configuration>
-                </plugin>
-                <!-- coverage -->
-                <plugin>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <!-- compatibility with sonar 4.5.5 -->
-                    <!-- <version>0.7.4.201502262128</version> -->
-                    <!-- <version>0.7.7.201606060606</version> -->
-                    <version>0.7.9</version>
-                    <configuration>
-                        <haltOnFailure>false</haltOnFailure>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>default-prepare-agent</id>
-                            <goals>
-                                <goal>prepare-agent</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>default-report</id>
-                            <phase>prepare-package</phase>
-                            <goals>
-                                <goal>report</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <!-- findbugs -->
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>findbugs-maven-plugin</artifactId>
-                    <version>3.0.5</version>
-                    <configuration>
-                        <effort>Max</effort>
-                        <threshold>High</threshold>
-                        <failOnError>false</failOnError>
-                        <sourceEncoding>UTF-8</sourceEncoding>
-                        <outputEncoding>UTF-8</outputEncoding>
-                        <findbugsXmlOutput>true</findbugsXmlOutput>
-                        <findbugsXmlWithMessages>true</findbugsXmlWithMessages>
-                        <xmlOutput>true</xmlOutput>
-                        <plugins>
-                            <plugin>
-                                <groupId>com.mebigfatguy.fb-contrib</groupId>
-                                <artifactId>fb-contrib</artifactId>
-                                <version>6.6.0</version>
-                            </plugin>
-                            <plugin>
-                                <groupId>com.h3xstream.findsecbugs</groupId>
-                                <artifactId>findsecbugs-plugin</artifactId>
-                                <version>1.4.5</version>
-                            </plugin>
-                        </plugins>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>check</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <!-- checkstyle -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>3.0.0</version>
-                    <dependencies>
-                        <dependency>
-                            <groupId>com.puppycrawl.tools</groupId>
-                            <artifactId>checkstyle</artifactId>
-                            <version>8.8</version>
-                        </dependency>
-                    </dependencies>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>check</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                    <configuration>
-                        <consoleOutput>true</consoleOutput>
-                        <failOnViolation>false</failOnViolation>
-                        <checkstyleRules>
-                            <module name="Checker">
-                                <module name="Header">
-                                    <!-- <property name="headerFile" value="config/java.header"/> -->
-                                    <!-- <property name="ignoreLines" value="2, 3, 4"/> -->
-                                    <property name="fileExtensions" value="java" />
-                                </module>
-                                <property name="severity" value="warning" />
-                                <property name="charset" value="UTF-8" />
-                                <module name="Translation" />
-                                <module name="FileLength">
-                                    <property name="max" value="750" />
-                                </module>
-                                <module name="FileTabCharacter" />
-                                <module name="TreeWalker">
-                                    <module name="JavadocType">
-                                        <property name="scope" value="public" />
-                                    </module>
-                                    <module name="JavadocMethod">
-                                        <property name="scope" value="public" />
-                                        <property name="logLoadErrors" value="true" />
-                                        <property name="suppressLoadErrors" value="true" />
-                                        <property name="validateThrows" value="true" />
-                                        <property name="allowMissingThrowsTags" value="true" />
-                                        <property name="allowMissingPropertyJavadoc" value="true" />
-                                    </module>
-                                    <module name="JavadocVariable">
-                                        <property name="scope" value="public" />
-                                    </module>
-                                    <module name="JavadocStyle">
-                                        <property name="scope" value="public" />
-                                        <property name="checkFirstSentence" value="true" />
-                                        <property name="checkEmptyJavadoc" value="true" />
-                                    </module>
-                                    <module name="ConstantName" />
-                                    <module name="LocalFinalVariableName" />
-                                    <module name="LocalVariableName" />
-                                    <module name="MemberName" />
-                                    <module name="MethodName" />
-                                    <module name="PackageName" />
-                                    <module name="ParameterName" />
-                                    <module name="StaticVariableName" />
-                                    <module name="TypeName" />
-                                    <module name="AvoidStarImport" />
-                                    <module name="IllegalImport" />
-                                    <module name="RedundantImport" />
-                                    <module name="UnusedImports" />
-                                    <module name="LineLength">
-                                        <property name="max" value="120" />
-                                        <property name="ignorePattern" value="import|package|@|//" />
-                                    </module>
-                                    <module name="JavaNCSS">
-                                        <property name="methodMaximum" value="60" />
-                                    </module>
-                                    <module name="ParameterNumber">
-                                        <property name="max" value="10" />
-                                        <property name="tokens" value="METHOD_DEF" />
-                                    </module>
-                                    <module name="EmptyForIteratorPad" />
-                                    <module name="GenericWhitespace" />
-                                    <module name="MethodParamPad" />
-                                    <module name="OperatorWrap" />
-                                    <module name="TypecastParenPad" />
-                                    <module name="WhitespaceAfter" />
-                                    <module name="WhitespaceAround" />
-                                    <module name="ModifierOrder" />
-                                    <module name="RedundantModifier" />
-                                    <module name="AvoidNestedBlocks" />
-                                    <module name="EmptyBlock" />
-                                    <module name="LeftCurly" />
-                                    <module name="NeedBraces" />
-                                    <module name="RightCurly" />
-                                    <module name="AvoidInlineConditionals" />
-                                    <module name="EmptyStatement" />
-                                    <module name="EqualsHashCode" />
-                                    <module name="IllegalInstantiation" />
-                                    <module name="InnerAssignment" />
-                                    <module name="MissingSwitchDefault" />
-                                    <module name="SimplifyBooleanExpression" />
-                                    <module name="SimplifyBooleanReturn" />
-                                    <module name="FinalClass" />
-                                    <module name="VisibilityModifier" />
-                                    <module name="ArrayTypeStyle" />
-                                    <module name="FinalParameters" />
-                                    <module name="TodoComment" />
-                                    <module name="UpperEll" />
-                                    <module name="CyclomaticComplexity">
-                                        <property name="max" value="10" />
-                                    </module>
-                                    <module name="NPathComplexity">
-                                        <property name="max" value="300" />
-                                    </module>
-                                    <module name="ClassFanOutComplexity">
-                                        <property name="max" value="45" />
-                                    </module>
-                                    <module name="Indentation">
-                                        <property name="basicOffset" value="4" />
-                                        <property name="braceAdjustment" value="0" />
-                                        <property name="caseIndent" value="4" />
-                                        <property name="arrayInitIndent" value="8" />
-                                    </module>
-                                    <module name="ReturnCount">
-                                        <property name="max" value="1" />
-                                    </module>
-                                    <module name="BooleanExpressionComplexity" />
-                                    <module name="InnerTypeLast" />
-                                    <module name="MutableException" />
-                                    <module name="NestedForDepthCheck">
-                                        <property name="max" value="1" />
-                                    </module>
-                                    <module name="NestedIfDepth">
-                                        <property name="max" value="1" />
-                                    </module>
-                                    <module name="NestedTryDepth">
-                                        <property name="max" value="1" />
-                                    </module>
-                                    <module name="OneStatementPerLine" />
-                                    <module name="RequireThis" />
-                                    <module name="MagicNumber">
-                                        <property name="ignoreAnnotation" value="true" />
-                                    </module>
-                                    <module name="ClassDataAbstractionCoupling">
-                                        <property name="max" value="12" />
-                                        <property name="excludedClasses"
-                                            value="boolean, byte, char, double, float, int, long, short, void, Boolean, Byte, Character, Double, Float, Integer, Long, Short, Void, Object, Class, String, StringBuffer, StringBuilder, ArrayIndexOutOfBoundsException, Exception, RuntimeException, IllegalArgumentException, IllegalStateException, IndexOutOfBoundsException, NullPointerException, Throwable, SecurityException, UnsupportedOperationException, List, ArrayList, Vector, Deque, Queue, LinkedList, Set, HashSet, SortedSet, TreeSet, Map, HashMap, SortedMap, TreeMap, Date, File, InputStream, OutputStream, FileInputStream, FileOutputStream, OutputStreamWriter, InputStreamReader, StringReader, StringWriter, FileWriter, FileReader, Reader, Writer, BufferedReader, BufferedWriter, ByteArrayOutputStream, ByteArrayInputStream, DataInputStream, DataOutputStream, IOException, InputSource, StreamSource, UrlResource" />
-                                    </module>
-                                    <module name="ParenPad">
-                                        <property name="tokens"
-                                            value="ANNOTATION_FIELD_DEF, CTOR_CALL, CTOR_DEF, ENUM_CONSTANT_DEF, EXPR, LITERAL_CATCH, LITERAL_DO, LITERAL_FOR, LITERAL_IF, LITERAL_NEW, LITERAL_SWITCH, LITERAL_SYNCHRONIZED, LITERAL_WHILE, METHOD_CALL, METHOD_DEF, QUESTION, RESOURCE_SPECIFICATION, SUPER_CTOR_CALL" />
-                                    </module>
-                                    <module name="SuppressWarnings" />
-                                    <module name="FallThrough" />
-                                    <module name="OverloadMethodsDeclarationOrder" />
-                                    <module name="MultipleVariableDeclarations" />
-                                </module>
-                            </module>
-                        </checkstyleRules>
-                    </configuration>
-                </plugin>
-                <!-- Check OWASP -->
-                <plugin>
-                    <groupId>org.owasp</groupId>
-                    <artifactId>dependency-check-maven</artifactId>
-                    <version>3.2.0</version>
-                    <configuration>
-                        <failOnError>false</failOnError>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>check</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <!-- Dependency control -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.1.0</version>
-                    <executions>
-                        <execution>
-                            <id>analyze</id>
-                            <phase>install</phase>
-                            <goals>
-                                <goal>analyze</goal>
-                                <goal>analyze-dep-mgt</goal>
-                                <goal>analyze-duplicate</goal>
-                            </goals>
-                            <configuration>
-                                <failBuild>false</failBuild>
-                                <ignoreDirect>false</ignoreDirect>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <!-- add sources to deploy nexus -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>3.0.1</version>
-                    <executions>
-                        <execution>
-                            <id>attach-sources</id>
-                            <goals>
-                                <goal>jar-no-fork</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <!-- add javadoc to deploy nexus -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.10.4</version>
-                    <configuration>
-                        <failOnError>false</failOnError>
-                        <aggregate>true</aggregate>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>attach-javadocs</id>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <!-- Ant -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-antrun-plugin</artifactId>
-                    <version>1.8</version>
-                    <dependencies>
-                        <dependency>
-                            <groupId>ant-contrib</groupId>
-                            <artifactId>ant-contrib</artifactId>
-                            <version>1.0b3</version>
-                            <exclusions>
-                                <exclusion>
-                                    <groupId>ant</groupId>
-                                    <artifactId>ant</artifactId>
-                                </exclusion>
-                            </exclusions>
-                        </dependency>
-                    </dependencies>
-                </plugin>
-                <!-- Selenium test are integration test and must be separated from estandar directoy of unit test. Your app 
-                    classpath is not visible! is the diference with unit tests! -->
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>3.0.0</version>
-                    <executions>
-                        <execution>
-                            <id>add-integration-test-sources</id>
-                            <phase>generate-test-sources</phase>
-                            <goals>
-                                <goal>add-test-source</goal>
-                            </goals>
-                            <configuration>
-                                <!-- Configures the source directory of our integration tests -->
-                                <sources>
-                                    <source>${robotest.integration.test.sources}</source>
-                                </sources>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>add-integration-test-resources</id>
-                            <phase>generate-test-resources</phase>
-                            <goals>
-                                <goal>add-test-resource</goal>
-                            </goals>
-                            <configuration>
-                                <!-- Configures the resource directory of our integration tests include json anotation procesing 
-                                    robotest extractor result -->
-                                <resources>
-                                    <resource>
-                                        <filtering>true</filtering>
-                                        <directory>${robotest.integration.test.resources}</directory>
-                                    </resource>
-                                </resources>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <!-- dependency plugin -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.1.1</version>
-                </plugin>
-                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven 
-                    build itself. -->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>com.cast-info.devops</groupId>
-                                        <artifactId>robotest-suite-cases-json-generator</artifactId>
-                                        <versionRange>[${project.version},)</versionRange>
-                                        <goals>
-                                            <goal>robotestsextractor</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore />
-                                    </action>
-                                </pluginExecution>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>org.apache.maven.plugins</groupId>
-                                        <artifactId>maven-dependency-plugin</artifactId>
-                                        <versionRange>[3.1.1,)</versionRange>
-                                        <goals>
-                                            <goal>unpack</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore />
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
+	<build>
+		<pluginManagement>
+			<plugins>
+				<!-- Compiler config -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.7.0</version>
+					<configuration>
+						<source>${maven.compiler.source}</source>
+						<target>${maven.compiler.target}</target>
+						<encoding>${project.build.sourceEncoding}</encoding>
+					</configuration>
+				</plugin>
+				<!-- Resource config -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>3.0.2</version>
+					<configuration>
+						<nonFilteredFileExtensions>
+							<nonFilteredFileExtension>pdf</nonFilteredFileExtension>
+							<nonFilteredFileExtension>swf</nonFilteredFileExtension>
+							<nonFilteredFileExtension>ttf</nonFilteredFileExtension>
+							<nonFilteredFileExtension>eot</nonFilteredFileExtension>
+							<nonFilteredFileExtension>otf</nonFilteredFileExtension>
+							<nonFilteredFileExtension>woff</nonFilteredFileExtension>
+							<nonFilteredFileExtension>cur</nonFilteredFileExtension>
+							<nonFilteredFileExtension>png</nonFilteredFileExtension>
+							<nonFilteredFileExtension>jpg</nonFilteredFileExtension>
+							<nonFilteredFileExtension>bmp</nonFilteredFileExtension>
+							<nonFilteredFileExtension>jpeg</nonFilteredFileExtension>
+							<nonFilteredFileExtension>ico</nonFilteredFileExtension>
+							<nonFilteredFileExtension>psd</nonFilteredFileExtension>
+							<nonFilteredFileExtension>gif</nonFilteredFileExtension>
+							<nonFilteredFileExtension>zip</nonFilteredFileExtension>
+							<nonFilteredFileExtension>mpg</nonFilteredFileExtension>
+							<nonFilteredFileExtension>mpeg</nonFilteredFileExtension>
+							<nonFilteredFileExtension>avi</nonFilteredFileExtension>
+							<nonFilteredFileExtension>pem</nonFilteredFileExtension>
+							<nonFilteredFileExtension>crt</nonFilteredFileExtension>
+							<nonFilteredFileExtension>cert</nonFilteredFileExtension>
+							<nonFilteredFileExtension>db</nonFilteredFileExtension>
+						</nonFilteredFileExtensions>
+						<encoding>${project.build.sourceEncoding}</encoding>
+						<configuration>
+							<delimiters>
+								<delimiter>@</delimiter>
+							</delimiters>
+							<useDefaultDelimiters>false</useDefaultDelimiters>
+						</configuration>
+					</configuration>
+				</plugin>
+				<!-- coverage -->
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<!-- compatibility with sonar 4.5.5 -->
+					<!-- <version>0.7.4.201502262128</version> -->
+					<!-- <version>0.7.7.201606060606</version> -->
+					<version>0.7.9</version>
+					<configuration>
+						<haltOnFailure>false</haltOnFailure>
+					</configuration>
+					<executions>
+						<execution>
+							<id>default-prepare-agent</id>
+							<goals>
+								<goal>prepare-agent</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>default-report</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>report</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<!-- findbugs -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>findbugs-maven-plugin</artifactId>
+					<version>3.0.5</version>
+					<configuration>
+						<effort>Max</effort>
+						<threshold>High</threshold>
+						<failOnError>false</failOnError>
+						<sourceEncoding>UTF-8</sourceEncoding>
+						<outputEncoding>UTF-8</outputEncoding>
+						<findbugsXmlOutput>true</findbugsXmlOutput>
+						<findbugsXmlWithMessages>true</findbugsXmlWithMessages>
+						<xmlOutput>true</xmlOutput>
+						<plugins>
+							<plugin>
+								<groupId>com.mebigfatguy.fb-contrib</groupId>
+								<artifactId>fb-contrib</artifactId>
+								<version>6.6.0</version>
+							</plugin>
+							<plugin>
+								<groupId>com.h3xstream.findsecbugs</groupId>
+								<artifactId>findsecbugs-plugin</artifactId>
+								<version>1.4.5</version>
+							</plugin>
+						</plugins>
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>check</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<!-- checkstyle -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-checkstyle-plugin</artifactId>
+					<version>3.0.0</version>
+					<dependencies>
+						<dependency>
+							<groupId>com.puppycrawl.tools</groupId>
+							<artifactId>checkstyle</artifactId>
+							<version>8.8</version>
+						</dependency>
+					</dependencies>
+					<executions>
+						<execution>
+							<goals>
+								<goal>check</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<consoleOutput>true</consoleOutput>
+						<failOnViolation>false</failOnViolation>
+						<checkstyleRules>
+							<module name="Checker">
+								<module name="Header">
+									<!-- <property name="headerFile" value="config/java.header"/> -->
+									<!-- <property name="ignoreLines" value="2, 3, 4"/> -->
+									<property name="fileExtensions" value="java" />
+								</module>
+								<property name="severity" value="warning" />
+								<property name="charset" value="UTF-8" />
+								<module name="Translation" />
+								<module name="FileLength">
+									<property name="max" value="750" />
+								</module>
+								<module name="FileTabCharacter" />
+								<module name="TreeWalker">
+									<module name="JavadocType">
+										<property name="scope" value="public" />
+									</module>
+									<module name="JavadocMethod">
+										<property name="scope" value="public" />
+										<property name="logLoadErrors" value="true" />
+										<property name="suppressLoadErrors" value="true" />
+										<property name="validateThrows" value="true" />
+										<property name="allowMissingThrowsTags" value="true" />
+										<property name="allowMissingPropertyJavadoc"
+											value="true" />
+									</module>
+									<module name="JavadocVariable">
+										<property name="scope" value="public" />
+									</module>
+									<module name="JavadocStyle">
+										<property name="scope" value="public" />
+										<property name="checkFirstSentence" value="true" />
+										<property name="checkEmptyJavadoc" value="true" />
+									</module>
+									<module name="ConstantName" />
+									<module name="LocalFinalVariableName" />
+									<module name="LocalVariableName" />
+									<module name="MemberName" />
+									<module name="MethodName" />
+									<module name="PackageName" />
+									<module name="ParameterName" />
+									<module name="StaticVariableName" />
+									<module name="TypeName" />
+									<module name="AvoidStarImport" />
+									<module name="IllegalImport" />
+									<module name="RedundantImport" />
+									<module name="UnusedImports" />
+									<module name="LineLength">
+										<property name="max" value="120" />
+										<property name="ignorePattern"
+											value="import|package|@|//" />
+									</module>
+									<module name="JavaNCSS">
+										<property name="methodMaximum" value="60" />
+									</module>
+									<module name="ParameterNumber">
+										<property name="max" value="10" />
+										<property name="tokens" value="METHOD_DEF" />
+									</module>
+									<module name="EmptyForIteratorPad" />
+									<module name="GenericWhitespace" />
+									<module name="MethodParamPad" />
+									<module name="OperatorWrap" />
+									<module name="TypecastParenPad" />
+									<module name="WhitespaceAfter" />
+									<module name="WhitespaceAround" />
+									<module name="ModifierOrder" />
+									<module name="RedundantModifier" />
+									<module name="AvoidNestedBlocks" />
+									<module name="EmptyBlock" />
+									<module name="LeftCurly" />
+									<module name="NeedBraces" />
+									<module name="RightCurly" />
+									<module name="AvoidInlineConditionals" />
+									<module name="EmptyStatement" />
+									<module name="EqualsHashCode" />
+									<module name="IllegalInstantiation" />
+									<module name="InnerAssignment" />
+									<module name="MissingSwitchDefault" />
+									<module name="SimplifyBooleanExpression" />
+									<module name="SimplifyBooleanReturn" />
+									<module name="FinalClass" />
+									<module name="VisibilityModifier" />
+									<module name="ArrayTypeStyle" />
+									<module name="FinalParameters" />
+									<module name="TodoComment" />
+									<module name="UpperEll" />
+									<module name="CyclomaticComplexity">
+										<property name="max" value="10" />
+									</module>
+									<module name="NPathComplexity">
+										<property name="max" value="300" />
+									</module>
+									<module name="ClassFanOutComplexity">
+										<property name="max" value="45" />
+									</module>
+									<module name="Indentation">
+										<property name="basicOffset" value="4" />
+										<property name="braceAdjustment" value="0" />
+										<property name="caseIndent" value="4" />
+										<property name="arrayInitIndent" value="8" />
+									</module>
+									<module name="ReturnCount">
+										<property name="max" value="1" />
+									</module>
+									<module name="BooleanExpressionComplexity" />
+									<module name="InnerTypeLast" />
+									<module name="MutableException" />
+									<module name="NestedForDepthCheck">
+										<property name="max" value="1" />
+									</module>
+									<module name="NestedIfDepth">
+										<property name="max" value="1" />
+									</module>
+									<module name="NestedTryDepth">
+										<property name="max" value="1" />
+									</module>
+									<module name="OneStatementPerLine" />
+									<module name="RequireThis" />
+									<module name="MagicNumber">
+										<property name="ignoreAnnotation" value="true" />
+									</module>
+									<module name="ClassDataAbstractionCoupling">
+										<property name="max" value="12" />
+										<property name="excludedClasses"
+											value="boolean, byte, char, double, float, int, long, short, void, Boolean, Byte, Character, Double, Float, Integer, Long, Short, Void, Object, Class, String, StringBuffer, StringBuilder, ArrayIndexOutOfBoundsException, Exception, RuntimeException, IllegalArgumentException, IllegalStateException, IndexOutOfBoundsException, NullPointerException, Throwable, SecurityException, UnsupportedOperationException, List, ArrayList, Vector, Deque, Queue, LinkedList, Set, HashSet, SortedSet, TreeSet, Map, HashMap, SortedMap, TreeMap, Date, File, InputStream, OutputStream, FileInputStream, FileOutputStream, OutputStreamWriter, InputStreamReader, StringReader, StringWriter, FileWriter, FileReader, Reader, Writer, BufferedReader, BufferedWriter, ByteArrayOutputStream, ByteArrayInputStream, DataInputStream, DataOutputStream, IOException, InputSource, StreamSource, UrlResource" />
+									</module>
+									<module name="ParenPad">
+										<property name="tokens"
+											value="ANNOTATION_FIELD_DEF, CTOR_CALL, CTOR_DEF, ENUM_CONSTANT_DEF, EXPR, LITERAL_CATCH, LITERAL_DO, LITERAL_FOR, LITERAL_IF, LITERAL_NEW, LITERAL_SWITCH, LITERAL_SYNCHRONIZED, LITERAL_WHILE, METHOD_CALL, METHOD_DEF, QUESTION, RESOURCE_SPECIFICATION, SUPER_CTOR_CALL" />
+									</module>
+									<module name="SuppressWarnings" />
+									<module name="FallThrough" />
+									<module name="OverloadMethodsDeclarationOrder" />
+									<module name="MultipleVariableDeclarations" />
+								</module>
+							</module>
+						</checkstyleRules>
+					</configuration>
+				</plugin>
+				<!-- Check OWASP -->
+				<plugin>
+					<groupId>org.owasp</groupId>
+					<artifactId>dependency-check-maven</artifactId>
+					<version>3.2.0</version>
+					<configuration>
+						<failOnError>false</failOnError>
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>check</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<!-- Dependency control -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>3.1.0</version>
+					<executions>
+						<execution>
+							<id>analyze</id>
+							<phase>install</phase>
+							<goals>
+								<goal>analyze</goal>
+								<goal>analyze-dep-mgt</goal>
+								<goal>analyze-duplicate</goal>
+							</goals>
+							<configuration>
+								<failBuild>false</failBuild>
+								<ignoreDirect>false</ignoreDirect>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<!-- add sources to deploy nexus -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>3.0.1</version>
+					<executions>
+						<execution>
+							<id>attach-sources</id>
+							<goals>
+								<goal>jar-no-fork</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<!-- add javadoc to deploy nexus -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.10.4</version>
+					<configuration>
+						<failOnError>false</failOnError>
+						<aggregate>true</aggregate>
+					</configuration>
+					<executions>
+						<execution>
+							<id>attach-javadocs</id>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<!-- Ant -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>1.8</version>
+					<dependencies>
+						<dependency>
+							<groupId>ant-contrib</groupId>
+							<artifactId>ant-contrib</artifactId>
+							<version>1.0b3</version>
+							<exclusions>
+								<exclusion>
+									<groupId>ant</groupId>
+									<artifactId>ant</artifactId>
+								</exclusion>
+							</exclusions>
+						</dependency>
+					</dependencies>
+				</plugin>
+				<!-- Selenium test are integration test and must be separated from estandar 
+					directoy of unit test. Your app classpath is not visible! is the diference 
+					with unit tests! -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>build-helper-maven-plugin</artifactId>
+					<version>3.0.0</version>
+					<executions>
+						<execution>
+							<id>add-integration-test-sources</id>
+							<phase>generate-test-sources</phase>
+							<goals>
+								<goal>add-test-source</goal>
+							</goals>
+							<configuration>
+								<!-- Configures the source directory of our integration tests -->
+								<sources>
+									<source>${robotest.integration.test.sources}</source>
+								</sources>
+							</configuration>
+						</execution>
+						<execution>
+							<id>add-integration-test-resources</id>
+							<phase>generate-test-resources</phase>
+							<goals>
+								<goal>add-test-resource</goal>
+							</goals>
+							<configuration>
+								<!-- Configures the resource directory of our integration tests include 
+									json anotation procesing robotest extractor result -->
+								<resources>
+									<resource>
+										<filtering>true</filtering>
+										<directory>${robotest.integration.test.resources}</directory>
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<!-- dependency plugin -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>3.1.1</version>
+				</plugin>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>com.cast-info.devops</groupId>
+										<artifactId>robotest-suite-cases-json-generator</artifactId>
+										<versionRange>[${project.version},)</versionRange>
+										<goals>
+											<goal>robotestsextractor</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-dependency-plugin</artifactId>
+										<versionRange>[3.1.1,)</versionRange>
+										<goals>
+											<goal>unpack</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 
-    <profiles>
-        <profile>
-            <id>robotestInternalQualityChecks</id>
-            <activation>
-                <file>
-                    <exists>robotest.iqc.profile.activator</exists>
-                </file>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-checkstyle-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>findbugs-maven-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.owasp</groupId>
-                        <artifactId>dependency-check-maven</artifactId>
-                    </plugin>
-                    <!-- default surfire junit based -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>${surfire-failsafe.version}</version>
-                        <dependencies>
-                            <dependency>
-                                <groupId>org.apache.maven.surefire</groupId>
-                                <artifactId>surefire-junit47</artifactId>
-                                <version>${surfire-failsafe.version}</version>
-                            </dependency>
-                        </dependencies>
-                        <configuration>
-                            <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
-                            <failIfNoTests>false</failIfNoTests>
-                        </configuration>
-                    </plugin>
-                    <!-- default failsafe junit based -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-failsafe-plugin</artifactId>
-                        <version>${surfire-failsafe.version}</version>
-                        <dependencies>
-                            <dependency>
-                                <groupId>org.apache.maven.surefire</groupId>
-                                <artifactId>surefire-junit47</artifactId>
-                                <version>${surfire-failsafe.version}</version>
-                            </dependency>
-                        </dependencies>
-                        <configuration>
-                            <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
-                            <failIfNoTests>false</failIfNoTests>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>robotestRun</id>
-            <activation>
-                <file>
-                    <exists>robotest.run.profile.activator</exists>
-                </file>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>com.cast-info.devops</groupId>
-                        <artifactId>robotest-suite-cases-json-generator</artifactId>
-                        <version>${project.version}</version>
-                        <!-- Add all dependencies that your test cases import -->
-                        <dependencies>
-                            <dependency>
-                                <groupId>junit</groupId>
-                                <artifactId>junit</artifactId>
-                                <version>${junit.version}</version>
-                            </dependency>
-                            <dependency>
-                                <groupId>org.testng</groupId>
-                                <artifactId>testng</artifactId>
-                                <version>${testng.version}</version>
-                            </dependency>
-                        </dependencies>
-                        <executions>
-                            <execution>
-                                <phase>process-test-classes</phase>
-                                <goals>
-                                    <goal>robotestsextractor</goal>
-                                </goals>
-                                <configuration>
-                                    <basedir>${robotest.extractor.basedir}</basedir>
-                                    <jk1File>${robotest.extractor.jenkins1.json}</jk1File>
-                                    <jk2File>${robotest.extractor.jenkins2.json}</jk2File>
-                                    <resourcesDir>${robotest.extractor.output}</resourcesDir>
-                                    <testSubDir>${robotest.extractor.test-classes}</testSubDir>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-failsafe-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>integration-tests</id>
-                                <goals>
-                                    <goal>integration-test</goal>
-                                    <goal>verify</goal>
-                                </goals>
-                                <configuration>
-                                    <test>${robotest.failsafe.include.cases}</test>
-                                    <useUnlimitedThreads>false</useUnlimitedThreads>
-                                    <perCoreThreadCount>false</perCoreThreadCount>
-                                    <parallelOptimized>false</parallelOptimized>
-                                    <reuseForks>true</reuseForks>
-                                    <!-- The parameter forkCount defines the maximum number of JVM processes that Surefire 
-                                        will spawn concurrently to execute the tests. It supports the same syntax as -T in maven-core: if you terminate the value 
-                                        with a C, that value will be multiplied with the number of available CPU cores in your system. For example forkCount=2.5C 
-                                        on a Quad-Core system will result in forking up to ten concurrent JVM processes that execute tests. The default setting is 
-                                        forkCount=1/reuseForks=true, which means that Surefire creates one new JVM process to execute all tests in one maven module -->
-                                    <forkCount>1</forkCount>
-                                    <parallel>methods</parallel>
-                                    <robotest.failsafe.forkCount>${robotest.failsafe.parallelProcess}</robotest.failsafe.forkCount>
-                                    <!-- When using reuseForks=true and a forkCount value larger than one, test classes are 
-                                        handed over to the forked process one-by-one. Thus, parallel=classes would not change anything. However, you can use parallel=methods: 
-                                        classes are executed in forkCount concurrent processes, each of the processes can then use threadCount threads to execute 
-                                        the methods of one class in parallel. -->
-                                    <threadCount>${robotest.failsafe.parallelBrowsersPerOneProcess}</threadCount>
-                                    <systemPropertyVariables>
-                                        <ROBOTEST_REPORT_BASE>${robotest.report.path}</ROBOTEST_REPORT_BASE>
-                                        <ROBOTEST_ENV>${robotest.cfg.env}</ROBOTEST_ENV>
-                                        <ROBOTEST_BROWSER>${robotest.cfg.browser.name}</ROBOTEST_BROWSER>
-                                        <ROBOTEST_BROWSER_HEADLESS>${robotest.cfg.headless}</ROBOTEST_BROWSER_HEADLESS>
-                                        <ROBOTEST_BROWSER_WIDTH>${robotest.cfg.browser.witdh}</ROBOTEST_BROWSER_WIDTH>
-                                        <ROBOTEST_BROWSER_HEIGHT>${robotest.cfg.browser.height}</ROBOTEST_BROWSER_HEIGHT>
-                                        <ROBOTEST_BROWSER_MAXIMIZED>${robotest.cfg.browser.maximized}</ROBOTEST_BROWSER_MAXIMIZED>
-                                        <ROBOTEST_BROWSER_CONSOLE_LOG_LEVEL>${robotest.cfg.browser.log.level}</ROBOTEST_BROWSER_CONSOLE_LOG_LEVEL>
-                                        <ROBOTEST_BROWSER_PROXY>${robotest.cfg.browser.proxy}</ROBOTEST_BROWSER_PROXY>
-                                        <ROBOTEST_BROWSER_NOPROXYFOR>${robotest.cfg.browser.noproxyfor}</ROBOTEST_BROWSER_NOPROXYFOR>
-                                        <ROBOTEST_BROWSER_PROXY_AUTH_USER>${robotest.cfg.browser.proxy_auth_user}</ROBOTEST_BROWSER_PROXY_AUTH_USER>
-                                        <ROBOTEST_BROWSER_PROXY_AUTH_SECRET>${robotest.cfg.browser.proxy_auth_secret}</ROBOTEST_BROWSER_PROXY_AUTH_SECRET>
-                                        <ROBOTEST_GENERAL_TIMEOUT>${robotest.cfg.general.timeout}</ROBOTEST_GENERAL_TIMEOUT>
-                                        <ROBOTEST_DOCKER_CONN>${robotest.cfg.docker.conn}</ROBOTEST_DOCKER_CONN>
-                                        <ROBOTEST_DOCKER_PUBLIC_HOST>${robotest.cfg.docker.public_host}</ROBOTEST_DOCKER_PUBLIC_HOST>
-                                        <ROBOTEST_DOCKER_TLS>${robotest.cfg.docker.tls}</ROBOTEST_DOCKER_TLS>
-                                        <ROBOTEST_DOCKER_CERTS>${robotest.cfg.docker.certs}</ROBOTEST_DOCKER_CERTS>
-                                        <ROBOTEST_DOCKER_NETWORK>${robotest.cfg.docker.network}</ROBOTEST_DOCKER_NETWORK>
-                                        <ROBOTEST_DOCKER_INSPECTREALPORT>${robotest.cfg.docker.inspectrealport}</ROBOTEST_DOCKER_INSPECTREALPORT>
-                                        <ROBOTEST_DOCKER_REGISTRY_URL>${robotest.cfg.docker.registry.url}</ROBOTEST_DOCKER_REGISTRY_URL>
-                                        <ROBOTEST_DOCKER_REGISTRY_USER>${robotest.cfg.docker.registry.user}</ROBOTEST_DOCKER_REGISTRY_USER>
-                                        <ROBOTEST_DOCKER_REGISTRY_SECRET>${robotest.cfg.docker.registry.secret}</ROBOTEST_DOCKER_REGISTRY_SECRET>
-                                        <ROBOTEST_DOCKER_REGISTRY_EMAIL>${robotest.cfg.docker.registry.email}</ROBOTEST_DOCKER_REGISTRY_EMAIL>
-                                        <ROBOTEST_DOCKER_CONTAINER_EXEC_TAG>${robotest.cfg.docker.container.exec.tag}</ROBOTEST_DOCKER_CONTAINER_EXEC_TAG>
-                                        <ROBOTEST_DOCKER_LABELS>${robotest.cfg.docker.labels}</ROBOTEST_DOCKER_LABELS>
-                                        <ROBOTEST_DOCKER_DEBUG>${robotest.cfg.docker.debug}</ROBOTEST_DOCKER_DEBUG>
-                                        <ROBOTEST_CHROME_DOCKER_IMG_TAG>${robotest.cfg.docker.chrome.image}</ROBOTEST_CHROME_DOCKER_IMG_TAG>
-                                        <ROBOTEST_CHROME_DEBUG_DOCKER_IMG_TAG>${robotest.cfg.docker.chrome.debug.image}</ROBOTEST_CHROME_DEBUG_DOCKER_IMG_TAG>
-                                        <ROBOTEST_FIREFOX_DOCKER_IMG_TAG>${robotest.cfg.docker.firefox.image}</ROBOTEST_FIREFOX_DOCKER_IMG_TAG>
-                                        <ROBOTEST_FIREFOX_DEBUG_DOCKER_IMG_TAG>${robotest.cfg.docker.firefox.debug.image}</ROBOTEST_FIREFOX_DEBUG_DOCKER_IMG_TAG>
-                                        <ROBOTEST_BROWSERSTACK_USER_NAME>${robotest.cfg.browserstack.user.name}</ROBOTEST_BROWSERSTACK_USER_NAME>
-                                        <ROBOTEST_BROWSERSTACK_ACCESS_KEY>${robotest.cfg.browserstack.access.key}</ROBOTEST_BROWSERSTACK_ACCESS_KEY>
-                                        <ROBOTEST_BROWSERSTACK_DEVICE>${robotest.cfg.browserstack.device}</ROBOTEST_BROWSERSTACK_DEVICE>
-                                        <ROBOTEST_BROWSERSTACK_PLATFORM>${robotest.cfg.browserstack.platform}</ROBOTEST_BROWSERSTACK_PLATFORM>
-                                        <wdm.geckoDriverVersion>${robotest.cfg.wdm.geckoDriverVersion}</wdm.geckoDriverVersion>
-                                        <wdm.chromeDriverVersion>${robotest.cfg.wdm.chromeDriverVersion}</wdm.chromeDriverVersion>
-                                        <wdm.targetPath>${robotest.cfg.wdm.targetPath}</wdm.targetPath>
-                                    </systemPropertyVariables>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>unpack-static-resources</id>
-                                <goals>
-                                    <goal>unpack</goal>
-                                </goals>
-                                <phase>generate-test-resources</phase>
-                                <configuration>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>com.cast-info.devops</groupId>
-                                            <artifactId>robotest-standalone-suite-report-ui</artifactId>
-                                            <version>${project.version}</version>
-                                            <overWrite>true</overWrite>
-                                            <type>jar</type>
-                                            <outputDirectory>${robotest.standalone-suite-report-ui.path}</outputDirectory>
-                                        </artifactItem>
-                                    </artifactItems>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
+	<profiles>
+		<profile>
+			<id>robotestInternalQualityChecks</id>
+			<activation>
+				<file>
+					<exists>robotest.iqc.profile.activator</exists>
+				</file>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-checkstyle-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>findbugs-maven-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.owasp</groupId>
+						<artifactId>dependency-check-maven</artifactId>
+					</plugin>
+					<!-- default surfire junit based -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>${surfire-failsafe.version}</version>
+						<dependencies>
+							<dependency>
+								<groupId>org.apache.maven.surefire</groupId>
+								<artifactId>surefire-junit47</artifactId>
+								<version>${surfire-failsafe.version}</version>
+							</dependency>
+						</dependencies>
+						<configuration>
+							<failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
+							<failIfNoTests>false</failIfNoTests>
+						</configuration>
+					</plugin>
+					<!-- default failsafe junit based -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-failsafe-plugin</artifactId>
+						<version>${surfire-failsafe.version}</version>
+						<dependencies>
+							<dependency>
+								<groupId>org.apache.maven.surefire</groupId>
+								<artifactId>surefire-junit47</artifactId>
+								<version>${surfire-failsafe.version}</version>
+							</dependency>
+						</dependencies>
+						<configuration>
+							<failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
+							<failIfNoTests>false</failIfNoTests>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>robotestRun</id>
+			<activation>
+				<file>
+					<exists>robotest.run.profile.activator</exists>
+				</file>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>com.cast-info.devops</groupId>
+						<artifactId>robotest-suite-cases-json-generator</artifactId>
+						<version>${project.version}</version>
+						<!-- Add all dependencies that your test cases import -->
+						<dependencies>
+							<dependency>
+								<groupId>junit</groupId>
+								<artifactId>junit</artifactId>
+								<version>${junit.version}</version>
+							</dependency>
+							<dependency>
+								<groupId>org.testng</groupId>
+								<artifactId>testng</artifactId>
+								<version>${testng.version}</version>
+							</dependency>
+						</dependencies>
+						<executions>
+							<execution>
+								<phase>process-test-classes</phase>
+								<goals>
+									<goal>robotestsextractor</goal>
+								</goals>
+								<configuration>
+									<basedir>${robotest.extractor.basedir}</basedir>
+									<jk1File>${robotest.extractor.jenkins1.json}</jk1File>
+									<jk2File>${robotest.extractor.jenkins2.json}</jk2File>
+									<resourcesDir>${robotest.extractor.output}</resourcesDir>
+									<testSubDir>${robotest.extractor.test-classes}</testSubDir>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-failsafe-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>integration-tests</id>
+								<goals>
+									<goal>integration-test</goal>
+									<goal>verify</goal>
+								</goals>
+								<configuration>
+									<test>${robotest.failsafe.include.cases}</test>
+									<useUnlimitedThreads>false</useUnlimitedThreads>
+									<perCoreThreadCount>false</perCoreThreadCount>
+									<parallelOptimized>false</parallelOptimized>
+									<reuseForks>true</reuseForks>
+									<!-- The parameter forkCount defines the maximum number of JVM processes 
+										that Surefire will spawn concurrently to execute the tests. It supports the 
+										same syntax as -T in maven-core: if you terminate the value with a C, that 
+										value will be multiplied with the number of available CPU cores in your system. 
+										For example forkCount=2.5C on a Quad-Core system will result in forking up 
+										to ten concurrent JVM processes that execute tests. The default setting is 
+										forkCount=1/reuseForks=true, which means that Surefire creates one new JVM 
+										process to execute all tests in one maven module -->
+									<forkCount>1</forkCount>
+									<parallel>methods</parallel>
+									<robotest.failsafe.forkCount>${robotest.failsafe.parallelProcess}</robotest.failsafe.forkCount>
+									<!-- When using reuseForks=true and a forkCount value larger than 
+										one, test classes are handed over to the forked process one-by-one. Thus, 
+										parallel=classes would not change anything. However, you can use parallel=methods: 
+										classes are executed in forkCount concurrent processes, each of the processes 
+										can then use threadCount threads to execute the methods of one class in parallel. -->
+									<threadCount>${robotest.failsafe.parallelBrowsersPerOneProcess}</threadCount>
+									<systemPropertyVariables>
+										<ROBOTEST_REPORT_BASE>${robotest.report.path}</ROBOTEST_REPORT_BASE>
+										<ROBOTEST_ENV>${robotest.cfg.env}</ROBOTEST_ENV>
+										<ROBOTEST_BROWSER>${robotest.cfg.browser.name}</ROBOTEST_BROWSER>
+										<ROBOTEST_BROWSER_HEADLESS>${robotest.cfg.headless}</ROBOTEST_BROWSER_HEADLESS>
+										<ROBOTEST_BROWSER_WIDTH>${robotest.cfg.browser.witdh}</ROBOTEST_BROWSER_WIDTH>
+										<ROBOTEST_BROWSER_HEIGHT>${robotest.cfg.browser.height}</ROBOTEST_BROWSER_HEIGHT>
+										<ROBOTEST_BROWSER_MAXIMIZED>${robotest.cfg.browser.maximized}</ROBOTEST_BROWSER_MAXIMIZED>
+										<ROBOTEST_BROWSER_CONSOLE_LOG_LEVEL>${robotest.cfg.browser.log.level}</ROBOTEST_BROWSER_CONSOLE_LOG_LEVEL>
+										<ROBOTEST_BROWSER_PROXY>${robotest.cfg.browser.proxy}</ROBOTEST_BROWSER_PROXY>
+										<ROBOTEST_BROWSER_NOPROXYFOR>${robotest.cfg.browser.noproxyfor}</ROBOTEST_BROWSER_NOPROXYFOR>
+										<ROBOTEST_BROWSER_PROXY_AUTH_USER>${robotest.cfg.browser.proxy_auth_user}</ROBOTEST_BROWSER_PROXY_AUTH_USER>
+										<ROBOTEST_BROWSER_PROXY_AUTH_SECRET>${robotest.cfg.browser.proxy_auth_secret}</ROBOTEST_BROWSER_PROXY_AUTH_SECRET>
+										<ROBOTEST_GENERAL_TIMEOUT>${robotest.cfg.general.timeout}</ROBOTEST_GENERAL_TIMEOUT>
+										<ROBOTEST_DOCKER_CONN>${robotest.cfg.docker.conn}</ROBOTEST_DOCKER_CONN>
+										<ROBOTEST_DOCKER_PUBLIC_HOST>${robotest.cfg.docker.public_host}</ROBOTEST_DOCKER_PUBLIC_HOST>
+										<ROBOTEST_DOCKER_TLS>${robotest.cfg.docker.tls}</ROBOTEST_DOCKER_TLS>
+										<ROBOTEST_DOCKER_CERTS>${robotest.cfg.docker.certs}</ROBOTEST_DOCKER_CERTS>
+										<ROBOTEST_DOCKER_NETWORK>${robotest.cfg.docker.network}</ROBOTEST_DOCKER_NETWORK>
+										<ROBOTEST_DOCKER_INSPECTREALPORT>${robotest.cfg.docker.inspectrealport}</ROBOTEST_DOCKER_INSPECTREALPORT>
+										<ROBOTEST_DOCKER_REGISTRY_URL>${robotest.cfg.docker.registry.url}</ROBOTEST_DOCKER_REGISTRY_URL>
+										<ROBOTEST_DOCKER_REGISTRY_USER>${robotest.cfg.docker.registry.user}</ROBOTEST_DOCKER_REGISTRY_USER>
+										<ROBOTEST_DOCKER_REGISTRY_SECRET>${robotest.cfg.docker.registry.secret}</ROBOTEST_DOCKER_REGISTRY_SECRET>
+										<ROBOTEST_DOCKER_REGISTRY_EMAIL>${robotest.cfg.docker.registry.email}</ROBOTEST_DOCKER_REGISTRY_EMAIL>
+										<ROBOTEST_DOCKER_CONTAINER_EXEC_TAG>${robotest.cfg.docker.container.exec.tag}</ROBOTEST_DOCKER_CONTAINER_EXEC_TAG>
+										<ROBOTEST_DOCKER_LABELS>${robotest.cfg.docker.labels}</ROBOTEST_DOCKER_LABELS>
+										<ROBOTEST_DOCKER_DEBUG>${robotest.cfg.docker.debug}</ROBOTEST_DOCKER_DEBUG>
+										<ROBOTEST_CHROME_DOCKER_IMG_TAG>${robotest.cfg.docker.chrome.image}</ROBOTEST_CHROME_DOCKER_IMG_TAG>
+										<ROBOTEST_CHROME_DEBUG_DOCKER_IMG_TAG>${robotest.cfg.docker.chrome.debug.image}</ROBOTEST_CHROME_DEBUG_DOCKER_IMG_TAG>
+										<ROBOTEST_FIREFOX_DOCKER_IMG_TAG>${robotest.cfg.docker.firefox.image}</ROBOTEST_FIREFOX_DOCKER_IMG_TAG>
+										<ROBOTEST_FIREFOX_DEBUG_DOCKER_IMG_TAG>${robotest.cfg.docker.firefox.debug.image}</ROBOTEST_FIREFOX_DEBUG_DOCKER_IMG_TAG>
+										<ROBOTEST_BROWSERSTACK_USER_NAME>${robotest.cfg.browserstack.user.name}</ROBOTEST_BROWSERSTACK_USER_NAME>
+										<ROBOTEST_BROWSERSTACK_ACCESS_KEY>${robotest.cfg.browserstack.access.key}</ROBOTEST_BROWSERSTACK_ACCESS_KEY>
+										<ROBOTEST_BROWSERSTACK_DEVICE>${robotest.cfg.browserstack.device}</ROBOTEST_BROWSERSTACK_DEVICE>
+										<ROBOTEST_BROWSERSTACK_PLATFORM>${robotest.cfg.browserstack.platform}</ROBOTEST_BROWSERSTACK_PLATFORM>
+										<wdm.geckoDriverVersion>${robotest.cfg.wdm.geckoDriverVersion}</wdm.geckoDriverVersion>
+										<wdm.chromeDriverVersion>${robotest.cfg.wdm.chromeDriverVersion}</wdm.chromeDriverVersion>
+										<wdm.targetPath>${robotest.cfg.wdm.targetPath}</wdm.targetPath>
+									</systemPropertyVariables>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>unpack-static-resources</id>
+								<goals>
+									<goal>unpack</goal>
+								</goals>
+								<phase>generate-test-resources</phase>
+								<configuration>
+									<artifactItems>
+										<artifactItem>
+											<groupId>com.cast-info.devops</groupId>
+											<artifactId>robotest-standalone-suite-report-ui</artifactId>
+											<version>${project.version}</version>
+											<overWrite>true</overWrite>
+											<type>jar</type>
+											<outputDirectory>${robotest.standalone-suite-report-ui.path}</outputDirectory>
+										</artifactItem>
+									</artifactItems>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 
-        <!-- profile to execute with junit -->
-        <profile>
-            <id>withJUnit</id>
-            <activation>
-                <file>
-                    <exists>robotest.run.junit.profile.activator</exists>
-                </file>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>com.cast-info.devops</groupId>
-                    <artifactId>robotest-core</artifactId>
-                    <version>${project.version}</version>
-                    <scope>test</scope>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>org.testng</groupId>
-                            <artifactId>testng</artifactId>
-                        </exclusion>
-                    </exclusions>
-                </dependency>
-                <dependency>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <!-- default surfire junit based -->
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-surefire-plugin</artifactId>
-                            <version>${surfire-failsafe.version}</version>
-                            <dependencies>
-                                <dependency>
-                                    <groupId>org.apache.maven.surefire</groupId>
-                                    <artifactId>surefire-junit47</artifactId>
-                                    <version>${surfire-failsafe.version}</version>
-                                </dependency>
-                            </dependencies>
-                            <configuration>
-                                <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
-                                <failIfNoTests>false</failIfNoTests>
-                            </configuration>
-                        </plugin>
-                        <!-- default failsafe junit based -->
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-failsafe-plugin</artifactId>
-                            <version>${surfire-failsafe.version}</version>
-                            <dependencies>
-                                <dependency>
-                                    <groupId>org.apache.maven.surefire</groupId>
-                                    <artifactId>surefire-junit47</artifactId>
-                                    <version>${surfire-failsafe.version}</version>
-                                </dependency>
-                            </dependencies>
-                            <configuration>
-                                <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
-                                <failIfNoTests>false</failIfNoTests>
-                            </configuration>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
-        </profile>
+		<!-- profile to execute with junit -->
+		<profile>
+			<id>withJUnit</id>
+			<activation>
+				<file>
+					<exists>robotest.run.junit.profile.activator</exists>
+				</file>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>com.cast-info.devops</groupId>
+					<artifactId>robotest-core</artifactId>
+					<version>${project.version}</version>
+					<scope>test</scope>
+					<exclusions>
+						<exclusion>
+							<groupId>org.testng</groupId>
+							<artifactId>testng</artifactId>
+						</exclusion>
+					</exclusions>
+				</dependency>
+				<dependency>
+					<groupId>junit</groupId>
+					<artifactId>junit</artifactId>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+			<build>
+				<pluginManagement>
+					<plugins>
+						<!-- default surfire junit based -->
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-surefire-plugin</artifactId>
+							<version>${surfire-failsafe.version}</version>
+							<dependencies>
+								<dependency>
+									<groupId>org.apache.maven.surefire</groupId>
+									<artifactId>surefire-junit47</artifactId>
+									<version>${surfire-failsafe.version}</version>
+								</dependency>
+							</dependencies>
+							<configuration>
+								<failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
+								<failIfNoTests>false</failIfNoTests>
+							</configuration>
+						</plugin>
+						<!-- default failsafe junit based -->
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-failsafe-plugin</artifactId>
+							<version>${surfire-failsafe.version}</version>
+							<dependencies>
+								<dependency>
+									<groupId>org.apache.maven.surefire</groupId>
+									<artifactId>surefire-junit47</artifactId>
+									<version>${surfire-failsafe.version}</version>
+								</dependency>
+							</dependencies>
+							<configuration>
+								<failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
+								<failIfNoTests>false</failIfNoTests>
+							</configuration>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
 
-        <!-- profile to execute with testng -->
-        <profile>
-            <id>withTestNG</id>
-            <activation>
-                <file>
-                    <exists>robotest.run.testng.profile.activator</exists>
-                </file>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>com.cast-info.devops</groupId>
-                    <artifactId>robotest-core</artifactId>
-                    <version>${project.version}</version>
-                    <scope>test</scope>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>junit</groupId>
-                            <artifactId>junit</artifactId>
-                        </exclusion>
-                    </exclusions>
-                </dependency>
-                <dependency>
-                    <groupId>org.testng</groupId>
-                    <artifactId>testng</artifactId>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <!-- overwrite surfire to testng based -->
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-surefire-plugin</artifactId>
-                            <version>${surfire-failsafe.version}</version>
-                            <dependencies>
-                                <dependency>
-                                    <groupId>org.apache.maven.surefire</groupId>
-                                    <artifactId>surefire-junit47</artifactId>
-                                    <version>${surfire-failsafe.version}</version>
-                                </dependency>
-                            </dependencies>
-                            <configuration>
-                                <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
-                                <failIfNoTests>false</failIfNoTests>
-                            </configuration>
-                        </plugin>
-                        <!-- failsafe -->
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-failsafe-plugin</artifactId>
-                            <version>${surfire-failsafe.version}</version>
-                            <dependencies>
-                                <dependency>
-                                    <groupId>org.apache.maven.surefire</groupId>
-                                    <artifactId>surefire-testng</artifactId>
-                                    <version>${surfire-failsafe.version}</version>
-                                </dependency>
-                            </dependencies>
-                            <configuration>
-                                <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
-                                <failIfNoTests>false</failIfNoTests>
-                            </configuration>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
-        </profile>
+		<!-- profile to execute with testng -->
+		<profile>
+			<id>withTestNG</id>
+			<activation>
+				<file>
+					<exists>robotest.run.testng.profile.activator</exists>
+				</file>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>com.cast-info.devops</groupId>
+					<artifactId>robotest-core</artifactId>
+					<version>${project.version}</version>
+					<scope>test</scope>
+					<exclusions>
+						<exclusion>
+							<groupId>junit</groupId>
+							<artifactId>junit</artifactId>
+						</exclusion>
+					</exclusions>
+				</dependency>
+				<dependency>
+					<groupId>org.testng</groupId>
+					<artifactId>testng</artifactId>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+			<build>
+				<pluginManagement>
+					<plugins>
+						<!-- overwrite surfire to testng based -->
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-surefire-plugin</artifactId>
+							<version>${surfire-failsafe.version}</version>
+							<dependencies>
+								<dependency>
+									<groupId>org.apache.maven.surefire</groupId>
+									<artifactId>surefire-junit47</artifactId>
+									<version>${surfire-failsafe.version}</version>
+								</dependency>
+							</dependencies>
+							<configuration>
+								<failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
+								<failIfNoTests>false</failIfNoTests>
+							</configuration>
+						</plugin>
+						<!-- failsafe -->
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-failsafe-plugin</artifactId>
+							<version>${surfire-failsafe.version}</version>
+							<dependencies>
+								<dependency>
+									<groupId>org.apache.maven.surefire</groupId>
+									<artifactId>surefire-testng</artifactId>
+									<version>${surfire-failsafe.version}</version>
+								</dependency>
+							</dependencies>
+							<configuration>
+								<failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
+								<failIfNoTests>false</failIfNoTests>
+							</configuration>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
 
-        <!-- profile to distribute to maven central -->
-        <profile>
-            <id>deployOpenSourceRelease</id>
-            <distributionManagement>
-                <snapshotRepository>
-                    <id>ossrh</id>
-                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-                </snapshotRepository>
-                <repository>
-                    <id>ossrh</id>
-                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-                </repository>
-            </distributionManagement>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.7</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <serverId>ossrh</serverId>
-                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.5</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>siteJavaDoc</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <configuration>
-                            <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
-                            <docletArtifact>
-                                <groupId>org.umlgraph</groupId>
-                                <artifactId>umlgraph</artifactId>
-                                <version>5.6.6</version>
-                            </docletArtifact>
-                            <additionalparam>-inferrel -inferdep -quiet -hide java.* -collpackages java.util.* -qualify
-                                -postfixpackage -nodefontsize 9 -nodefontpackagesize 7 -attributes -operations
-                                -enumerations
-                                -enumconstants -views -visibility -verbose</additionalparam>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+		<!-- profile to distribute to maven central -->
+		<profile>
+			<id>deployOpenSourceRelease</id>
+			<distributionManagement>
+				<snapshotRepository>
+					<id>ossrh</id>
+					<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+				</snapshotRepository>
+				<repository>
+					<id>ossrh</id>
+					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+				</repository>
+			</distributionManagement>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>1.6.7</version>
+						<extensions>true</extensions>
+						<configuration>
+							<serverId>ossrh</serverId>
+							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.5</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>siteJavaDoc</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<configuration>
+							<doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
+							<docletArtifact>
+								<groupId>org.umlgraph</groupId>
+								<artifactId>umlgraph</artifactId>
+								<version>5.6.6</version>
+							</docletArtifact>
+							<additionalparam>-inferrel -inferdep -quiet -hide java.*
+								-collpackages java.util.* -qualify
+								-postfixpackage -nodefontsize 9 -nodefontpackagesize 7 -attributes -operations
+								-enumerations
+								-enumconstants -views -visibility -verbose</additionalparam>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>

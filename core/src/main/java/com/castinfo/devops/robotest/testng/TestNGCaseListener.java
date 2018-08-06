@@ -43,10 +43,14 @@ public class TestNGCaseListener implements IInvokedMethodListener, ITestListener
      * @see org.testng.IInvokedMethodListener#afterInvocation(org.testng.IInvokedMethod, org.testng.ITestResult)
      */
     @Override
-    public void afterInvocation(final IInvokedMethod ctx, final ITestResult arg1) {
+    public void afterInvocation(final IInvokedMethod ctx,
+                                final ITestResult arg1) {
         try {
-            RobotestExecutionContext.endCaseByMethod(ctx.getTestMethod().getInstance().getClass(),
-                                                     ctx.getTestMethod().getMethodName());
+            RobotestExecutionContext.endCaseByMethod(ctx.getTestMethod()
+                                                        .getInstance()
+                                                        .getClass(),
+                                                     ctx.getTestMethod()
+                                                        .getMethodName());
         } catch (RobotestException e) {
             throw new TestNGException(e);
         }
@@ -58,10 +62,14 @@ public class TestNGCaseListener implements IInvokedMethodListener, ITestListener
      * @see org.testng.IInvokedMethodListener#beforeInvocation(org.testng.IInvokedMethod, org.testng.ITestResult)
      */
     @Override
-    public void beforeInvocation(final IInvokedMethod ctx, final ITestResult arg1) {
+    public void beforeInvocation(final IInvokedMethod ctx,
+                                 final ITestResult arg1) {
         try {
-            RobotestExecutionContext.buildCaseByMethod(ctx.getTestMethod().getInstance().getClass(),
-                                                       ctx.getTestMethod().getMethodName());
+            RobotestExecutionContext.buildCaseByMethod(ctx.getTestMethod()
+                                                          .getInstance()
+                                                          .getClass(),
+                                                       ctx.getTestMethod()
+                                                          .getMethodName());
         } catch (RobotestException e) {
             throw new TestNGException(e);
         }
@@ -78,11 +86,13 @@ public class TestNGCaseListener implements IInvokedMethodListener, ITestListener
             if (null != ctx.getAllTestMethods()) {
                 Class<?> testClazz = null;
                 for (int i = 0; i < ctx.getAllTestMethods().length; i++) {
-                    testClazz = ctx.getAllTestMethods()[i].getTestClass().getRealClass();
+                    testClazz = ctx.getAllTestMethods()[i].getTestClass()
+                                                          .getRealClass();
                     try {
                         RobotestExecutionContext.endSuite(testClazz);
                     } catch (Exception e) {
-                        LOG.error("ERROR END SUITE", e);
+                        LOG.error("ERROR END SUITE",
+                                  e);
                     }
                 }
             }
@@ -101,7 +111,8 @@ public class TestNGCaseListener implements IInvokedMethodListener, ITestListener
         if (null != ctx.getAllTestMethods()) {
             for (int i = 0; i < ctx.getAllTestMethods().length; i++) {
                 try {
-                    RobotestExecutionContext.buildSuite(ctx.getAllTestMethods()[i].getTestClass().getRealClass(),
+                    RobotestExecutionContext.buildSuite(ctx.getAllTestMethods()[i].getTestClass()
+                                                                                  .getRealClass(),
                                                         ctx.getAllTestMethods()[i].getMethodName());
                 } catch (RobotestException e) {
                     throw new TestNGException(e);
@@ -119,7 +130,6 @@ public class TestNGCaseListener implements IInvokedMethodListener, ITestListener
     @Override
     public void onTestFailure(final ITestResult arg0) {
         // not need to implement
-
     }
 
     @Override

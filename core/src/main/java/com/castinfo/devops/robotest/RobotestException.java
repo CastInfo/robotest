@@ -33,8 +33,10 @@ public class RobotestException extends Exception {
      * @param e
      *            ex
      */
-    public RobotestException(final String msg, final Throwable e) {
-        super(msg, e);
+    public RobotestException(final String msg,
+                             final Throwable e) {
+        super(msg,
+              e);
     }
 
     /**

@@ -31,7 +31,8 @@ public class JacksonPojo {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(echo).toHashCode();
+        return new HashCodeBuilder().append(echo)
+                                    .toHashCode();
     }
 
     @Override
@@ -43,6 +44,8 @@ public class JacksonPojo {
             return false;
         }
         JacksonPojo rhs = (JacksonPojo) other;
-        return new EqualsBuilder().append(echo, rhs.echo).isEquals();
+        return new EqualsBuilder().append(echo,
+                                          rhs.echo)
+                                  .isEquals();
     }
 }

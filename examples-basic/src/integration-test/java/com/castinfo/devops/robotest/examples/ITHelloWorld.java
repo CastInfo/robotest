@@ -27,11 +27,13 @@ public class ITHelloWorld extends TestCase {
     @RobotestCase(tag = "HELLO_WORLD_ROBOTEST_CASE_001", description = "The ROBOTEST HelloWorld example by Selenium")
     public void helloWorldSelenium() throws RobotestException {
         HelloWorldPageObject helloWorldPO = this.buildPageObject(HelloWorldPageObject.class);
-        String urlToTest = getSuiteTestPropertyCfg("WEB_TO_TEST", "CAST-INFO-WEB");
+        String urlToTest = getSuiteTestPropertyCfg("WEB_TO_TEST",
+                                                   "CAST-INFO-WEB");
         helloWorldPO.openURL(urlToTest);
         helloWorldPO.checkTitle();
         helloWorldPO.checkLogo();
-        helloWorldPO.addInfoToReport().withMessage("Congratulations, you have finish your first ROBOTEST example!");
+        helloWorldPO.addInfoToReport()
+                    .withMessage("Congratulations, you have finish your first ROBOTEST example!");
     }
 
     @Test
@@ -39,7 +41,8 @@ public class ITHelloWorld extends TestCase {
     public void helloWorldRestAssured() throws RobotestException {
         HelloWorldPageObject helloWorldPO = this.buildPageObject(HelloWorldPageObject.class);
         helloWorldPO.checkRest();
-        helloWorldPO.addInfoToReport().withMessage("Congratulations, you have finish your second ROBOTEST example!");
+        helloWorldPO.addInfoToReport()
+                    .withMessage("Congratulations, you have finish your second ROBOTEST example!");
     }
 
 }

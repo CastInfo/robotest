@@ -30,13 +30,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "env",
-                     "browser",
-                     "browserConsoleLogLevel",
-                     "generalTimeout",
-                     "reportFilePath",
-                     "docker",
-                     "browserStack" })
+@JsonPropertyOrder({ "env", "reportFilePath", "http", "browser", "docker", "browserStack" })
 public class RobotestBasicConfig {
 
     @JsonProperty("env")
@@ -45,8 +39,8 @@ public class RobotestBasicConfig {
     @JsonProperty("browser")
     private RobotestBrowserConfig browser;
 
-    @JsonProperty("generalTimeout")
-    private String generalTimeout = "";
+    @JsonProperty("http")
+    private RobotestHttpConnConfig http;
 
     @JsonProperty("reportFilePath")
     private String reportFilePath = "";
@@ -81,33 +75,26 @@ public class RobotestBasicConfig {
     }
 
     /**
-     * The generalTimeout.
+     * The http config.
      *
-     * @return generalTimeou
+     * @return http config
      *
      */
-    @JsonProperty("generalTimeout")
-    public String getGeneralTimeout() {
-        return generalTimeout;
-    }
-
-    private static final int ONE_SECOND_IN_MILLIS = 1000;
-
-    public long getGeneralTimeoutInSeconds() {
-        long millis = Long.parseLong(generalTimeout);
-        return millis / ONE_SECOND_IN_MILLIS;
+    @JsonProperty("http")
+    public RobotestHttpConnConfig getHttp() {
+        return http;
     }
 
     /**
-     * The generalTimeout.
+     * The http config.
      *
-     * @param waitTimeout
-     *            generalTimeout
+     * @param http
+     *            http config
      *
      */
-    @JsonProperty("generalTimeout")
-    public void setGeneralTimeout(final String waitTimeout) {
-        generalTimeout = waitTimeout;
+    @JsonProperty("http")
+    public void setHttp(final RobotestHttpConnConfig http) {
+        this.http = http;
     }
 
     /**
@@ -144,10 +131,10 @@ public class RobotestBasicConfig {
     }
 
     /**
-     * The Reportpath.
+     * The reportFilePath.
      *
      * @param reportFilePath
-     *            reportpath
+     *            reportFilePath
      *
      */
     @JsonProperty("reportFilePath")
@@ -205,9 +192,9 @@ public class RobotestBasicConfig {
     @Override
     public int hashCode() {
         return new HashCodeBuilder().append(env)
-                                    .append(generalTimeout)
-                                    .append(browser)
                                     .append(reportFilePath)
+                                    .append(http)
+                                    .append(browser)
                                     .append(docker)
                                     .append(browserStack)
                                     .toHashCode();
@@ -222,10 +209,10 @@ public class RobotestBasicConfig {
             return false;
         }
         RobotestBasicConfig rhs = (RobotestBasicConfig) other;
-        return new EqualsBuilder().append(generalTimeout, rhs.generalTimeout)
-                                  .append(env, rhs.env)
-                                  .append(browser, rhs.browser)
+        return new EqualsBuilder().append(env, rhs.env)
                                   .append(reportFilePath, rhs.reportFilePath)
+                                  .append(http, rhs.http)
+                                  .append(browser, rhs.browser)
                                   .append(docker, rhs.docker)
                                   .append(browserStack, rhs.browserStack)
                                   .isEquals();

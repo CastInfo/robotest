@@ -20,25 +20,32 @@ public class EmpleoPageObject extends PageObject {
      */
     @RobotestStep(tag = "EMPLEO_STEP_001", description = "Check Empleo Delegacion", captureScreenShootAtEndStep = true)
     public void checkEmpleoDelegacion() throws RobotestException {
-        String handler = this.getDriver().getWindowHandle();
-        JavascriptExecutor js = (JavascriptExecutor) this.getDriver();
-        List<WebElement> listElem = this.findElementsBy(By.xpath("//*[@id=\"post-1512\"]/div/div[5]/div"));
-        Assert.assertNotNull("There is no 'Delegacion' elements to show in this page", listElem);
+        String handler = getDriver()
+                             .getWindowHandle();
+        JavascriptExecutor js = (JavascriptExecutor) getDriver();
+        List<WebElement> listElem = findElementsBy(By.xpath("//*[@id=\"post-1512\"]/div/div[5]/div"));
+        Assert.assertNotNull("There is no 'Delegacion' elements to show in this page",
+                             listElem);
         for (WebElement elem : listElem) {
             List<WebElement> linkElems = elem.findElements(By.tagName("a"));
-            Assert.assertNotNull("the object has no links", linkElems);
+            Assert.assertNotNull("the object has no links",
+                                 linkElems);
             for (WebElement href : linkElems) {
                 String link = href.getAttribute("href");
                 if (link.contains("mailto")) {
                     continue;
                 }
                 js.executeScript("window.open('" + link + "','_blank');");
-                this.switchToAnotherWindow();
-                Boolean okPage = this.getCurrentUrl().equals(link);
-                Assert.assertTrue("destination page [" + href + "] is not the same as [" + this.getCurrentUrl() + "]",
+                switchToAnotherWindow();
+                Boolean okPage = getCurrentUrl()
+                                     .equals(link);
+                Assert.assertTrue("destination page [" + href + "] is not the same as [" + getCurrentUrl() + "]",
                                   okPage);
-                this.getDriver().close();
-                this.getDriver().switchTo().window(handler);
+                getDriver()
+                    .close();
+                getDriver()
+                    .switchTo()
+                    .window(handler);
             }
         }
     }
@@ -49,8 +56,9 @@ public class EmpleoPageObject extends PageObject {
     @RobotestStep(tag = "EMPLEO_STEP_002", description = "Check Empleo Mail", captureScreenShootAtEndStep = true)
     public void checkEmpleoEmail(final HomePageObject home) throws RobotestException {
         home.checkCastCookies();
-        List<WebElement> listElems = this.findElementsBy(By.tagName("a"));
-        Assert.assertNotNull("there is no links in the current page", listElems);
+        List<WebElement> listElems = findElementsBy(By.tagName("a"));
+        Assert.assertNotNull("there is no links in the current page",
+                             listElems);
         int size = listElems.size();
         int i = 0;
         for (WebElement elem : listElems) {
@@ -58,7 +66,8 @@ public class EmpleoPageObject extends PageObject {
             if (!link.contains("mailto")) {
                 i++;
                 if (i == size) {
-                    Assert.assertTrue("there is no elements 'mailto' in this element", false);
+                    Assert.assertTrue("there is no elements 'mailto' in this element",
+                                      false);
                 }
                 continue;
             }

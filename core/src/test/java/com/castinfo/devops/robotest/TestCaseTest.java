@@ -14,12 +14,14 @@ public class TestCaseTest {
         try {
             testCase.buildPageObject(TestCaseTest.class);
         } catch (RobotestException e) {
-            Assert.assertTrue(e.getMessage().contains("CAN'T BUILD NO PAGEOBJECT CLASS"));
+            Assert.assertTrue(e.getMessage()
+                               .contains("CAN'T BUILD NO PAGEOBJECT CLASS"));
         }
         try {
             testCase.buildPageObject(AnnotatedPageObjectExample.class);
         } catch (RobotestException e) {
-            Assert.assertTrue(e.getMessage().contains("CAN'T BUILD PAGE FRAGMENTS OUT OF ROBOTEST ANNOTATED CASE"));
+            Assert.assertTrue(e.getMessage()
+                               .contains("CAN'T BUILD PAGE FRAGMENTS OUT OF ROBOTEST ANNOTATED CASE"));
         }
         try {
             testCase.caseExample();
@@ -29,12 +31,14 @@ public class TestCaseTest {
         try {
             testCase.caseExample2();
         } catch (RobotestException e) {
-            Assert.assertTrue(e.getMessage().contains("@RobotestStep TAG MUST BE UNIQUE"));
+            Assert.assertTrue(e.getMessage()
+                               .contains("@RobotestStep TAG MUST BE UNIQUE"));
         }
         try {
             testCase.caseExample3();
         } catch (RobotestException e) {
-            Assert.assertTrue(e.getMessage().contains("REGEX PATTERN"));
+            Assert.assertTrue(e.getMessage()
+                               .contains("REGEX PATTERN"));
         }
     }
 }

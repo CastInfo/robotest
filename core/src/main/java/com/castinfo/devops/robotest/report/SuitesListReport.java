@@ -26,7 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
 /**
- * Generates a index file with al suite report files.
+ * Generates a index file with all suite report files.
  *
  */
 public class SuitesListReport {
@@ -47,7 +47,8 @@ public class SuitesListReport {
     public SuitesListReport(final File reportFile) throws RobotestException {
         try {
             suitesListFile = reportFile;
-            mapper.writeValue(suitesListFile, suiteListMapper);
+            mapper.writeValue(suitesListFile,
+                              suiteListMapper);
         } catch (IOException e) {
             throw new RobotestException("ERROR CREATING SUITE LIST REPORT",
                                         e);
@@ -141,9 +142,11 @@ public class SuitesListReport {
     public void appendToSuiteListReport(final String suiteReportFileName) throws RobotestException {
         try {
             final SuiteListMapper suitesList = getSuiteListReportContent();
-            suitesList.getSuites().add(suiteReportFileName);
+            suitesList.getSuites()
+                      .add(suiteReportFileName);
             ObjectWriter writer = mapper.writer(printer);
-            writer.writeValue(suitesListFile, suitesList);
+            writer.writeValue(suitesListFile,
+                              suitesList);
         } catch (IOException e) {
             throw new RobotestException("ERROR APPEND SUITE LIST REPORT",
                                         e);
@@ -159,7 +162,8 @@ public class SuitesListReport {
      */
     public SuiteListMapper getSuiteListReportContent() throws RobotestException {
         try {
-            return mapper.readValue(suitesListFile, SuiteListMapper.class);
+            return mapper.readValue(suitesListFile,
+                                    SuiteListMapper.class);
         } catch (IOException e) {
             throw new RobotestException("ERROR GET SUITE LIST REPORT CONTENT",
                                         e);

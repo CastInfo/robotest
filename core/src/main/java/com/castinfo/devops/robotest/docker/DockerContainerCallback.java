@@ -69,8 +69,10 @@ public class DockerContainerCallback extends LogContainerResultCallback {
      */
     @Override
     public void onNext(final Frame item) {
-        DockerContainerCallback.LOGGER.info("DOCKER LOGGER: {}", item);
-        if (item.toString().indexOf(loadedServerText) != -1) {
+        DockerContainerCallback.LOGGER.info("DOCKER LOGGER: {}",
+                                            item);
+        if (item.toString()
+                .indexOf(loadedServerText) != -1) {
             serverSeleniumLoaded = true;
         }
 

@@ -21,9 +21,12 @@ public class JUnitListenerTest {
         Description desc = Mockito.mock(Description.class);
         ArrayList<Description> childs = new ArrayList<>();
         childs.add(desc);
-        Mockito.when(desc.getChildren()).thenReturn(childs);
-        Mockito.when(desc.getTestClass()).thenReturn((Class) JUnitListenerTest.class);
-        Mockito.when(desc.getMethodName()).thenReturn("testListenerMethods");
+        Mockito.when(desc.getChildren())
+               .thenReturn(childs);
+        Mockito.when(desc.getTestClass())
+               .thenReturn((Class) JUnitListenerTest.class);
+        Mockito.when(desc.getMethodName())
+               .thenReturn("testListenerMethods");
         Result result = Mockito.mock(Result.class);
 
         ngL.setClazz(this.getClass());
@@ -31,12 +34,14 @@ public class JUnitListenerTest {
         try {
             ngL.testRunStarted(desc);
         } catch (RobotestException e) {
-            Assert.assertTrue(e.getMessage().contains("TEST CLASS MUST BE @RobotestSuite ANNOTATED!"));
+            Assert.assertTrue(e.getMessage()
+                               .contains("TEST CLASS MUST BE @RobotestSuite ANNOTATED!"));
         }
         try {
             ngL.testRunFinished(result);
         } catch (RobotestException e) {
-            Assert.assertTrue(e.getMessage().contains("TEST CLASS MUST BE @RobotestSuite ANNOTATED!"));
+            Assert.assertTrue(e.getMessage()
+                               .contains("TEST CLASS MUST BE @RobotestSuite ANNOTATED!"));
         }
         try {
             ngL.testStarted(desc);

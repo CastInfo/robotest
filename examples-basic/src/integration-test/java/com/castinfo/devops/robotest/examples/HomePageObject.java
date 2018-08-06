@@ -22,8 +22,6 @@ import com.castinfo.devops.robotest.config.RobotestConfiguration;
 /**
  * Test Cases related to Cast-Info Home Page
  *
- * @author Jordi.Artal
- *
  */
 public class HomePageObject extends PageObject {
 
@@ -38,7 +36,8 @@ public class HomePageObject extends PageObject {
     @RobotestStep(tag = "HOME_STEP_001", description = "Check home title", captureScreenShootAtEndStep = true)
     public void checkTitle() throws RobotestException {
         String parameter = "Cast Info | Cast Info s.a > Soluciones y Servicios tecnológicos de Vanguardia";
-        if (!this.getDriver().getTitle().equals(parameter)) {
+        if (!getDriver().getTitle()
+                        .equals(parameter)) {
             throw new RobotestException("Screen doesn't contains this Title: " + parameter);
         }
     }
@@ -51,11 +50,13 @@ public class HomePageObject extends PageObject {
     @RobotestStep(tag = "HOME_STEP_002", description = "Check search Contacto", captureScreenShootAtEndStep = true)
     public void checkSearchContacto() throws RobotestException {
         String searchParameter = "contacto";
-        this.getDriver().manage().window().maximize();
-        WebElement search = this.getDriver().findElement(By.id("et_top_search"));
+        getDriver().manage()
+                   .window()
+                   .maximize();
+        WebElement search = getDriver().findElement(By.id("et_top_search"));
         if (search != null) {
-            this.click(search);
-            WebElement input = this.getDriver().findElement(By.tagName("input"));
+            click(search);
+            WebElement input = getDriver().findElement(By.tagName("input"));
             if (input != null) {
                 input.clear();
                 input.sendKeys(searchParameter);
@@ -75,14 +76,16 @@ public class HomePageObject extends PageObject {
      */
     @RobotestStep(tag = "HOME_STEP_003", description = "Check go Contacto Page", captureScreenShootAtEndStep = true)
     public void checkGoContacto() throws RobotestException {
-        List<WebElement> results = this.getDriver().findElements(By.id("left-area"));
+        List<WebElement> results = getDriver().findElements(By.id("left-area"));
         if (results != null) {
-            List<WebElement> hrefs = results.get(0).findElements(By.tagName("a"));
+            List<WebElement> hrefs = results.get(0)
+                                            .findElements(By.tagName("a"));
             if (hrefs != null) {
                 StringBuffer sb = new StringBuffer("https://www.cast-info.es/contacto/");
                 for (WebElement element : hrefs) {
-                    if (element.getAttribute("href").contentEquals(sb)) {
-                        this.openURL("https://www.cast-info.es/contacto/");
+                    if (element.getAttribute("href")
+                               .contentEquals(sb)) {
+                        openURL("https://www.cast-info.es/contacto/");
                         break;
                     }
                 }
@@ -117,15 +120,19 @@ public class HomePageObject extends PageObject {
      */
     @RobotestStep(tag = "HOME_STEP_005", description = "Check Contacto form works", captureScreenShootAtEndStep = true)
     public void checkUseForm() throws RobotestException {
-        WebElement name = this.getDriver().findElement(By.id("et_pb_contact_name_1"));
+        WebElement name = getDriver().findElement(By.id("et_pb_contact_name_1"));
         name.clear();
         name.sendKeys("test name");
-        Assert.assertTrue("insertion error in contact name", name.getAttribute("value").equals("Nombre Prueba"));
-        WebElement email = this.getDriver().findElement(By.id("et_pb_contact_email_1"));
+        Assert.assertTrue("insertion error in contact name",
+                          name.getAttribute("value")
+                              .equals("Nombre Prueba"));
+        WebElement email = getDriver().findElement(By.id("et_pb_contact_email_1"));
         email.clear();
         email.sendKeys("test eMail");
-        Assert.assertTrue("insertion error in contact eMail", email.getAttribute("value").equals("email Prueba"));
-        WebElement message = this.getDriver().findElement(By.id("et_pb_contact_message_1"));
+        Assert.assertTrue("insertion error in contact eMail",
+                          email.getAttribute("value")
+                               .equals("email Prueba"));
+        WebElement message = getDriver().findElement(By.id("et_pb_contact_message_1"));
         message.clear();
         message.sendKeys("test message: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer mauris erat, vulputate at fermentum ac, lacinia sed sem.");
         Assert.assertTrue("insertion error in contact message",
@@ -141,9 +148,12 @@ public class HomePageObject extends PageObject {
     @RobotestStep(tag = "HOME_STEP_006", description = "Check Top Menu exists", captureScreenShootAtEndStep = true)
     public void checkTopMenu() throws RobotestException {
         String parameter = "top-menu";
-        this.getDriver().manage().window().maximize();
+        getDriver().manage()
+                   .window()
+                   .maximize();
         Assert.assertTrue("element not found:" + parameter,
-                          this.getDriver().findElement(By.id(parameter)).isDisplayed());
+                          getDriver().findElement(By.id(parameter))
+                                     .isDisplayed());
     }
 
     /**
@@ -153,16 +163,17 @@ public class HomePageObject extends PageObject {
      */
     @RobotestStep(tag = "HOME_STEP_007", description = "Check top Menu Links", captureScreenShootAtEndStep = true)
     public void checkTopMenuLinks() throws RobotestException {
-        List<WebElement> linkList = this.getDriver().findElements(By.xpath("//nav/ul/li/a[@href]"));
+        List<WebElement> linkList = getDriver().findElements(By.xpath("//nav/ul/li/a[@href]"));
         if (!linkList.isEmpty()) {
             List<String> hrefList = new ArrayList<>();
             for (WebElement elem : linkList) {
                 hrefList.add(elem.getAttribute("href"));
             }
             for (String href : hrefList) {
-                this.waitForPageLoaded(1L);
-                this.getDriver().navigate().to(href);
-                Assert.assertTrue(href.equals(this.getCurrentUrl()));
+                waitForPageLoaded(1L);
+                getDriver().navigate()
+                           .to(href);
+                Assert.assertTrue(href.equals(getCurrentUrl()));
             }
         } else {
             throw new RobotestException("Ther is no elements in this navigation menu");
@@ -178,7 +189,7 @@ public class HomePageObject extends PageObject {
                   description = "Check internal Links Home Page",
                   captureScreenShootAtEndStep = true)
     public void checkAllLinks() throws RobotestException {
-        List<WebElement> linkList = this.getDriver().findElements(By.xpath("//a[@href]"));
+        List<WebElement> linkList = getDriver().findElements(By.xpath("//a[@href]"));
         if (linkList != null) {
             List<String> hrefList = new ArrayList<>();
             for (WebElement elem : linkList) {
@@ -205,9 +216,12 @@ public class HomePageObject extends PageObject {
                     }
                     i++;
                     HomePageObject.LOG.info(i + " - Verifying link: " + href);
-                    this.getDriver().navigate().to(href);
-                    this.waitForPageLoaded(2L);
-                    Assert.assertTrue("", this.currentURLContains(href, this.getGeneralWaitTimoutSeconds()));
+                    getDriver().navigate()
+                               .to(href);
+                    waitForPageLoaded(2L);
+                    Assert.assertTrue("",
+                                      currentURLContains(href,
+                                                         getGeneralWaitTimoutSeconds()));
                 }
             }
         } else {
@@ -225,28 +239,31 @@ public class HomePageObject extends PageObject {
                   description = "Check Slider Buttons Home Page",
                   captureScreenShootAtEndStep = true)
     public void checkSliderButtons() throws RobotestException {
-        List<WebElement> listElem = this.getDriver().findElements(By.xpath("//div[@class='et-pb-controllers']/a"));
+        List<WebElement> listElem = getDriver().findElements(By.xpath("//div[@class='et-pb-controllers']/a"));
         if (!listElem.isEmpty()) {
-            String parentWindow = this.getDriver().getWindowHandle();
+            String parentWindow = getDriver().getWindowHandle();
             Boolean assertCondition = false;
             int i = 1;
             for (WebElement elem : listElem) {
                 // go to the slide
                 if (i > 1) {
-                    this.getDriver().switchTo().window(parentWindow);
+                    getDriver().switchTo()
+                               .window(parentWindow);
                 }
                 elem.click();
 
                 // find individual slide and verify that is visible
                 String className = "et_pb_slide_" + i;
-                WebElement sliderElem = this.getDriver().findElement(By.className(className));
-                assertCondition = sliderElem.getCssValue("opacity").equals("1");
-                Assert.assertTrue("Slider elemnet num: " + i + " NO visible", assertCondition);
+                WebElement sliderElem = getDriver().findElement(By.className(className));
+                assertCondition = sliderElem.getCssValue("opacity")
+                                            .equals("1");
+                Assert.assertTrue("Slider elemnet num: " + i + " NO visible",
+                                  assertCondition);
 
                 // open slider link in a new Tab
-                this.openLinkInNewTab(By.xpath("//*[@id=\"post-42\"]/div/div[1]/div/div[1]/div[" + i
-                        + "]/div/div/div/a"), 1L);
-                this.getDriver().getWindowHandle();
+                openLinkInNewTab(By.xpath("//*[@id=\"post-42\"]/div/div[1]/div/div[1]/div[" + i + "]/div/div/div/a"),
+                                 1L);
+                getDriver().getWindowHandle();
                 i++;
             }
         }
@@ -259,9 +276,9 @@ public class HomePageObject extends PageObject {
      */
     @RobotestStep(tag = "HOME_STEP_010", description = "Check Cookies", captureScreenShootAtEndStep = true)
     public void checkCastCookies() throws RobotestException {
-        WebElement elem = this.findElementBy(By.xpath("//div[@id='cookie-law-info-bar']/span/a"));
+        WebElement elem = findElementBy(By.xpath("//div[@id='cookie-law-info-bar']/span/a"));
         elem.click();
-        Set<Cookie> listCookies = this.listOfCookiesAvailable();
+        Set<Cookie> listCookies = listOfCookiesAvailable();
         if (!listCookies.isEmpty()) {
             for (Cookie cookie : listCookies) {
                 HomePageObject.LOG.info("cookie found: " + cookie.toString());
@@ -279,9 +296,10 @@ public class HomePageObject extends PageObject {
     @RobotestStep(tag = "HOME_STEP_011", description = "Check Create Cookie", captureScreenShootAtEndStep = true)
     public void checkCreateCookie() throws RobotestException {
         String name = "testCreateCookie";
-        this.addCookie(name, "description=test value cookie");
+        addCookie(name,
+                  "description=test value cookie");
         HomePageObject.LOG.info("cookie with: " + "testCreateCookie" + " and values: "
-                + this.getCookieValueByName("testCreateCookie") + " has been created.");
+                + getCookieValueByName("testCreateCookie") + " has been created.");
     }
 
     /**
@@ -291,9 +309,10 @@ public class HomePageObject extends PageObject {
      */
     @RobotestStep(tag = "HOME_STEP_012", description = "Check Cast Cookie", captureScreenShootAtEndStep = true)
     public void checkDeleteCastCookies() throws RobotestException {
-        Set<Cookie> listCookies = this.listOfCookiesAvailable();
+        Set<Cookie> listCookies = listOfCookiesAvailable();
         for (Cookie cookie : listCookies) {
-            this.getDriver().manage().deleteCookieNamed(cookie.getName());
+            getDriver().manage()
+                       .deleteCookieNamed(cookie.getName());
             HomePageObject.LOG.info("cookie with name: '" + cookie.getName() + "' has been erased");
         }
     }

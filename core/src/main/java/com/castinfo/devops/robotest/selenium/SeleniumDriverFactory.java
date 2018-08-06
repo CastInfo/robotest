@@ -172,9 +172,11 @@ public class SeleniumDriverFactory {
         WebDriver webdriver = null;
         DesiredCapabilities capabilities = null;
         try {
-            if (SeleniumBrowser.FIREFOX.name().equalsIgnoreCase(getBrowserConfig().getBrowserName())) {
+            if (SeleniumBrowser.FIREFOX.name()
+                                       .equalsIgnoreCase(getBrowserConfig().getBrowserName())) {
                 capabilities = DesiredCapabilities.firefox();
-            } else if (SeleniumBrowser.CHROME.name().equalsIgnoreCase(getBrowserConfig().getBrowserName())) {
+            } else if (SeleniumBrowser.CHROME.name()
+                                             .equalsIgnoreCase(getBrowserConfig().getBrowserName())) {
                 capabilities = DesiredCapabilities.chrome();
             } else {
                 throw new RobotestException("NOT DOCKER AVAILABLE FOR THIS BROWSER. REVISE ROBOTEST_BROWSER CONFIG: "
@@ -189,7 +191,9 @@ public class SeleniumDriverFactory {
             webdriver = new RemoteWebDriver(new URL(dockerCfg.getHub()),
                                             capabilities);
 
-            postCreationDriverCapabilities(webdriver, capabilities, false);
+            postCreationDriverCapabilities(webdriver,
+                                           capabilities,
+                                           false);
 
         } catch (IOException | UnreachableBrowserException e) {
             throw new RobotestException("DOCKER HUB SELENIUM DRIVER CREATION ERROR",
@@ -211,16 +215,19 @@ public class SeleniumDriverFactory {
      * @throws RobotestException
      *             error in WebDriver creation.
      */
-    public WebDriver
-           buildBrowserStackRealDeviceWebDriver(final String suiteName,
-                                                final String caseName,
-                                                final BrowserStackConfig browserStackCfg) throws RobotestException {
+    public WebDriver buildBrowserStackRealDeviceWebDriver(final String suiteName,
+                                                          final String caseName,
+                                                          final BrowserStackConfig browserStackCfg) throws RobotestException {
         if (null == browserStackCfg) {
             throw new RobotestException("BROWSERSTACK CONFIG IS MANDATORY! REVISE BASIC CONFIG.");
         }
-        browserStackCfgValidations(suiteName, caseName, browserStackCfg);
+        browserStackCfgValidations(suiteName,
+                                   caseName,
+                                   browserStackCfg);
         WebDriver webdriver = null;
-        DesiredCapabilities capabilities = browserStackCapabilities(suiteName, caseName, browserStackCfg);
+        DesiredCapabilities capabilities = browserStackCapabilities(suiteName,
+                                                                    caseName,
+                                                                    browserStackCfg);
         try {
             webdriver = new RemoteWebDriver(new URL("http://" + browserStackCfg.getLogin() + ":"
                     + browserStackCfg.getAccessKey() + "@hub-cloud.browserstack.com/wd/hub"),
@@ -264,7 +271,8 @@ public class SeleniumDriverFactory {
         if (StringUtils.isEmpty(browserStackCfg.getAccessKey())) {
             throw new RobotestException("BROWSERSTACK ACCESSKEY IS MANDATORY! REVISE BASIC CONFIG.");
         }
-        browserStackCfgValidationsNames(suiteName, caseName);
+        browserStackCfgValidationsNames(suiteName,
+                                        caseName);
     }
 
     private void browserStackCfgValidationsNames(final String suiteName,
@@ -300,18 +308,30 @@ public class SeleniumDriverFactory {
         } else {
             bsAdaptedBroserName = "android";
         }
-        capabilities.setCapability("browserName", bsAdaptedBroserName);
-        capabilities.setCapability("device", browserStackCfg.getDevice());
-        capabilities.setCapability("os_version", browserStackCfg.getPlatform());
-        capabilities.setCapability("build", suiteName);
-        capabilities.setCapability("project", caseName);
-        capabilities.setCapability("realMobile", Boolean.TRUE.toString());
-        capabilities.setCapability("browserstack.console", "disable");
-        capabilities.setCapability("browserstack.networkLogs", Boolean.FALSE.toString());
-        capabilities.setCapability("browserstack.debug", Boolean.FALSE.toString());
-        capabilities.setCapability("browserstack.local", Boolean.FALSE.toString());
-        capabilities.setCapability("browserstack.video", Boolean.FALSE.toString());
-        capabilities.setCapability("acceptSslCerts", Boolean.FALSE.toString());
+        capabilities.setCapability("browserName",
+                                   bsAdaptedBroserName);
+        capabilities.setCapability("device",
+                                   browserStackCfg.getDevice());
+        capabilities.setCapability("os_version",
+                                   browserStackCfg.getPlatform());
+        capabilities.setCapability("build",
+                                   suiteName);
+        capabilities.setCapability("project",
+                                   caseName);
+        capabilities.setCapability("realMobile",
+                                   Boolean.TRUE.toString());
+        capabilities.setCapability("browserstack.console",
+                                   "disable");
+        capabilities.setCapability("browserstack.networkLogs",
+                                   Boolean.FALSE.toString());
+        capabilities.setCapability("browserstack.debug",
+                                   Boolean.FALSE.toString());
+        capabilities.setCapability("browserstack.local",
+                                   Boolean.FALSE.toString());
+        capabilities.setCapability("browserstack.video",
+                                   Boolean.FALSE.toString());
+        capabilities.setCapability("acceptSslCerts",
+                                   Boolean.FALSE.toString());
         return capabilities;
     }
 
@@ -327,23 +347,30 @@ public class SeleniumDriverFactory {
      */
     public WebDriver buildLocalNativeWebDriver() throws RobotestException {
         Pair<WebDriver, DesiredCapabilities> localDriver;
-        LOG.info("TRY TO UP NATIVE DRIVER: {}", getBrowserConfig());
+        LOG.info("TRY TO UP NATIVE DRIVER: {}",
+                 getBrowserConfig());
         try {
-            if (SeleniumBrowser.CHROME.name().equalsIgnoreCase(getBrowserConfig().getBrowserName())) {
+            if (SeleniumBrowser.CHROME.name()
+                                      .equalsIgnoreCase(getBrowserConfig().getBrowserName())) {
                 if (!SeleniumDriverFactory.isNativeChromeInitied()) {
-                    WebDriverManager.chromedriver().setup();
+                    WebDriverManager.chromedriver()
+                                    .setup();
                     SeleniumDriverFactory.setNativeChromeInitied(true);
                 }
                 localDriver = buildChromeNativeDriver();
-            } else if (SeleniumBrowser.FIREFOX.name().equalsIgnoreCase(getBrowserConfig().getBrowserName())) {
+            } else if (SeleniumBrowser.FIREFOX.name()
+                                              .equalsIgnoreCase(getBrowserConfig().getBrowserName())) {
                 if (!SeleniumDriverFactory.isNativeFirefoxInitied()) {
-                    WebDriverManager.firefoxdriver().setup();
+                    WebDriverManager.firefoxdriver()
+                                    .setup();
                     SeleniumDriverFactory.setNativeFirefoxInitied(true);
                 }
                 localDriver = buildFirefoxNativeDriver();
-            } else if (SeleniumBrowser.INTERNET_EXPLORER.name().equalsIgnoreCase(getBrowserConfig().getBrowserName())) {
+            } else if (SeleniumBrowser.INTERNET_EXPLORER.name()
+                                                        .equalsIgnoreCase(getBrowserConfig().getBrowserName())) {
                 if (!SeleniumDriverFactory.isNativeInternetExplorerInitied()) {
-                    WebDriverManager.iedriver().setup();
+                    WebDriverManager.iedriver()
+                                    .setup();
                     SeleniumDriverFactory.setNativeInternetExplorerInitied(true);
                 }
                 localDriver = buildInternetExplorerNativeDriver();
@@ -353,7 +380,9 @@ public class SeleniumDriverFactory {
             LOG.info("NATIVE DRIVER CREATED: {} HEADLESS: {}",
                      getBrowserConfig().getBrowserName(),
                      getBrowserConfig().getHeadLess());
-            postCreationDriverCapabilities(localDriver.getLeft(), localDriver.getRight(), true);
+            postCreationDriverCapabilities(localDriver.getLeft(),
+                                           localDriver.getRight(),
+                                           true);
         } catch (WebDriverManagerException | WebDriverException | IllegalStateException e) {
             throw new RobotestException("NATIVE DRIVER CREATION ERROR",
                                         e);
@@ -417,8 +446,10 @@ public class SeleniumDriverFactory {
     private Pair<WebDriver, DesiredCapabilities> buildInternetExplorerNativeDriver() {
         WebDriver driver;
         DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
-        capabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
-        capabilities.setCapability("ignoreZoomSetting", true);
+        capabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,
+                                   true);
+        capabilities.setCapability("ignoreZoomSetting",
+                                   true);
         preCreationDriverCapabilities(capabilities);
         InternetExplorerOptions ieOptions = new InternetExplorerOptions();
         ieOptions.merge(capabilities);
@@ -435,27 +466,42 @@ public class SeleniumDriverFactory {
      */
     protected void preCreationDriverCapabilities(final DesiredCapabilities capabilities) {
         configureBrowserLogs(capabilities);
-        if (!SeleniumBrowser.INTERNET_EXPLORER.name().equalsIgnoreCase(capabilities.getBrowserName())) {
+        if (!SeleniumBrowser.INTERNET_EXPLORER.name()
+                                              .equalsIgnoreCase(capabilities.getBrowserName())) {
             capabilities.setAcceptInsecureCerts(true);
         }
-        if (StringUtils.isEmpty(getBrowserConfig().getProxyHost())) {
-            capabilities.setCapability(CapabilityType.ForSeleniumServer.AVOIDING_PROXY, true);
+        if (StringUtils.isEmpty(getBasicCfg().getHttp()
+                                             .getProxyHost())) {
+            capabilities.setCapability(CapabilityType.ForSeleniumServer.AVOIDING_PROXY,
+                                       true);
         } else {
-            if (!SeleniumBrowser.FIREFOX.name().equalsIgnoreCase(capabilities.getBrowserName())) {
+            if (!SeleniumBrowser.FIREFOX.name()
+                                        .equalsIgnoreCase(capabilities.getBrowserName())) {
                 Proxy proxy = new Proxy();
                 proxy.setProxyType(ProxyType.MANUAL);
-                proxy.setHttpProxy(getBrowserConfig().getProxyHostAndPort());
-                proxy.setSslProxy(getBrowserConfig().getProxyHostAndPort());
-                proxy.setNoProxy(getBrowserConfig().getNoproxyfor());
-                capabilities.setCapability(CapabilityType.PROXY, proxy);
+                proxy.setHttpProxy(getBasicCfg().getHttp()
+                                                .obtainProxyHostAndPort());
+                proxy.setSslProxy(getBasicCfg().getHttp()
+                                               .obtainProxyHostAndPort());
+                proxy.setNoProxy(getBasicCfg().getHttp()
+                                              .getNoproxyfor());
+                capabilities.setCapability(CapabilityType.PROXY,
+                                           proxy);
             }
         }
-        capabilities.setCapability(CapabilityType.ForSeleniumServer.ENSURING_CLEAN_SESSION, true);
+        capabilities.setCapability(CapabilityType.ForSeleniumServer.ENSURING_CLEAN_SESSION,
+                                   true);
         com.google.gson.JsonObject timeouts = new com.google.gson.JsonObject();
-        timeouts.addProperty("implicit", 0);
-        timeouts.addProperty("pageLoad", Integer.parseInt(getBasicCfg().getGeneralTimeout()));
-        timeouts.addProperty("script", Integer.parseInt(getBasicCfg().getGeneralTimeout()));
-        capabilities.setCapability("timeouts", timeouts);
+        timeouts.addProperty("implicit",
+                             0);
+        timeouts.addProperty("pageLoad",
+                             Integer.parseInt(getBasicCfg().getHttp()
+                                                           .getGeneralTimeout()));
+        timeouts.addProperty("script",
+                             Integer.parseInt(getBasicCfg().getHttp()
+                                                           .getGeneralTimeout()));
+        capabilities.setCapability("timeouts",
+                                   timeouts);
         preDriverCreationChromeCapabilites(capabilities);
         preDriverCreationFirefoxCapabilities(capabilities);
     }
@@ -468,13 +514,20 @@ public class SeleniumDriverFactory {
      */
     protected void configureBrowserLogs(final DesiredCapabilities capabilities) {
         LoggingPreferences logs = new LoggingPreferences();
-        logs.enable(LogType.BROWSER, Level.parse(getBrowserConfig().getConsoleLogLevel()));
-        logs.enable(LogType.CLIENT, Level.parse(getBrowserConfig().getConsoleLogLevel()));
-        logs.enable(LogType.DRIVER, Level.parse(getBrowserConfig().getConsoleLogLevel()));
-        logs.enable(LogType.PERFORMANCE, Level.parse(getBrowserConfig().getConsoleLogLevel()));
-        logs.enable(LogType.PROFILER, Level.parse(getBrowserConfig().getConsoleLogLevel()));
-        logs.enable(LogType.SERVER, Level.parse(getBrowserConfig().getConsoleLogLevel()));
-        capabilities.setCapability(CapabilityType.LOGGING_PREFS, logs);
+        logs.enable(LogType.BROWSER,
+                    Level.parse(getBrowserConfig().getConsoleLogLevel()));
+        logs.enable(LogType.CLIENT,
+                    Level.parse(getBrowserConfig().getConsoleLogLevel()));
+        logs.enable(LogType.DRIVER,
+                    Level.parse(getBrowserConfig().getConsoleLogLevel()));
+        logs.enable(LogType.PERFORMANCE,
+                    Level.parse(getBrowserConfig().getConsoleLogLevel()));
+        logs.enable(LogType.PROFILER,
+                    Level.parse(getBrowserConfig().getConsoleLogLevel()));
+        logs.enable(LogType.SERVER,
+                    Level.parse(getBrowserConfig().getConsoleLogLevel()));
+        capabilities.setCapability(CapabilityType.LOGGING_PREFS,
+                                   logs);
     }
 
     /**
@@ -484,20 +537,29 @@ public class SeleniumDriverFactory {
      *            current capabilities
      */
     protected void preDriverCreationFirefoxCapabilities(final DesiredCapabilities capabilities) {
-        if (capabilities.getBrowserName().equalsIgnoreCase(SeleniumBrowser.FIREFOX.name())) {
-            capabilities.setBrowserName(DesiredCapabilities.firefox().getBrowserName());
-            capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
-            capabilities.setCapability("marionette", true);
-            System.setProperty(FirefoxDriver.SystemProperty.DRIVER_USE_MARIONETTE, "true");
+        if (capabilities.getBrowserName()
+                        .equalsIgnoreCase(SeleniumBrowser.FIREFOX.name())) {
+            capabilities.setBrowserName(DesiredCapabilities.firefox()
+                                                           .getBrowserName());
+            capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS,
+                                       true);
+            capabilities.setCapability("marionette",
+                                       true);
+            System.setProperty(FirefoxDriver.SystemProperty.DRIVER_USE_MARIONETTE,
+                               "true");
             FirefoxProfile fp = new FirefoxProfile();
             // fp.setPreference("media.autoplay.enabled", false); // video-off
             // fp.setPreference("media.ogg.enabled", false); // video-off
             // fp.setPreference("media.webm.enabled", false); // video-off
             // fp.setPreference("media.windows-media-foundation.enabled", false); // video-off
-            fp.setPreference("toolkit.startup.max_resumed_crashes", -1); // Desactivar el Safe Mode
-            fp.setPreference("browserCfg.sessionstore.postdata", -1); // Desactivar el "Document Expired"
-            if (StringUtils.isEmpty(getBrowserConfig().getProxyHost())) {
-                fp.setPreference("network.proxy.type", 0); // Sin proxy
+            fp.setPreference("toolkit.startup.max_resumed_crashes",
+                             -1); // Desactivar el Safe Mode
+            fp.setPreference("browserCfg.sessionstore.postdata",
+                             -1); // Desactivar el "Document Expired"
+            if (StringUtils.isEmpty(getBasicCfg().getHttp()
+                                                 .getProxyHost())) {
+                fp.setPreference("network.proxy.type",
+                                 0); // Sin proxy
             } else {
                 // JsonObject json = new JsonObject();
                 // json.addProperty("proxyType", Proxy.ProxyType.MANUAL.name().toLowerCase());
@@ -506,22 +568,40 @@ public class SeleniumDriverFactory {
                 // json.addProperty("noProxy", this.getBrowserConfig().getNoproxyfor());
                 // capabilities.setCapability("proxy", json);
                 // WORKAROUND related to https://github.com/SeleniumHQ/selenium/issues/5004
-                fp.setPreference("network.proxy.type", 1);
-                fp.setPreference("network.proxy.http", getBrowserConfig().getProxyHost());
-                fp.setPreference("network.proxy.http_port", Integer.parseInt(getBrowserConfig().getProxyPort()));
-                fp.setPreference("network.proxy.ssl", getBrowserConfig().getProxyHost());
-                fp.setPreference("network.proxy.ssl_port", Integer.parseInt(getBrowserConfig().getProxyPort()));
-                fp.setPreference("network.proxy.no_proxies_on", getBrowserConfig().getNoproxyfor());
+                fp.setPreference("network.proxy.type",
+                                 1);
+                fp.setPreference("network.proxy.http",
+                                 getBasicCfg().getHttp()
+                                              .getProxyHost());
+                fp.setPreference("network.proxy.http_port",
+                                 Integer.parseInt(getBasicCfg().getHttp()
+                                                               .getProxyPort()));
+                fp.setPreference("network.proxy.ssl",
+                                 getBasicCfg().getHttp()
+                                              .getProxyHost());
+                fp.setPreference("network.proxy.ssl_port",
+                                 Integer.parseInt(getBasicCfg().getHttp()
+                                                               .getProxyPort()));
+                fp.setPreference("network.proxy.no_proxies_on",
+                                 getBasicCfg().getHttp()
+                                              .getNoproxyfor());
 
             }
-            fp.setPreference("browserCfg.cache.disk.enable", true);
-            fp.setPreference("browserCfg.cache.memory.enable", true);
-            fp.setPreference("browserCfg.cache.offline.enable", true);
-            fp.setPreference("network.http.use-cache", true);
-            fp.setPreference("startup.homepage_welcome_url.additional", "");
-            fp.setPreference("startup.homepage_welcome_url", "");
+            fp.setPreference("browserCfg.cache.disk.enable",
+                             true);
+            fp.setPreference("browserCfg.cache.memory.enable",
+                             true);
+            fp.setPreference("browserCfg.cache.offline.enable",
+                             true);
+            fp.setPreference("network.http.use-cache",
+                             true);
+            fp.setPreference("startup.homepage_welcome_url.additional",
+                             "");
+            fp.setPreference("startup.homepage_welcome_url",
+                             "");
 
-            capabilities.setCapability(FirefoxDriver.PROFILE, fp);
+            capabilities.setCapability(FirefoxDriver.PROFILE,
+                                       fp);
         }
     }
 
@@ -532,10 +612,13 @@ public class SeleniumDriverFactory {
      *            current capabilities
      */
     protected void preDriverCreationChromeCapabilites(final DesiredCapabilities capabilities) {
-        if (capabilities.getBrowserName().equalsIgnoreCase(SeleniumBrowser.CHROME.name())) {
+        if (capabilities.getBrowserName()
+                        .equalsIgnoreCase(SeleniumBrowser.CHROME.name())) {
             ChromeOptions options = new ChromeOptions();
-            options.addArguments(Arrays.asList("--no-sandbox", "--start-maximized"));
-            capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+            options.addArguments(Arrays.asList("--no-sandbox",
+                                               "--start-maximized"));
+            capabilities.setCapability(ChromeOptions.CAPABILITY,
+                                       options);
         }
     }
 
@@ -554,7 +637,9 @@ public class SeleniumDriverFactory {
                                                   final boolean localNative) {
         deleteCookiesAndSetTimemouts(webdriver);
         if ("true".equals(getBrowserConfig().getMaximized())) {
-            forzeMaximizeWindow(webdriver, capabilities, localNative);
+            forzeMaximizeWindow(webdriver,
+                                capabilities,
+                                localNative);
         }
     }
 
@@ -571,8 +656,11 @@ public class SeleniumDriverFactory {
     protected void forzeMaximizeWindow(final WebDriver webdriver,
                                        final DesiredCapabilities capabilities,
                                        final boolean localNative) {
-        if (localNative || !capabilities.getBrowserName().equalsIgnoreCase(SeleniumBrowser.CHROME.name())) {
-            webdriver.manage().window().maximize();
+        if (localNative || !capabilities.getBrowserName()
+                                        .equalsIgnoreCase(SeleniumBrowser.CHROME.name())) {
+            webdriver.manage()
+                     .window()
+                     .maximize();
         }
     }
 
@@ -583,14 +671,22 @@ public class SeleniumDriverFactory {
      *            webdriver created
      */
     protected void deleteCookiesAndSetTimemouts(final WebDriver webdriver) {
-        webdriver.manage().deleteAllCookies();
+        webdriver.manage()
+                 .deleteAllCookies();
         webdriver.manage()
                  .timeouts()
-                 .pageLoadTimeout((int) getBasicCfg().getGeneralTimeoutInSeconds(), TimeUnit.SECONDS);
+                 .pageLoadTimeout((int) getBasicCfg().getHttp()
+                                                     .obtainGeneralTimeoutInSeconds(),
+                                  TimeUnit.SECONDS);
         webdriver.manage()
                  .timeouts()
-                 .setScriptTimeout((int) getBasicCfg().getGeneralTimeoutInSeconds(), TimeUnit.SECONDS);
-        webdriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+                 .setScriptTimeout((int) getBasicCfg().getHttp()
+                                                      .obtainGeneralTimeoutInSeconds(),
+                                   TimeUnit.SECONDS);
+        webdriver.manage()
+                 .timeouts()
+                 .implicitlyWait(0,
+                                 TimeUnit.SECONDS);
     }
 
 }

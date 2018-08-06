@@ -20,16 +20,21 @@ package com.castinfo.devops.robotest.restassured;
 import static io.restassured.RestAssured.given;
 import static io.restassured.authentication.FormAuthConfig.formAuthConfig;
 import static io.restassured.authentication.FormAuthConfig.springSecurity;
+import static io.restassured.config.HttpClientConfig.httpClientConfig;
 
 import java.util.Map;
 
 import org.apache.http.HttpStatus;
 
 import com.castinfo.devops.robotest.RobotestException;
+import com.castinfo.devops.robotest.config.RobotestHttpConnConfig;
 
+import io.restassured.RestAssured;
 import io.restassured.authentication.FormAuthConfig;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
+import io.restassured.config.HttpClientConfig;
+import io.restassured.config.RestAssuredConfig;
 import io.restassured.http.ContentType;
 import io.restassured.http.Cookies;
 import io.restassured.http.Method;
@@ -54,6 +59,7 @@ public class RestAssuredWrapper {
     private RequestSpecBuilder requestSpecBuilder;
     private ResponseSpecBuilder responseSpecBuilder;
     private RequestSpecification requestSpec;
+    private RestAssuredConfig clientConfig;
     private Response response = null;
 
     /**
@@ -63,6 +69,22 @@ public class RestAssuredWrapper {
         requestSpecBuilder = new RequestSpecBuilder();
         responseSpecBuilder = new ResponseSpecBuilder();
         requestSpec = null;
+        clientConfig = RestAssured.config;
+    }
+
+    /**
+     * Constructor with HttpConn settings.
+     *
+     * @param httpConfig
+     *            ROBOTEST config for http settings
+     */
+    public RestAssuredWrapper(final RobotestHttpConnConfig httpConfig) {
+        requestSpecBuilder = new RequestSpecBuilder();
+        responseSpecBuilder = new ResponseSpecBuilder();
+        requestSpec = null;
+        HttpClientConfig httpClientConfig =
+                httpClientConfig().httpClientFactory(new RestAssuredHttpClientConfig(httpConfig));
+        clientConfig = new RestAssuredConfig().httpClient(httpClientConfig);
     }
 
     /**
@@ -197,8 +219,11 @@ public class RestAssuredWrapper {
      *            psw
      * @return The same object for fluent api.
      */
-    public RestAssuredWrapper withDigest(final String username, final String password) {
-        loadGivenSpecWhen().auth().digest(username, password);
+    public RestAssuredWrapper withDigest(final String username,
+                                         final String password) {
+        loadGivenSpecWhen().auth()
+                           .digest(username,
+                                   password);
         return this;
     }
 
@@ -211,8 +236,12 @@ public class RestAssuredWrapper {
      *            psw
      * @return The same object for fluent api.
      */
-    public RestAssuredWrapper withBasicPreemptive(final String username, final String password) {
-        loadGivenSpecWhen().auth().preemptive().basic(username, password);
+    public RestAssuredWrapper withBasicPreemptive(final String username,
+                                                  final String password) {
+        loadGivenSpecWhen().auth()
+                           .preemptive()
+                           .basic(username,
+                                  password);
         return this;
     }
 
@@ -225,8 +254,11 @@ public class RestAssuredWrapper {
      *            psw
      * @return The same object for fluent api.
      */
-    public RestAssuredWrapper withChallengedBasic(final String username, final String password) {
-        loadGivenSpecWhen().auth().basic(username, password);
+    public RestAssuredWrapper withChallengedBasic(final String username,
+                                                  final String password) {
+        loadGivenSpecWhen().auth()
+                           .basic(username,
+                                  password);
         return this;
     }
 
@@ -238,7 +270,8 @@ public class RestAssuredWrapper {
      * @param additionalFields
      *            add fields
      */
-    private void formAdditionalFieldNames(final FormAuthConfig formConfig, final Map<String, ?> additionalFields) {
+    private void formAdditionalFieldNames(final FormAuthConfig formConfig,
+                                          final Map<String, ?> additionalFields) {
         if (null != additionalFields && !additionalFields.isEmpty()) {
             for (String fieldName : additionalFields.keySet()) {
                 formConfig.withAdditionalField(fieldName);
@@ -277,8 +310,16 @@ public class RestAssuredWrapper {
         FormAuthConfig formConfig = new FormAuthConfig(formName,
                                                        usernameInputName,
                                                        passwordInputName);
-        formAdditionalFieldNames(formConfig, additionalFields);
-        given().auth().form(username, password, formConfig).when().get(authFormUrl).then().statusCode(HttpStatus.SC_OK);
+        formAdditionalFieldNames(formConfig,
+                                 additionalFields);
+        given().auth()
+               .form(username,
+                     password,
+                     formConfig)
+               .when()
+               .get(authFormUrl)
+               .then()
+               .statusCode(HttpStatus.SC_OK);
         loadGivenSpecWhen();
         return this;
     }
@@ -303,9 +344,12 @@ public class RestAssuredWrapper {
                                                          final String password,
                                                          final Map<String, ?> additionalFields) {
         FormAuthConfig formConfig = FormAuthConfig.springSecurity();
-        formAdditionalFieldNames(formConfig, additionalFields);
+        formAdditionalFieldNames(formConfig,
+                                 additionalFields);
         given().auth()
-               .form(username, password, formConfig)
+               .form(username,
+                     password,
+                     formConfig)
                .formParams(additionalFields)
                .when()
                .get(authFormUrl)
@@ -335,9 +379,12 @@ public class RestAssuredWrapper {
                                            final String password,
                                            final Map<String, ?> additionalFields) {
         FormAuthConfig formConfig = formAuthConfig().withAutoDetectionOfCsrf();
-        formAdditionalFieldNames(formConfig, additionalFields);
+        formAdditionalFieldNames(formConfig,
+                                 additionalFields);
         given().auth()
-               .form(username, password, formConfig)
+               .form(username,
+                     password,
+                     formConfig)
                .formParams(additionalFields)
                .when()
                .get(authFormUrl)
@@ -377,7 +424,9 @@ public class RestAssuredWrapper {
             formConfig = formConfig.sendCsrfTokenAsHeader();
         }
         given().auth()
-               .form(username, password, formConfig)
+               .form(username,
+                     password,
+                     formConfig)
                .formParams(additionalFields)
                .when()
                .get(authFormUrl)
@@ -396,7 +445,7 @@ public class RestAssuredWrapper {
      *            secret key
      *
      * @param accessToken
-     *            acess token.
+     *            access token.
      * @param secretToken
      *            secret token
      *
@@ -406,7 +455,11 @@ public class RestAssuredWrapper {
                                         final String consumerSecret,
                                         final String accessToken,
                                         final String secretToken) {
-        loadGivenSpecWhen().auth().oauth(consumerKey, consumerSecret, accessToken, secretToken);
+        loadGivenSpecWhen().auth()
+                           .oauth(consumerKey,
+                                  consumerSecret,
+                                  accessToken,
+                                  secretToken);
         return this;
     }
 
@@ -414,12 +467,13 @@ public class RestAssuredWrapper {
      * OAUth2 prepare call helper.
      *
      * @param accessToken
-     *            acess token.
+     *            access token.
      *
      * @return The same object for fluent api.
      */
     public RestAssuredWrapper withOAuth2(final String accessToken) {
-        loadGivenSpecWhen().auth().oauth2(accessToken);
+        loadGivenSpecWhen().auth()
+                           .oauth2(accessToken);
         return this;
     }
 
@@ -430,7 +484,9 @@ public class RestAssuredWrapper {
      */
     private RequestSpecification loadGivenSpecWhen() {
         if (null == requestSpec) {
-            requestSpec = given().spec(requestSpecBuilder.build()).when();
+            requestSpec = given().config(clientConfig)
+                                 .spec(requestSpecBuilder.build())
+                                 .when();
         }
         return requestSpec;
     }
@@ -456,10 +512,11 @@ public class RestAssuredWrapper {
      * @param url
      *            By default only relative path to http://localhost:80 you can specify you wan't.
      * @param httpMethod
-     *            The RestAssured suported {@link Method}
+     *            The RestAssured supported {@link Method}
      * @return The same object for fluent api.
      */
-    public RestAssuredWrapper doCall(final String url, final Method httpMethod) {
+    public RestAssuredWrapper when(final String url,
+                                   final Method httpMethod) {
         loadGivenSpecWhen();
         if (Method.GET.equals(httpMethod)) {
             response = requestSpec.get(url);
@@ -481,7 +538,7 @@ public class RestAssuredWrapper {
     }
 
     /**
-     * Utility method for aply response spec specified object.
+     * Utility method for apply response spec specified object.
      *
      * @return The same object for fluent api.
      * @throws RobotestException
@@ -491,7 +548,8 @@ public class RestAssuredWrapper {
         if (null == response) {
             throw new RobotestException("doCall METHOD NOT INVOKED");
         }
-        response.then().spec(responseSpecBuilder.build());
+        response.then()
+                .spec(responseSpecBuilder.build());
         return this;
     }
 

@@ -22,18 +22,23 @@ public class SolucionesPageObject extends PageObject {
                   captureScreenShootAtEndStep = true)
     public void checkLinkList() throws RobotestException {
         List<WebElement> elems =
-                this.findElementsBy(By.xpath("//*[@id=\"post-285\"]/div/div[4]/div/div/div/div[2]/div/div"));
+                findElementsBy(By.xpath("//*[@id=\"post-285\"]/div/div[4]/div/div/div/div[2]/div/div"));
         if (!elems.isEmpty()) {
             for (int i = 1; i < elems.size(); i++) {
                 WebElement url =
-                        this.findElementBy(By.xpath("//*[@id=\"post-285\"]/div/div[4]/div/div/div/div[2]/div/div[" + i
+                        findElementBy(By.xpath("//*[@id=\"post-285\"]/div/div[4]/div/div/div/div[2]/div/div[" + i
                                 + "]/h2/a"));
                 String urlString = url.getAttribute("href");
                 String title = url.getText();
-                this.getDriver().navigate().to(urlString);
-                String titleResult = this.getDriver().getTitle();
+                getDriver()
+                    .navigate()
+                    .to(urlString);
+                String titleResult = getDriver()
+                                         .getTitle();
                 Assert.assertTrue(titleResult.contains(title));
-                this.getDriver().navigate().back();
+                getDriver()
+                    .navigate()
+                    .back();
             }
         }
     }
@@ -45,9 +50,10 @@ public class SolucionesPageObject extends PageObject {
                   description = "Check Soluciones Contacto",
                   captureScreenShootAtEndStep = true)
     public void checkContacto(final HomePageObject home) throws RobotestException {
-        Assert.assertNotNull(this.findElementBy(By.xpath("//*[@id=\"post-285\"]/div/div[6]/div/div/div/a")));
+        Assert.assertNotNull(findElementBy(By.xpath("//*[@id=\"post-285\"]/div/div[6]/div/div/div/a")));
         home.checkCastCookies();
-        this.findElementBy(By.xpath("//*[@id=\"post-285\"]/div/div[6]/div/div/div/a")).click();
+        findElementBy(By.xpath("//*[@id=\"post-285\"]/div/div[6]/div/div/div/a"))
+            .click();
         home.checkUseForm();
     }
 }

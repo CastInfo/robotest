@@ -145,7 +145,10 @@ public class BrowserStackConfig {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(device).append(platform).append(login).toHashCode();
+        return new HashCodeBuilder().append(device)
+                                    .append(platform)
+                                    .append(login)
+                                    .toHashCode();
     }
 
     @Override
@@ -157,9 +160,12 @@ public class BrowserStackConfig {
             return false;
         }
         BrowserStackConfig rhs = (BrowserStackConfig) other;
-        return new EqualsBuilder().append(device, rhs.device)
-                                  .append(platform, rhs.platform)
-                                  .append(login, rhs.login)
+        return new EqualsBuilder().append(device,
+                                          rhs.device)
+                                  .append(platform,
+                                          rhs.platform)
+                                  .append(login,
+                                          rhs.login)
                                   .isEquals();
     }
 

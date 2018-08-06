@@ -25,7 +25,7 @@ import com.castinfo.devops.robotest.SuiteContext;
 import com.castinfo.devops.robotest.TestContext;
 
 /**
- * Accessor utility methods to retrieve context config under execution.
+ * Access utility methods to retrieve context config under execution.
  */
 public abstract class ConfigurationAccess extends TestContext {
 
@@ -48,7 +48,8 @@ public abstract class ConfigurationAccess extends TestContext {
      * @return BasicConfig Object.
      */
     public RobotestBasicConfig getBasicCfg(final SuiteContext suiteContext) {
-        return suiteContext.getConfig().getConfigBasic();
+        return suiteContext.getConfig()
+                           .getConfigBasic();
     }
 
     /**
@@ -64,8 +65,12 @@ public abstract class ConfigurationAccess extends TestContext {
      *            generic type to be cast
      * @return T cfg casted object.
      */
-    public <T> T getTestCfgInScope(final SuiteContext suiteContext, final Annotation scope, final String key) {
-        return suiteContext.getConfig().getAnnotationScopeCfg(scope, key);
+    public <T> T getTestCfgInScope(final SuiteContext suiteContext,
+                                   final Annotation scope,
+                                   final String key) {
+        return suiteContext.getConfig()
+                           .getAnnotationScopeCfg(scope,
+                                                  key);
     }
 
     /**
@@ -100,7 +105,9 @@ public abstract class ConfigurationAccess extends TestContext {
                                             final String configKey,
                                             final String keyProperty) {
         String resultado = null;
-        Properties scopedConfig = this.getTestCfgInScope(suiteContext, scope, configKey);
+        Properties scopedConfig = this.getTestCfgInScope(suiteContext,
+                                                         scope,
+                                                         configKey);
         if (null != scopedConfig) {
             resultado = scopedConfig.getProperty(keyProperty);
         }
@@ -119,7 +126,8 @@ public abstract class ConfigurationAccess extends TestContext {
      * @throws RobotestException
      *             If suite initialization problems happens.
      */
-    public String getTestPropertyCfg(final String configKey, final String keyProperty) throws RobotestException {
+    public String getTestPropertyCfg(final String configKey,
+                                     final String keyProperty) throws RobotestException {
         String result = null;
         Properties scopedConfig = this.getTestCfg(configKey);
         if (null != scopedConfig) {
@@ -140,7 +148,9 @@ public abstract class ConfigurationAccess extends TestContext {
      *             If suite initialization problems happens
      */
     public <T> T getStepTestCfg(final String configKey) throws RobotestException {
-        return this.getTestCfgInScope(getSuiteContext(), getStepAnnot(), configKey);
+        return this.getTestCfgInScope(getSuiteContext(),
+                                      getStepAnnot(),
+                                      configKey);
     }
 
     /**
@@ -154,8 +164,12 @@ public abstract class ConfigurationAccess extends TestContext {
      * @throws RobotestException
      *             If suite initialization problems happens.
      */
-    public String getStepTestPropertyCfg(final String configKey, final String keyProperty) throws RobotestException {
-        return getTestPropertyCfgInScope(getSuiteContext(), getStepAnnot(), configKey, keyProperty);
+    public String getStepTestPropertyCfg(final String configKey,
+                                         final String keyProperty) throws RobotestException {
+        return getTestPropertyCfgInScope(getSuiteContext(),
+                                         getStepAnnot(),
+                                         configKey,
+                                         keyProperty);
     }
 
     /**
@@ -170,7 +184,9 @@ public abstract class ConfigurationAccess extends TestContext {
      *             If suite initialization problems happens
      */
     public <T> T getCaseTestCfg(final String configKey) throws RobotestException {
-        return this.getTestCfgInScope(getSuiteContext(), getCaseAnnot(), configKey);
+        return this.getTestCfgInScope(getSuiteContext(),
+                                      getCaseAnnot(),
+                                      configKey);
     }
 
     /**
@@ -184,8 +200,12 @@ public abstract class ConfigurationAccess extends TestContext {
      * @throws RobotestException
      *             If suite initialization problems happens.
      */
-    public String getCaseTestPropertyCfg(final String configKey, final String keyProperty) throws RobotestException {
-        return getTestPropertyCfgInScope(getSuiteContext(), getCaseAnnot(), configKey, keyProperty);
+    public String getCaseTestPropertyCfg(final String configKey,
+                                         final String keyProperty) throws RobotestException {
+        return getTestPropertyCfgInScope(getSuiteContext(),
+                                         getCaseAnnot(),
+                                         configKey,
+                                         keyProperty);
     }
 
     /**
@@ -200,7 +220,9 @@ public abstract class ConfigurationAccess extends TestContext {
      *             If suite initialization problems happens
      */
     public <T> T getSuiteTestCfg(final String configKey) throws RobotestException {
-        return this.getTestCfgInScope(getSuiteContext(), getSuiteAnnot(), configKey);
+        return this.getTestCfgInScope(getSuiteContext(),
+                                      getSuiteAnnot(),
+                                      configKey);
     }
 
     /**
@@ -214,8 +236,12 @@ public abstract class ConfigurationAccess extends TestContext {
      * @throws RobotestException
      *             If suite initialization problems happens.
      */
-    public String getSuiteTestPropertyCfg(final String configKey, final String keyProperty) throws RobotestException {
-        return getTestPropertyCfgInScope(getSuiteContext(), getSuiteAnnot(), configKey, keyProperty);
+    public String getSuiteTestPropertyCfg(final String configKey,
+                                          final String keyProperty) throws RobotestException {
+        return getTestPropertyCfgInScope(getSuiteContext(),
+                                         getSuiteAnnot(),
+                                         configKey,
+                                         keyProperty);
     }
 
 }

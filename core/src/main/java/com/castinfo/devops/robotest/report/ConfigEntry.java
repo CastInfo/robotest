@@ -34,7 +34,8 @@ public class ConfigEntry {
      *            value.
      *
      */
-    public ConfigEntry(final String id, final Object value) {
+    public ConfigEntry(final String id,
+                       final Object value) {
         this.id = id;
         this.value = value;
     }

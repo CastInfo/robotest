@@ -49,9 +49,11 @@ public class StepInterceptor implements MethodInterceptor {
         StepStatus resultadoStatusStep = StepStatus.INFO;
         PageObject pageFragment = (PageObject) obj;
         RobotestStep stepAnnot = method.getAnnotation(RobotestStep.class);
-        SuiteContext sCtx = atStartAnnotationActions(pageFragment, stepAnnot);
+        SuiteContext sCtx = atStartAnnotationActions(pageFragment,
+                                                     stepAnnot);
         try {
-            resultado = proxy.invokeSuper(obj, args);
+            resultado = proxy.invokeSuper(obj,
+                                          args);
         } catch (Exception | AssertionError e) {
             errorTest = e;
         }
@@ -61,13 +63,19 @@ public class StepInterceptor implements MethodInterceptor {
                 sCtx.addAdditionalStepEntry(pageFragment,
                                             new ValidationEntry(resultadoStatusStep).withException(errorTest));
             }
-            atEndAnnotationActions(pageFragment, sCtx, stepAnnot, resultadoStatusStep);
-            sCtx.endStep(pageFragment, resultadoStatusStep, System.currentTimeMillis());
+            atEndAnnotationActions(pageFragment,
+                                   sCtx,
+                                   stepAnnot,
+                                   resultadoStatusStep);
+            sCtx.endStep(pageFragment,
+                         resultadoStatusStep,
+                         System.currentTimeMillis());
         } else {
             if (null != errorTest) {
                 RobotestExecutionContext.getSuite(pageFragment.getSuiteAnnot())
                                         .putCaseError(pageFragment.getCaseAnnot(),
-                                                      ValidationEntry.buildCritical().withException(errorTest));
+                                                      ValidationEntry.buildCritical()
+                                                                     .withException(errorTest));
             }
         }
         if (null != errorTest) {
@@ -92,16 +100,20 @@ public class StepInterceptor implements MethodInterceptor {
         if (null != stepAnnot) {
             pageFragment.setStepAnnot(stepAnnot);
             sCtx = RobotestExecutionContext.getSuite(pageFragment.getSuiteAnnot());
-            sCtx.initStep(pageFragment, System.currentTimeMillis());
+            sCtx.initStep(pageFragment,
+                          System.currentTimeMillis());
             if (stepAnnot.captureScreenShootAtStartStep()) {
                 try {
                     File screnShoot = pageFragment.takeScreenShoot(stepAnnot.tag());
-                    sCtx.addAdditionalStepEntry(pageFragment, ValidationEntry.buildInfo().withCapture(screnShoot));
+                    sCtx.addAdditionalStepEntry(pageFragment,
+                                                ValidationEntry.buildInfo()
+                                                               .withCapture(screnShoot));
                 } catch (RobotestException e) {
                     ValidationEntry err = ValidationEntry.buildCritical();
                     err.withException(new RobotestException("IS NOT POSIBLE TO CAPTURE IMAGE SCRENSHOOT",
                                                             e));
-                    sCtx.addAdditionalStepEntry(pageFragment, err);
+                    sCtx.addAdditionalStepEntry(pageFragment,
+                                                err);
                 }
             }
         }
@@ -135,7 +147,8 @@ public class StepInterceptor implements MethodInterceptor {
                 ValidationEntry err = ValidationEntry.buildCritical();
                 err.withException(new RobotestException("IS NOT POSIBLE TO CAPTURE PAGE SOURCE",
                                                         e));
-                sCtx.addAdditionalStepEntry(pageFragment, err);
+                sCtx.addAdditionalStepEntry(pageFragment,
+                                            err);
             }
         }
         if (stepAnnot.captureScreenShootAtEndStep()) {
@@ -147,20 +160,23 @@ public class StepInterceptor implements MethodInterceptor {
                 ValidationEntry err = ValidationEntry.buildCritical();
                 err.withException(new RobotestException("IS NOT POSIBLE TO CAPTURE IMAGE SCRENSHOOT",
                                                         e));
-                sCtx.addAdditionalStepEntry(pageFragment, err);
+                sCtx.addAdditionalStepEntry(pageFragment,
+                                            err);
             }
         }
         if (stepAnnot.captureConsoleErrorLogsAtEndStep()) {
             try {
                 List<ValidationEntry> logs = pageFragment.takeBrowserConsoleLogs();
                 for (ValidationEntry log : logs) {
-                    sCtx.addAdditionalStepEntry(pageFragment, log);
+                    sCtx.addAdditionalStepEntry(pageFragment,
+                                                log);
                 }
             } catch (RobotestException e) {
                 ValidationEntry err = ValidationEntry.buildCritical();
                 err.withException(new RobotestException("IS NOT POSIBLE TO RETRIVE BROWSER CONSOLE LOGS",
                                                         e));
-                sCtx.addAdditionalStepEntry(pageFragment, err);
+                sCtx.addAdditionalStepEntry(pageFragment,
+                                            err);
             }
         }
     }

@@ -62,8 +62,10 @@ public class JUnitCaseListener extends RunListener {
     @Override
     public void testRunStarted(final Description description) throws Exception {
         for (Description descriptors : description.getChildren()) {
-            if (description.getTestClass().equals(getClazz())) {
-                RobotestExecutionContext.buildSuite(getClazz(), descriptors.getMethodName());
+            if (description.getTestClass()
+                           .equals(getClazz())) {
+                RobotestExecutionContext.buildSuite(getClazz(),
+                                                    descriptors.getMethodName());
             }
         }
         super.testRunStarted(description);
@@ -79,7 +81,8 @@ public class JUnitCaseListener extends RunListener {
         try {
             RobotestExecutionContext.endSuite(getClazz());
         } catch (Exception e) {
-            LOG.error("ERROR END SUITE", e);
+            LOG.error("ERROR END SUITE",
+                      e);
         }
         RobotestExecutionContext.forceStopLostResources();
         super.testRunFinished(result);
@@ -93,8 +96,10 @@ public class JUnitCaseListener extends RunListener {
      */
     @Override
     public void testStarted(final Description description) throws Exception {
-        if (description.getTestClass().equals(getClazz())) {
-            RobotestExecutionContext.buildCaseByMethod(getClazz(), description.getMethodName());
+        if (description.getTestClass()
+                       .equals(getClazz())) {
+            RobotestExecutionContext.buildCaseByMethod(getClazz(),
+                                                       description.getMethodName());
         }
         super.testStarted(description);
     }
@@ -106,8 +111,10 @@ public class JUnitCaseListener extends RunListener {
      */
     @Override
     public void testFinished(final Description description) throws Exception {
-        if (description.getTestClass().equals(getClazz())) {
-            RobotestExecutionContext.endCaseByMethod(getClazz(), description.getMethodName());
+        if (description.getTestClass()
+                       .equals(getClazz())) {
+            RobotestExecutionContext.endCaseByMethod(getClazz(),
+                                                     description.getMethodName());
         }
         super.testFinished(description);
     }

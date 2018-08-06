@@ -137,9 +137,11 @@ public final class RobotestExecutionContext {
      * @throws RobotestException
      *             error in validations and initiatin resources.
      */
-    public static void buildSuite(final Class<?> suiteClazz, final String methodName) throws RobotestException {
+    public static void buildSuite(final Class<?> suiteClazz,
+                                  final String methodName) throws RobotestException {
         RobotestSuite suiteAnnot = getSuiteAnnotation(suiteClazz);
-        RobotestCase caseAnnot = getCaseAnnotationByMethod(suiteClazz, methodName);
+        RobotestCase caseAnnot = getCaseAnnotationByMethod(suiteClazz,
+                                                           methodName);
         SuiteContext suite = null;
         if (CASE_TAG_METHODS.containsKey(caseAnnot.tag())
                 && !(suiteClazz.getName() + "." + methodName).equals(CASE_TAG_METHODS.get(caseAnnot.tag()))) {
@@ -152,16 +154,22 @@ public final class RobotestExecutionContext {
                         + " IS DUPLICATED IN: " + suiteClazz.getName() + " AND "
                         + SUITES_TAG_CLASSES.get(suiteAnnot.tag()));
             }
-            if (SUITE_CASES.get(suiteAnnot).contains(caseAnnot)) {
+            if (SUITE_CASES.get(suiteAnnot)
+                           .contains(caseAnnot)) {
                 throw new RobotestException("SAME @RobotestCase TAG IN METHOD " + methodName + " ALLREADY BUILD: "
                         + suiteAnnot.tag()
                         + " parallel exectution context of same test is not posible in real robotest execution, "
                         + "your unit test do end suite and case?");
             }
-            SUITE_CASES.get(suiteAnnot).add(caseAnnot);
-            LOG.info("REUSE SUITE: {} FOR {}", suiteAnnot.tag(), caseAnnot.tag());
+            SUITE_CASES.get(suiteAnnot)
+                       .add(caseAnnot);
+            LOG.info("REUSE SUITE: {} FOR {}",
+                     suiteAnnot.tag(),
+                     caseAnnot.tag());
         } else {
-            LOG.info("STARTING SUITE: {} FOR {}", suiteAnnot.tag(), caseAnnot.tag());
+            LOG.info("STARTING SUITE: {} FOR {}",
+                     suiteAnnot.tag(),
+                     caseAnnot.tag());
             suite = new SuiteContext();
             suite.setSuiteAnnotation(suiteAnnot);
             if (SUITES.containsKey(suiteAnnot)) {
@@ -169,15 +177,21 @@ public final class RobotestExecutionContext {
                         + " parallel exectution context of same test is not posible in real robotest execution, "
                         + "your unit test do end suite and case?");
             }
-            SUITES.put(suiteAnnot, suite);
-            SUITE_CASES.put(suiteAnnot, new ArrayList<RobotestCase>());
-            SUITE_CASES.get(suiteAnnot).add(caseAnnot);
-            SUITES_TAG_CLASSES.put(suiteAnnot.tag(), suiteClazz);
-            CASE_TAG_METHODS.put(caseAnnot.tag(), suiteClazz.getName() + "." + methodName);
+            SUITES.put(suiteAnnot,
+                       suite);
+            SUITE_CASES.put(suiteAnnot,
+                            new ArrayList<RobotestCase>());
+            SUITE_CASES.get(suiteAnnot)
+                       .add(caseAnnot);
+            SUITES_TAG_CLASSES.put(suiteAnnot.tag(),
+                                   suiteClazz);
+            CASE_TAG_METHODS.put(caseAnnot.tag(),
+                                 suiteClazz.getName() + "." + methodName);
             try {
                 suite.initSuite(SUITE_ORDER.incrementAndGet());
             } catch (RobotestException e) {
-                suite.putIntialitationSuiteError(ValidationEntry.buildCritical().withException(e));
+                suite.putIntialitationSuiteError(ValidationEntry.buildCritical()
+                                                                .withException(e));
                 throw e;
             }
         }
@@ -191,10 +205,12 @@ public final class RobotestExecutionContext {
         for (Map<RobotestCase, DockerConfig> caseSet : BROWSER_DOCKERS.values()) {
             for (DockerConfig docker : caseSet.values()) {
                 try {
-                    LOG.info("TRY FORCE STOP LOST DOCKER CONTAINER {}", docker.getIdContainer());
+                    LOG.info("TRY FORCE STOP LOST DOCKER CONTAINER {}",
+                             docker.getIdContainer());
                     dockerFarmClient.stopNode(docker.getIdContainer());
                 } catch (Exception e) {
-                    LOG.error("ERROR FORCE STOP CONTAINER", e);
+                    LOG.error("ERROR FORCE STOP CONTAINER",
+                              e);
                 }
             }
         }
@@ -203,7 +219,8 @@ public final class RobotestExecutionContext {
                 dockerFarmClient.destroyDockerClient();
             }
         } catch (RobotestException e) {
-            LOG.error("DOCKER CLIENT QUIT ERROR", e);
+            LOG.error("DOCKER CLIENT QUIT ERROR",
+                      e);
         }
         for (SuiteContext sCtx : SUITES.values()) {
             sCtx.forzeSeleniumDriversDestroy();
@@ -222,8 +239,10 @@ public final class RobotestExecutionContext {
     public static void endSuite(final Class<?> clazz) throws RobotestException {
         RobotestSuite suiteAnnot = getSuiteAnnotation(clazz);
         synchronized (endSuiteBlocker) {
-            if (SUITE_CASES.containsKey(suiteAnnot) && SUITE_CASES.get(suiteAnnot).isEmpty()) {
-                LOG.info("ENDING SUITE: {}", suiteAnnot.tag());
+            if (SUITE_CASES.containsKey(suiteAnnot) && SUITE_CASES.get(suiteAnnot)
+                                                                  .isEmpty()) {
+                LOG.info("ENDING SUITE: {}",
+                         suiteAnnot.tag());
                 try {
                     getSuite(suiteAnnot).endSuite();
                 } finally {
@@ -248,7 +267,8 @@ public final class RobotestExecutionContext {
         if (null == suiteAnnot) {
             throw new RobotestException("TEST CLASS MUST BE @RobotestSuite ANNOTATED!");
         }
-        if (!Pattern.matches(TAG_PATTERN, suiteAnnot.tag())) {
+        if (!Pattern.matches(TAG_PATTERN,
+                             suiteAnnot.tag())) {
             throw new RobotestException("TAG OF SUITE: " + klass.getName() + " MUST ACOMPLISH " + TAG_PATTERN
                     + " REGEX PATTERN");
         }
@@ -266,8 +286,10 @@ public final class RobotestExecutionContext {
      * @throws RobotestException
      *             error in inicialization.
      */
-    public static void buildCaseByMethod(final Class<?> clazz, final String methodName) throws RobotestException {
-        RobotestCase caseAnnot = getCaseAnnotationByMethod(clazz, methodName);
+    public static void buildCaseByMethod(final Class<?> clazz,
+                                         final String methodName) throws RobotestException {
+        RobotestCase caseAnnot = getCaseAnnotationByMethod(clazz,
+                                                           methodName);
         RobotestSuite suiteAnnot = getSuiteAnnotation(clazz);
         LOG.info("STARTING CASE: {} OF {} FOR {}",
                  caseAnnot.tag(),
@@ -275,9 +297,12 @@ public final class RobotestExecutionContext {
                  clazz.getName() + "." + methodName);
         SuiteContext suite = getSuite(suiteAnnot);
         try {
-            suite.initTestCase(suiteAnnot, caseAnnot);
+            suite.initTestCase(suiteAnnot,
+                               caseAnnot);
         } catch (RobotestException e) {
-            suite.putCaseError(caseAnnot, ValidationEntry.buildCritical().withException(e));
+            suite.putCaseError(caseAnnot,
+                               ValidationEntry.buildCritical()
+                                              .withException(e));
             throw e;
         }
     }
@@ -292,15 +317,21 @@ public final class RobotestExecutionContext {
      * @throws RobotestException
      *             free case resource errors.
      */
-    public static void endCaseByMethod(final Class<?> clazz, final String methodName) throws RobotestException {
-        RobotestCase caseAnnot = getCaseAnnotationByMethod(clazz, methodName);
+    public static void endCaseByMethod(final Class<?> clazz,
+                                       final String methodName) throws RobotestException {
+        RobotestCase caseAnnot = getCaseAnnotationByMethod(clazz,
+                                                           methodName);
         RobotestSuite suiteAnnot = getSuiteAnnotation(clazz);
-        LOG.info("ENDING CASE: {} OF {} FOR {}", caseAnnot.tag(), suiteAnnot.tag(), clazz.getName() + "." + methodName);
+        LOG.info("ENDING CASE: {} OF {} FOR {}",
+                 caseAnnot.tag(),
+                 suiteAnnot.tag(),
+                 clazz.getName() + "." + methodName);
         SuiteContext suite = getSuite(suiteAnnot);
         try {
             suite.endTestCase(caseAnnot);
         } finally {
-            SUITE_CASES.get(suiteAnnot).remove(caseAnnot);
+            SUITE_CASES.get(suiteAnnot)
+                       .remove(caseAnnot);
         }
     }
 
@@ -320,7 +351,8 @@ public final class RobotestExecutionContext {
         RobotestCase annotCase = null;
         try {
             for (Method method : klass.getMethods()) {
-                if (method.getName().equals(methodName)) {
+                if (method.getName()
+                          .equals(methodName)) {
                     if (null != annotCase) {
                         throw new RobotestException("TEST METHOD NAME MUST BE UNIQUE! " + methodName);
                     }
@@ -330,7 +362,9 @@ public final class RobotestExecutionContext {
             if (null == annotCase) {
                 throw new RobotestException("TEST METHOD NOT EXIST, NOT ACCESIBLE AND NOT @RobotestCase ANNOTATED!");
             }
-            validateTag(klass, methodName, annotCase);
+            validateTag(klass,
+                        methodName,
+                        annotCase);
         } catch (SecurityException e) {
             throw new RobotestException("TEST METHOD NOT EXIST OR NOT ACCESIBLE: " + methodName,
                                         e);
@@ -351,7 +385,8 @@ public final class RobotestExecutionContext {
     private static void validateTag(final Class<?> klass,
                                     final String methodName,
                                     final RobotestCase annotCase) throws RobotestException {
-        if (!Pattern.matches(TAG_PATTERN, annotCase.tag())) {
+        if (!Pattern.matches(TAG_PATTERN,
+                             annotCase.tag())) {
             throw new RobotestException("TAG OF CASE: " + methodName + " OF CLASS " + klass.getName()
                     + " MUST ACOMPLISH " + TAG_PATTERN + " REGEX PATTERN");
         }
@@ -376,9 +411,12 @@ public final class RobotestExecutionContext {
             for (Method method : klass.getMethods()) {
                 if (method.isAnnotationPresent(RobotestCase.class)) {
                     annotCaseTmp = method.getAnnotation(RobotestCase.class);
-                    if (annotCaseTmp.tag().equals(tagName)) {
+                    if (annotCaseTmp.tag()
+                                    .equals(tagName)) {
                         annotCase = annotCaseTmp;
-                        validateTag(klass, method.getName(), annotCase);
+                        validateTag(klass,
+                                    method.getName(),
+                                    annotCase);
                     }
                 }
             }

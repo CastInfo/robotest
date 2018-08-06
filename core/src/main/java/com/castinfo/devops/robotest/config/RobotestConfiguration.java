@@ -70,19 +70,20 @@ public class RobotestConfiguration implements IRobotestConfiguration {
     public void loadBasic(final RobotestSuite suiteAnnot) {
         basicCfg = new RobotestBasicConfig();
         System.setProperty(RobotestConfigKeys.ROBOTEST_REPORT_BASE,
-                           getProperty(RobotestConfigKeys.ROBOTEST_REPORT_BASE, System.getProperty("java.io.tmpdir")));
+                           getProperty(RobotestConfigKeys.ROBOTEST_REPORT_BASE,
+                                       System.getProperty("java.io.tmpdir")));
         basicCfg.setReportFilePath(System.getProperty(RobotestConfigKeys.ROBOTEST_REPORT_BASE));
-        RobotestConfiguration.LOG.info("ROBOTEST_REPORT_BASE: {}", basicCfg.getReportFilePath());
+        RobotestConfiguration.LOG.info("ROBOTEST_REPORT_BASE: {}",
+                                       basicCfg.getReportFilePath());
 
-        System.setProperty(RobotestConfigKeys.ROBOTEST_ENV, getProperty(RobotestConfigKeys.ROBOTEST_ENV, "local"));
+        System.setProperty(RobotestConfigKeys.ROBOTEST_ENV,
+                           getProperty(RobotestConfigKeys.ROBOTEST_ENV,
+                                       "local"));
         basicCfg.setEnv(System.getProperty(RobotestConfigKeys.ROBOTEST_ENV));
-        RobotestConfiguration.LOG.info("ROBOTEST ENV: {}", basicCfg.getEnv());
+        RobotestConfiguration.LOG.info("ROBOTEST ENV: {}",
+                                       basicCfg.getEnv());
 
-        System.setProperty(RobotestConfigKeys.ROBOTEST_GENERAL_TIMEOUT_MILLIS,
-                           getProperty(RobotestConfigKeys.ROBOTEST_GENERAL_TIMEOUT_MILLIS, "10000"));
-        basicCfg.setGeneralTimeout(System.getProperty(RobotestConfigKeys.ROBOTEST_GENERAL_TIMEOUT_MILLIS));
-        RobotestConfiguration.LOG.info("ROBOTEST_GENERAL_TIMEOUT: {}", basicCfg.getGeneralTimeout());
-
+        configHttp();
         configBrowser();
         configDocker();
         configBrowserStack();
@@ -97,12 +98,53 @@ public class RobotestConfiguration implements IRobotestConfiguration {
      *            default value
      * @return the final value.
      */
-    private String getProperty(final String key, final String defaultValue) {
+    private String getProperty(final String key,
+                               final String defaultValue) {
         String value = System.getProperty(key);
         if (StringUtils.isEmpty(value)) {
             value = defaultValue;
         }
         return value;
+    }
+
+    /**
+     * Do http configuration.
+     */
+    public void configHttp() {
+        RobotestHttpConnConfig httpConfig = new RobotestHttpConnConfig();
+        basicCfg.setHttp(httpConfig);
+
+        System.setProperty(RobotestConfigKeys.ROBOTEST_GENERAL_TIMEOUT_MILLIS,
+                           getProperty(RobotestConfigKeys.ROBOTEST_GENERAL_TIMEOUT_MILLIS,
+                                       "10000"));
+        httpConfig.setGeneralTimeout(System.getProperty(RobotestConfigKeys.ROBOTEST_GENERAL_TIMEOUT_MILLIS));
+        RobotestConfiguration.LOG.info("ROBOTEST_GENERAL_TIMEOUT: {}",
+                                       httpConfig.getGeneralTimeout());
+
+        httpConfig.setProxyHost(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_PROXY_HOST,
+                                                   ""));
+        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_PROXY_HOST: {}",
+                                       httpConfig.getProxyHost());
+
+        httpConfig.setProxyPort(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_PROXY_PORT,
+                                                   ""));
+        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_PROXY_PORT: {}",
+                                       httpConfig.getProxyPort());
+
+        httpConfig.setNoproxyfor(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_NOPROXYFOR,
+                                                    ""));
+        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_NOPROXYFOR: {}",
+                                       httpConfig.getNoproxyfor());
+
+        httpConfig.setProxyUser(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_PROXY_AUTH_USER,
+                                                   ""));
+        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_PROXY_AUTH_USER: {}",
+                                       httpConfig.getProxyUser());
+
+        httpConfig.setProxySecret(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_PROXY_AUTH_SECRET,
+                                                     ""));
+        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_PROXY_AUTH_SECRET: {}",
+                                       httpConfig.getProxySecret());
     }
 
     /**
@@ -113,50 +155,52 @@ public class RobotestConfiguration implements IRobotestConfiguration {
         basicCfg.setBrowser(browserConfig);
 
         System.setProperty(RobotestConfigKeys.ROBOTEST_BROWSER_CONSOLE_LOG_LEVEL,
-                           getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_CONSOLE_LOG_LEVEL, "WARNING"));
+                           getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_CONSOLE_LOG_LEVEL,
+                                       "WARNING"));
         browserConfig.setConsoleLogLevel(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_CONSOLE_LOG_LEVEL));
-        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_CONSOLE_LOG_LEVEL: {}", browserConfig.getConsoleLogLevel());
+        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_CONSOLE_LOG_LEVEL: {}",
+                                       browserConfig.getConsoleLogLevel());
 
         System.setProperty(RobotestConfigKeys.ROBOTEST_BROWSER,
-                           getProperty(RobotestConfigKeys.ROBOTEST_BROWSER, "CHROME"));
+                           getProperty(RobotestConfigKeys.ROBOTEST_BROWSER,
+                                       "CHROME"));
         browserConfig.setBrowserName(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER));
-        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER: {}", basicCfg.getBrowser().getBrowserName());
+        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER: {}",
+                                       basicCfg.getBrowser()
+                                               .getBrowserName());
 
         System.setProperty(RobotestConfigKeys.ROBOTEST_BROWSER_HEADLESS,
-                           getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_HEADLESS, "false"));
+                           getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_HEADLESS,
+                                       "false"));
         browserConfig.setHeadLess(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_HEADLESS));
-        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_HEADLESS: {}", basicCfg.getBrowser().getHeadLess());
+        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_HEADLESS: {}",
+                                       basicCfg.getBrowser()
+                                               .getHeadLess());
 
         System.setProperty(RobotestConfigKeys.ROBOTEST_BROWSER_WIDTH,
-                           getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_WIDTH, "1024"));
+                           getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_WIDTH,
+                                       "1024"));
         browserConfig.setWindowWidth(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_WIDTH));
-        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_WIDTH: {}", basicCfg.getBrowser().getWindowWidth());
+        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_WIDTH: {}",
+                                       basicCfg.getBrowser()
+                                               .getWindowWidth());
 
         System.setProperty(RobotestConfigKeys.ROBOTEST_BROWSER_HEIGHT,
-                           getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_HEIGHT, "768"));
+                           getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_HEIGHT,
+                                       "768"));
         browserConfig.setWindowHeight(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_HEIGHT));
-        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_HEIGHT: {}", basicCfg.getBrowser().getWindowHeight());
+        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_HEIGHT: {}",
+                                       basicCfg.getBrowser()
+                                               .getWindowHeight());
 
         System.setProperty(RobotestConfigKeys.ROBOTEST_BROWSER_MAXIMIZED,
-                           getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_MAXIMIZED, "false"));
+                           getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_MAXIMIZED,
+                                       "false"));
         browserConfig.setMaximized(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_MAXIMIZED));
-        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_MAXIMIZED: {}", basicCfg.getBrowser().getMaximized());
+        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_MAXIMIZED: {}",
+                                       basicCfg.getBrowser()
+                                               .getMaximized());
 
-        browserConfig.setProxyHost(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_PROXY_HOST, ""));
-        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_PROXY_HOST: {}", basicCfg.getBrowser().getProxyHost());
-
-        browserConfig.setProxyPort(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_PROXY_PORT, ""));
-        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_PROXY_PORT: {}", basicCfg.getBrowser().getProxyPort());
-
-        browserConfig.setNoproxyfor(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_NOPROXYFOR, ""));
-        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_NOPROXYFOR: {}", basicCfg.getBrowser().getNoproxyfor());
-
-        browserConfig.setProxyUser(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_PROXY_AUTH_USER, ""));
-        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_PROXY_AUTH_USER: {}", basicCfg.getBrowser().getProxyUser());
-
-        browserConfig.setProxySecret(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_PROXY_AUTH_SECRET, ""));
-        RobotestConfiguration.LOG.info("ROBOTEST_BROWSER_PROXY_AUTH_SECRET: {}",
-                                       basicCfg.getBrowser().getProxySecret());
     }
 
     /**
@@ -167,31 +211,38 @@ public class RobotestConfiguration implements IRobotestConfiguration {
             DockerConfig dockerConfig = new DockerConfig();
 
             dockerConfig.setHost(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_CONN));
-            RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_HOST: {}", dockerConfig.getHost());
+            RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_HOST: {}",
+                                           dockerConfig.getHost());
 
             if ("true".equalsIgnoreCase(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_TLS))) {
                 System.setProperty(RobotestConfigKeys.ROBOTEST_DOCKER_CERTS,
                                    getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_CERTS,
                                                System.getProperty("user.home") + "/.docker/machine/certs"));
                 dockerConfig.setCertsPath(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_CERTS));
-                RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_CERTS: {}", dockerConfig.getCertsPath());
+                RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_CERTS: {}",
+                                               dockerConfig.getCertsPath());
             }
 
             dockerConfig.setHub(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_PUBLIC_HOST));
-            RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_PUBLIC_HOST: {}", dockerConfig.getHub());
+            RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_PUBLIC_HOST: {}",
+                                           dockerConfig.getHub());
 
             dockerConfig.setExposeDebugPort(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_DEBUG));
-            RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_DEBUG: {}", dockerConfig.getExposeDebugPort());
+            RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_DEBUG: {}",
+                                           dockerConfig.getExposeDebugPort());
 
             dockerConfig.setNetworkMode(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_NETWORK));
-            RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_NETWORK: {}", dockerConfig.getNetworkMode());
+            RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_NETWORK: {}",
+                                           dockerConfig.getNetworkMode());
 
             dockerConfig.setInspectRealPort(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_INSPECTREALPORT,
                                                                "false"));
-            RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_INSPECTREALPORT: {}", dockerConfig.getInspectRealPort());
+            RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_INSPECTREALPORT: {}",
+                                           dockerConfig.getInspectRealPort());
 
             dockerConfig.setContainerName(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_CONTAINER_EXEC_TAG));
-            RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_CONTAINER_EXEC_TAG: {}", dockerConfig.getContainerName());
+            RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_CONTAINER_EXEC_TAG: {}",
+                                           dockerConfig.getContainerName());
 
             Map<String, String> labels = new HashMap<>();
             String labelsText = System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_LABELS);
@@ -199,37 +250,45 @@ public class RobotestConfiguration implements IRobotestConfiguration {
                 String[] label = null;
                 String key = null;
                 String value = null;
-                for (String labelText : labelsText.trim().split(",")) {
-                    label = labelText.trim().split(":");
+                for (String labelText : labelsText.trim()
+                                                  .split(",")) {
+                    label = labelText.trim()
+                                     .split(":");
                     key = label[0];
                     if (label.length == 1) {
                         value = "";
                     } else {
                         value = label[1];
                     }
-                    labels.put(key, value);
+                    labels.put(key,
+                               value);
                 }
             }
             dockerConfig.setLabels(labels);
-            RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_LABELS: {}", labelsText);
+            RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_LABELS: {}",
+                                           labelsText);
 
             dockerConfig.setDockerRegistryUrl(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_REGISTRY_URL));
-            RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_REGISTRY: {}", dockerConfig.getDockerRegistryUrl());
+            RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_REGISTRY: {}",
+                                           dockerConfig.getDockerRegistryUrl());
 
             dockerConfig.setDockerRegistryUser(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_REGISTRY_USER));
-            RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_REGISTRY: {}", dockerConfig.getDockerRegistryUser());
+            RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_REGISTRY: {}",
+                                           dockerConfig.getDockerRegistryUser());
 
             dockerConfig.setDockerRegistrySecret(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_REGISTRY_SECRET));
             RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_REGISTRY_SECRET *****");
 
             dockerConfig.setDockerRegistryEmail(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_REGISTRY_EMAIL));
-            RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_REGISTRY_EMAIL: {}", dockerConfig.getDockerRegistryEmail());
+            RobotestConfiguration.LOG.info("ROBOTEST_DOCKER_REGISTRY_EMAIL: {}",
+                                           dockerConfig.getDockerRegistryEmail());
 
             System.setProperty(RobotestConfigKeys.ROBOTEST_CHROME_DOCKER_IMG_TAG,
                                getProperty(RobotestConfigKeys.ROBOTEST_CHROME_DOCKER_IMG_TAG,
                                            "selenium/standalone-chrome:3.12.0-boron"));
             dockerConfig.setChromeImageTag(System.getProperty(RobotestConfigKeys.ROBOTEST_CHROME_DOCKER_IMG_TAG));
-            RobotestConfiguration.LOG.info("ROBOTEST_CHROME_DOCKER_IMG_TAG: {}", dockerConfig.getChromeImageTag());
+            RobotestConfiguration.LOG.info("ROBOTEST_CHROME_DOCKER_IMG_TAG: {}",
+                                           dockerConfig.getChromeImageTag());
 
             System.setProperty(RobotestConfigKeys.ROBOTEST_CHROME_DEBUG_DOCKER_IMG_TAG,
                                getProperty(RobotestConfigKeys.ROBOTEST_CHROME_DEBUG_DOCKER_IMG_TAG,
@@ -242,7 +301,8 @@ public class RobotestConfiguration implements IRobotestConfiguration {
                                getProperty(RobotestConfigKeys.ROBOTEST_FIREFOX_DOCKER_IMG_TAG,
                                            "selenium/standalone-firefox:3.12.0-boron"));
             dockerConfig.setFirefoxImageTag(System.getProperty(RobotestConfigKeys.ROBOTEST_FIREFOX_DOCKER_IMG_TAG));
-            RobotestConfiguration.LOG.info("ROBOTEST_FIREFOX_DOCKER_IMG_TAG: {}", dockerConfig.getFirefoxImageTag());
+            RobotestConfiguration.LOG.info("ROBOTEST_FIREFOX_DOCKER_IMG_TAG: {}",
+                                           dockerConfig.getFirefoxImageTag());
 
             System.setProperty(RobotestConfigKeys.ROBOTEST_FIREFOX_DEBUG_DOCKER_IMG_TAG,
                                getProperty(RobotestConfigKeys.ROBOTEST_FIREFOX_DEBUG_DOCKER_IMG_TAG,
@@ -262,11 +322,14 @@ public class RobotestConfiguration implements IRobotestConfiguration {
         if (StringUtils.isNotEmpty(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSERSTACK_DEVICE))) {
             BrowserStackConfig bsCfg = new BrowserStackConfig();
             bsCfg.setDevice(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSERSTACK_DEVICE));
-            RobotestConfiguration.LOG.info("ROBOTEST_BROWSERSTACK_DEVICE: {}", bsCfg.getDevice());
+            RobotestConfiguration.LOG.info("ROBOTEST_BROWSERSTACK_DEVICE: {}",
+                                           bsCfg.getDevice());
             bsCfg.setPlatform(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSERSTACK_PLATFORM));
-            RobotestConfiguration.LOG.info("ROBOTEST_BROWSERSTACK_PLATFORM: {}", bsCfg.getPlatform());
+            RobotestConfiguration.LOG.info("ROBOTEST_BROWSERSTACK_PLATFORM: {}",
+                                           bsCfg.getPlatform());
             bsCfg.setLogin(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSERSTACK_USER_NAME));
-            RobotestConfiguration.LOG.info("ROBOTEST_BROWSERSTACK_USER_NAME: {}", bsCfg.getLogin());
+            RobotestConfiguration.LOG.info("ROBOTEST_BROWSERSTACK_USER_NAME: {}",
+                                           bsCfg.getLogin());
             bsCfg.setAccessKey(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSERSTACK_ACCESS_KEY));
             RobotestConfiguration.LOG.info("ROBOTEST_BROWSERSTACK_ACCESS_KEY *****");
             basicCfg.setBrowserStack(bsCfg);
@@ -288,23 +351,31 @@ public class RobotestConfiguration implements IRobotestConfiguration {
             for (RobotestConfig cfg : cfgAnnot) {
                 @SuppressWarnings("rawtypes")
                 ConfigurationEntry configEntry = new ConfigurationEntry();
-                if (cfg.resource().startsWith("system://")) {
-                    String[] envKeys = cfg.resource().substring("system://".length()).split(",");
+                if (cfg.resource()
+                       .startsWith("system://")) {
+                    String[] envKeys = cfg.resource()
+                                          .substring("system://".length())
+                                          .split(",");
                     Properties envValues = new Properties();
                     for (String key : envKeys) {
-                        envValues.setProperty(key, System.getProperty(key));
+                        envValues.setProperty(key,
+                                              System.getProperty(key));
                     }
                     configEntry.setValue(envValues);
                 } else {
                     String resourceUri = expandUri(cfg.resource());
                     try (InputStream resource = loadResourceStream(resourceUri)) {
-                        configEntry.setValue(this.mapObjectResources(resource, cfg.type()));
+                        configEntry.setValue(this.mapObjectResources(resource,
+                                                                     cfg.type()));
                     } catch (IOException | NullPointerException e) {
                         throw new RobotestException("ERROR READING USER CONFIG: " + resourceUri,
                                                     e);
                     }
                 }
-                testConfigEntries.computeIfAbsent(scope, k -> new HashMap<>()).put(cfg.key(), configEntry);
+                testConfigEntries.computeIfAbsent(scope,
+                                                  k -> new HashMap<>())
+                                 .put(cfg.key(),
+                                      configEntry);
             }
         }
     }
@@ -320,7 +391,8 @@ public class RobotestConfiguration implements IRobotestConfiguration {
      *             Marshal exceptions.
      */
     @SuppressWarnings("unchecked")
-    private <T> T mapObjectResources(final InputStream resource, final Class<T> clazzType) throws RobotestException {
+    private <T> T mapObjectResources(final InputStream resource,
+                                     final Class<T> clazzType) throws RobotestException {
         Object mapped = null;
         if (clazzType.equals(Properties.class)) {
             Properties props = new Properties();
@@ -333,7 +405,8 @@ public class RobotestConfiguration implements IRobotestConfiguration {
             }
         } else if (isJackson(clazzType)) {
             try {
-                mapped = new ObjectMapper().readValue(resource, clazzType);
+                mapped = new ObjectMapper().readValue(resource,
+                                                      clazzType);
             } catch (IOException e) {
                 throw new RobotestException("CONFIG RESOURCE JSON READ ERROR",
                                             e);
@@ -365,8 +438,10 @@ public class RobotestConfiguration implements IRobotestConfiguration {
     private InputStream loadResourceStream(final String resourceUri) throws RobotestException {
         InputStream resource = null;
         if (resourceUri.startsWith("classpath://")) {
-            resource =
-                    this.getClass().getClassLoader().getResourceAsStream(resourceUri.replaceFirst("classpath://", ""));
+            resource = this.getClass()
+                           .getClassLoader()
+                           .getResourceAsStream(resourceUri.replaceFirst("classpath://",
+                                                                         ""));
         } else if (resourceUri.startsWith("file://")) {
             try {
                 resource = new FileInputStream(resourceUri);
@@ -375,7 +450,9 @@ public class RobotestConfiguration implements IRobotestConfiguration {
                                             e);
             }
         } else if (resourceUri.startsWith("http://") || resourceUri.startsWith("https://")) {
-            resource = new ByteArrayInputStream(when().get(resourceUri).getBody().asByteArray());
+            resource = new ByteArrayInputStream(when().get(resourceUri)
+                                                      .getBody()
+                                                      .asByteArray());
         } else {
             throw new RobotestException("CONFIG RESOURCE NOT SUPORTED");
         }
@@ -391,8 +468,11 @@ public class RobotestConfiguration implements IRobotestConfiguration {
      */
     private String expandUri(final String resource) {
         Map<String, String> systemMap = new HashMap<>();
-        for (String key : System.getProperties().stringPropertyNames()) {
-            systemMap.put(key, System.getProperties().getProperty(key));
+        for (String key : System.getProperties()
+                                .stringPropertyNames()) {
+            systemMap.put(key,
+                          System.getProperties()
+                                .getProperty(key));
         }
         StrSubstitutor sub = new StrSubstitutor(systemMap);
         return sub.replace(resource);
@@ -408,7 +488,9 @@ public class RobotestConfiguration implements IRobotestConfiguration {
     private static boolean isJackson(final Class<?> type) {
         boolean resultado = false;
         for (Annotation annot : type.getAnnotations()) {
-            if (annot.annotationType().getName().contains("com.fasterxml.jackson.annotation")) {
+            if (annot.annotationType()
+                     .getName()
+                     .contains("com.fasterxml.jackson.annotation")) {
                 resultado = true;
             }
         }
@@ -425,11 +507,14 @@ public class RobotestConfiguration implements IRobotestConfiguration {
     private static boolean isJaxb(final Class<?> type) {
         boolean resultado = false;
         for (Annotation annot : type.getAnnotations()) {
-            if (annot.annotationType().getName().contains("javax.xml.bind.annotation")) {
+            if (annot.annotationType()
+                     .getName()
+                     .contains("javax.xml.bind.annotation")) {
                 resultado = true;
             }
         }
-        if (!resultado && type.getSuperclass().equals(JAXBElement.class)) {
+        if (!resultado && type.getSuperclass()
+                              .equals(JAXBElement.class)) {
             resultado = true;
         }
         return resultado;
@@ -454,7 +539,8 @@ public class RobotestConfiguration implements IRobotestConfiguration {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T getAnnotationScopeCfg(final Annotation scope, final String key) {
+    public <T> T getAnnotationScopeCfg(final Annotation scope,
+                                       final String key) {
         T resultado = null;
         Map<String, ConfigurationEntry<?>> configEntries = testConfigEntries.get(scope);
         if (null != configEntries) {
@@ -476,9 +562,12 @@ public class RobotestConfiguration implements IRobotestConfiguration {
     public List<ConfigEntry> toReportConfigEntries(final Annotation scope) {
         List<ConfigEntry> entries = new ArrayList<>();
         if (testConfigEntries.containsKey(scope)) {
-            for (String key : testConfigEntries.get(scope).keySet()) {
+            for (String key : testConfigEntries.get(scope)
+                                               .keySet()) {
                 entries.add(new ConfigEntry(key,
-                                            testConfigEntries.get(scope).get(key).getValue()));
+                                            testConfigEntries.get(scope)
+                                                             .get(key)
+                                                             .getValue()));
             }
         }
         return entries;

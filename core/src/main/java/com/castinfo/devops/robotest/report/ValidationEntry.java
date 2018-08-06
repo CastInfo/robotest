@@ -288,10 +288,12 @@ public class ValidationEntry {
         } else {
             st = ex.getStackTrace()[0];
         }
-        errorMsg.append(ex.getClass().getName());
+        errorMsg.append(ex.getClass()
+                          .getName());
         if (null == ex.getMessage()) {
             errorMsg.append(" No message: ");
-            errorMsg.append(ex.getClass().getName());
+            errorMsg.append(ex.getClass()
+                              .getName());
         } else {
             errorMsg.append(" with message: ");
             errorMsg.append(ex.getMessage());
@@ -313,7 +315,8 @@ public class ValidationEntry {
                 errorMsg.append(cause.getMessage());
             }
             errorMsg.append(" (");
-            errorMsg.append(cause.getClass().getName());
+            errorMsg.append(cause.getClass()
+                                 .getName());
             errorMsg.append(")");
             cause = cause.getCause();
             causeLimit--;
@@ -350,9 +353,12 @@ public class ValidationEntry {
     public void writeValidation(final JsonGenerator jGenerator) throws RobotestException {
         try {
             jGenerator.writeStartObject();
-            jGenerator.writeNumberField("order", getValidationOrder());
-            jGenerator.writeStringField("status", getStatus().name());
-            jGenerator.writeStringField("type", getType().name());
+            jGenerator.writeNumberField("order",
+                                        getValidationOrder());
+            jGenerator.writeStringField("status",
+                                        getStatus().name());
+            jGenerator.writeStringField("type",
+                                        getType().name());
             if (null != getResource()) {
                 jGenerator.writeArrayFieldStart("resource");
                 for (String res : resource) {

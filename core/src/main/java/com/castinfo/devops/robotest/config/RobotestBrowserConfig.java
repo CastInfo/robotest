@@ -30,20 +30,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "browserName",
-                     "headLess",
-                     "windowWidth",
-                     "windowHeight",
-                     "maximized",
-                     "consoleLogLevel",
-                     "proxyHost",
-                     "proxyPort",
-                     "noproxyfor",
-                     "proxyUser",
-                     "proxySecret" })
+@JsonPropertyOrder({ "browserName", "headLess", "windowWidth", "windowHeight", "maximized", "consoleLogLevel" })
 public class RobotestBrowserConfig {
-
-    public static String PROXY_HOST_PORT_SEPARATOR = ":";
 
     @JsonProperty("browserName")
     private String browserName = "";
@@ -62,21 +50,6 @@ public class RobotestBrowserConfig {
 
     @JsonProperty("consoleLogLevel")
     private String consoleLogLevel = "";
-
-    @JsonProperty("proxyHost")
-    private String proxyHost = "";
-
-    @JsonProperty("proxyPort")
-    private String proxyPort = "";
-
-    @JsonProperty("noproxyfor")
-    private String noproxyfor = "";
-
-    @JsonProperty("proxyUser")
-    private String proxyUser = "";
-
-    @JsonProperty("proxySecret")
-    private String proxySecret = "";
 
     /**
      * The Browser.
@@ -210,120 +183,6 @@ public class RobotestBrowserConfig {
         consoleLogLevel = level;
     }
 
-    /**
-     * Getter method for proxy host.
-     *
-     * @return the proxy host
-     */
-    @JsonProperty("proxyHost")
-    public String getProxyHost() {
-        return proxyHost;
-    }
-
-    /**
-     * Setter method for the proxyHost.
-     *
-     * @param proxyHost
-     *            the proxy Host to set
-     */
-    @JsonProperty("proxyHost")
-    public void setProxyHost(final String proxyHost) {
-        this.proxyHost = proxyHost;
-    }
-
-    /**
-     * Getter of proxyPort
-     *
-     * @return the proxyPort
-     */
-    @JsonProperty("proxyPort")
-    public String getProxyPort() {
-        return proxyPort;
-    }
-
-    /**
-     * Setter of proxyPort
-     *
-     * @param proxyPort
-     *            the proxyPort to set
-     */
-    @JsonProperty("proxyPort")
-    public void setProxyPort(final String proxyPort) {
-        this.proxyPort = proxyPort;
-    }
-
-    /**
-     * Obtain proxyHost:proxyPort uri
-     *
-     * @return uri
-     */
-    public String getProxyHostAndPort() {
-        return getProxyHost() + PROXY_HOST_PORT_SEPARATOR + getProxyPort();
-    }
-
-    /**
-     * Getter method for noproxyfor.
-     *
-     * @return the noproxyfor
-     */
-    @JsonProperty("noproxyfor")
-    public String getNoproxyfor() {
-        return noproxyfor;
-    }
-
-    /**
-     * Setter method for the noproxyfor.
-     *
-     * @param noproxyfor
-     *            the noproxyfor to set
-     */
-    @JsonProperty("noproxyfor")
-    public void setNoproxyfor(final String noproxyfor) {
-        this.noproxyfor = noproxyfor;
-    }
-
-    /**
-     * Getter of proxyUser
-     *
-     * @return the proxyUser
-     */
-    @JsonProperty("proxyUser")
-    public String getProxyUser() {
-        return proxyUser;
-    }
-
-    /**
-     * Setter of proxyUser
-     *
-     * @param proxyUser
-     *            the proxyUser to set
-     */
-    @JsonProperty("proxyUser")
-    public void setProxyUser(final String proxyUser) {
-        this.proxyUser = proxyUser;
-    }
-
-    /**
-     * Getter of proxySecret
-     *
-     * @return the proxySecret
-     */
-    @JsonProperty("proxySecret")
-    public String getProxySecret() {
-        return proxySecret;
-    }
-
-    /**
-     * Setter of proxySecret
-     *
-     * @param proxySecret
-     *            the proxySecret to set
-     */
-    @JsonProperty("proxySecret")
-    public void setProxySecret(final String proxySecret) {
-        this.proxySecret = proxySecret;
-    }
-
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
@@ -337,11 +196,6 @@ public class RobotestBrowserConfig {
                                     .append(windowHeight)
                                     .append(maximized)
                                     .append(consoleLogLevel)
-                                    .append(proxyHost)
-                                    .append(proxyPort)
-                                    .append(noproxyfor)
-                                    .append(proxyUser)
-                                    .append(proxySecret)
                                     .toHashCode();
     }
 
@@ -360,11 +214,6 @@ public class RobotestBrowserConfig {
                                   .append(windowHeight, rhs.windowHeight)
                                   .append(maximized, rhs.maximized)
                                   .append(consoleLogLevel, rhs.consoleLogLevel)
-                                  .append(proxyHost, rhs.proxyHost)
-                                  .append(proxyPort, rhs.proxyPort)
-                                  .append(noproxyfor, rhs.noproxyfor)
-                                  .append(proxyUser, rhs.proxyUser)
-                                  .append(proxySecret, rhs.proxySecret)
                                   .isEquals();
     }
 

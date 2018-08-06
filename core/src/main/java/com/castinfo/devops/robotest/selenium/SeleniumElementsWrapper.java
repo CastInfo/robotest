@@ -94,7 +94,8 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
      *            By search.
      * @return true if present.
      */
-    public boolean isElementPresent(final WebElement element, final By by) {
+    public boolean isElementPresent(final WebElement element,
+                                    final By by) {
         boolean resultado = true;
         try {
             element.findElement(by);
@@ -133,11 +134,13 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
      *            By search
      * @return true if exists and visible
      */
-    public boolean isElementVisible(final WebElement element, final By by) {
+    public boolean isElementVisible(final WebElement element,
+                                    final By by) {
         boolean resultado = false;
         try {
             element.findElement(by);
-            resultado = element.findElement(by).isDisplayed();
+            resultado = element.findElement(by)
+                               .isDisplayed();
         } catch (NoSuchElementException e) {
             resultado = false;
         }
@@ -155,7 +158,8 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
      * @throws RobotestException
      *             Selenium Driver unavailable or error
      */
-    public boolean isElementPresentUntil(final By by, final long seconds) throws RobotestException {
+    public boolean isElementPresentUntil(final By by,
+                                         final long seconds) throws RobotestException {
         boolean resultado = true;
         try {
             new WebDriverWait(getDriver(),
@@ -177,7 +181,8 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
      * @throws RobotestException
      *             Selenium Driver unavailable or error
      */
-    public boolean isElementVisibleUntil(final By by, final long seconds) throws RobotestException {
+    public boolean isElementVisibleUntil(final By by,
+                                         final long seconds) throws RobotestException {
         boolean resultado = true;
         try {
             new WebDriverWait(getDriver(),
@@ -199,7 +204,8 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
      * @throws RobotestException
      *             Selenium Driver unavailable or error
      */
-    public boolean isElementInvisibleUntil(final By by, final long seconds) throws RobotestException {
+    public boolean isElementInvisibleUntil(final By by,
+                                           final long seconds) throws RobotestException {
         boolean resultado = true;
         try {
             new WebDriverWait(getDriver(),
@@ -259,7 +265,9 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
      *            used as expected attribute value
      * @return Boolean true when element has css or HTML attribute which contains the value
      */
-    public boolean attributeContains(final WebElement element, final String attribute, final String value) {
+    public boolean attributeContains(final WebElement element,
+                                     final String attribute,
+                                     final String value) {
         boolean contains = false;
         String currentValue = null;
         try {
@@ -286,7 +294,8 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
      * @throws RobotestException
      *             Selenium Driver unavailable or error
      */
-    public boolean isElementClickableUntil(final By by, final long seconds) throws RobotestException {
+    public boolean isElementClickableUntil(final By by,
+                                           final long seconds) throws RobotestException {
         boolean resultado = true;
         try {
             new WebDriverWait(getDriver(),
@@ -308,7 +317,8 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
      * @throws RobotestException
      *             Selenium Driver unavailable or error
      */
-    public boolean isElementNoClickableUntil(final By by, final long seconds) throws RobotestException {
+    public boolean isElementNoClickableUntil(final By by,
+                                             final long seconds) throws RobotestException {
         boolean resultado = true;
         try {
             new WebDriverWait(getDriver(),
@@ -329,7 +339,8 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
      * @throws RobotestException
      *             Selenium Driver unavailable or error
      */
-    public void clickUntilLoadPage(final WebElement link, final long pageLoadingWaitSeconds) throws RobotestException {
+    public void clickUntilLoadPage(final WebElement link,
+                                   final long pageLoadingWaitSeconds) throws RobotestException {
         click(link);
         waitForPageLoaded(pageLoadingWaitSeconds);
     }
@@ -382,7 +393,8 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
         } catch (WebDriverException e) {
             try {
                 JavascriptExecutor executor = (JavascriptExecutor) getDriver();
-                executor.executeScript("arguments[0].click();", link);
+                executor.executeScript("arguments[0].click();",
+                                       link);
             } catch (JavascriptException e2) {
                 throw new RobotestException("NOT CLICABLE ELEMENT",
                                             e2);
@@ -401,9 +413,12 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
     public void moveToElement(final WebElement search) throws RobotestException {
         try {
             Actions mover = new Actions(getDriver());
-            mover.moveToElement(search).build().perform();
+            mover.moveToElement(search)
+                 .build()
+                 .perform();
         } catch (MoveTargetOutOfBoundsException e) {
-            ((JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView(true);", search);
+            ((JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView(true);",
+                                                             search);
         }
     }
 
@@ -432,13 +447,20 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
      * @throws RobotestException
      *             Selenium Driver unavailable or error
      */
-    public void sendKeysWithRetry(final int numRetry, final By by, final String keys) throws RobotestException {
+    public void sendKeysWithRetry(final int numRetry,
+                                  final By by,
+                                  final String keys) throws RobotestException {
         int i = 0;
         do {
-            getDriver().findElement(by).clear();
-            getDriver().findElement(by).sendKeys(keys);
+            getDriver().findElement(by)
+                       .clear();
+            getDriver().findElement(by)
+                       .sendKeys(keys);
             i += 1;
-        } while (getDriver().findElement(by).getAttribute("value").compareTo(keys) != 0 && i < numRetry);
+        } while (getDriver().findElement(by)
+                            .getAttribute("value")
+                            .compareTo(keys) != 0
+                && i < numRetry);
     }
 
     /**
@@ -451,10 +473,13 @@ public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWr
      * @throws RobotestException
      *             Selenium Driver unavailable or error
      */
-    public void selectOption(final WebElement selectElement, final String value) throws RobotestException {
-        if (selectElement.getAttribute("value").compareTo(value) != 0) {
+    public void selectOption(final WebElement selectElement,
+                             final String value) throws RobotestException {
+        if (selectElement.getAttribute("value")
+                         .compareTo(value) != 0) {
             selectElement.sendKeys(value);
-            if (selectElement.getAttribute("value").compareTo(value) != 0) {
+            if (selectElement.getAttribute("value")
+                             .compareTo(value) != 0) {
                 JavascriptExecutor executor = (JavascriptExecutor) getDriver();
                 executor.executeScript("const textToFind = '" + value + "';" + "const dd = arguments[0];"
                         + "dd.selectedIndex = [...dd.options].findIndex (option => option.text === textToFind);",

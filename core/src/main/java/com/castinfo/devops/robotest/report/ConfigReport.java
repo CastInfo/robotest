@@ -95,12 +95,14 @@ public class ConfigReport {
      * @throws RobotestException
      *             Errors, provably IO.
      */
-    public void writeConfig(final JsonGenerator jGenerator, final String cfgName) throws RobotestException {
+    public void writeConfig(final JsonGenerator jGenerator,
+                            final String cfgName) throws RobotestException {
         try {
             jGenerator.writeFieldName(cfgName);
             jGenerator.writeStartArray();
             for (ConfigEntry cfg : configs) {
-                writeConfigTraverse(jGenerator, cfg);
+                writeConfigTraverse(jGenerator,
+                                    cfg);
             }
             jGenerator.writeEndArray();
         } catch (IOException e) {
@@ -119,24 +121,30 @@ public class ConfigReport {
      * @throws IOException
      *             IO errors.
      */
-    private void writeConfigTraverse(final JsonGenerator jGenerator, final ConfigEntry cfg) throws IOException {
+    private void writeConfigTraverse(final JsonGenerator jGenerator,
+                                     final ConfigEntry cfg) throws IOException {
         if (cfg.getValue() instanceof String) {
             jGenerator.writeStartObject();
-            jGenerator.writeStringField(cfg.getId(), cfg.getValue().toString());
+            jGenerator.writeStringField(cfg.getId(),
+                                        cfg.getValue()
+                                           .toString());
             jGenerator.writeEndObject();
         } else if (cfg.getValue() instanceof Properties) {
             jGenerator.writeStartObject();
             jGenerator.writeFieldName(cfg.getId());
             jGenerator.writeStartObject();
             for (Object key : ((Properties) cfg.getValue()).keySet()) {
-                jGenerator.writeStringField(key.toString(), ((Properties) cfg.getValue()).get(key).toString());
+                jGenerator.writeStringField(key.toString(),
+                                            ((Properties) cfg.getValue()).get(key)
+                                                                         .toString());
             }
             jGenerator.writeEndObject();
             jGenerator.writeEndObject();
         } else {
             jGenerator.writeStartObject();
             jGenerator.writeFieldName(cfg.getId());
-            mapper.writeValue(jGenerator, cfg.getValue());
+            mapper.writeValue(jGenerator,
+                              cfg.getValue());
             jGenerator.writeEndObject();
         }
     }

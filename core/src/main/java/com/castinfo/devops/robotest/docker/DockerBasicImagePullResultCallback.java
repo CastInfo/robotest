@@ -33,7 +33,8 @@ public class DockerBasicImagePullResultCallback extends PullImageResultCallback 
 
     @Override
     public void onNext(final PullResponseItem item) {
-        DockerBasicImagePullResultCallback.LOGGER.info("{}", item);
+        DockerBasicImagePullResultCallback.LOGGER.info("{}",
+                                                       item);
         super.onNext(item);
     }
 }

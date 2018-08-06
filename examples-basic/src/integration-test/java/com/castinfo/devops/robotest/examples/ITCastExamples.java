@@ -14,7 +14,6 @@ import com.castinfo.devops.robotest.junit.JUnitCaseRunner;
 /**
  * Robotest Shop Suite that runs a series of tests of Cast-info web page
  *
- * @author Jordi.Artal
  *
  */
 @RobotestSuite(tag = "CASTINFO_SUITE_001", description = "Standad navigetion through Cast-Info page")
@@ -95,7 +94,10 @@ public class ITCastExamples extends TestCase {
     public void checkHomeSliderControls() throws RobotestException {
         HomePageObject preHome = this.buildPageObject(HomePageObject.class);
         preHome.openURL("http://www.cast-info.es");
-        preHome.getDriver().manage().window().maximize();
+        preHome.getDriver()
+               .manage()
+               .window()
+               .maximize();
         preHome.checkSliderButtons();
     }
 

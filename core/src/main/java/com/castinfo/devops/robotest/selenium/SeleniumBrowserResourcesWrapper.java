@@ -87,7 +87,8 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
      * @throws RobotestException
      *             Selenium Driver unavailable or error
      */
-    public void openURLAndWaitLoad(final String url, final int timeoutInSeconds) throws RobotestException {
+    public void openURLAndWaitLoad(final String url,
+                                   final int timeoutInSeconds) throws RobotestException {
         openURL(url);
         waitForPageLoaded(timeoutInSeconds);
     }
@@ -121,7 +122,9 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
                               waitSeconds).until(expectation);
         } catch (TimeoutException e) {
             Actions action = new Actions(getDriver());
-            action.sendKeys("Keys.ESCAPE").build().perform();
+            action.sendKeys("Keys.ESCAPE")
+                  .build()
+                  .perform();
             throw new RobotestException("LOADING PAGE TIMEOUT",
                                         e);
         }
@@ -137,10 +140,15 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
      * @throws RobotestException
      *             Selenium Driver unavailable or error
      */
-    public void openLinkInNewTab(final By by, final long timeoutSeconds) throws RobotestException {
+    public void openLinkInNewTab(final By by,
+                                 final long timeoutSeconds) throws RobotestException {
         Actions a = new Actions(getDriver());
         WebElement e = getDriver().findElement(by);
-        a.moveToElement(e).keyDown(Keys.CONTROL).click().build().perform();
+        a.moveToElement(e)
+         .keyDown(Keys.CONTROL)
+         .click()
+         .build()
+         .perform();
         switchToAnotherWindow();
         waitForPageLoaded(timeoutSeconds);
     }
@@ -163,7 +171,8 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
                                final int timeoutInSeconds) throws RobotestException {
         JavascriptExecutor js = (JavascriptExecutor) getDriver();
         js.executeScript("window.open('" + urlToLoad + "', '" + tabId + "');");
-        getDriver().switchTo().window(tabId);
+        getDriver().switchTo()
+                   .window(tabId);
         waitForPageLoaded(timeoutInSeconds);
     }
 
@@ -202,9 +211,11 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
      * @throws RobotestException
      *             Selenium Driver unavailable or error
      */
-    public boolean currentURLContains(final String toSearchInUrl, final long seconds) throws RobotestException {
+    public boolean currentURLContains(final String toSearchInUrl,
+                                      final long seconds) throws RobotestException {
         ExpectedCondition<Boolean> currentURLContains =
-                webdriverApplyParam -> Boolean.valueOf(webdriverApplyParam.getCurrentUrl().contains(toSearchInUrl));
+                webdriverApplyParam -> Boolean.valueOf(webdriverApplyParam.getCurrentUrl()
+                                                                          .contains(toSearchInUrl));
         boolean resultado = true;
         try {
             new WebDriverWait(getDriver(),
@@ -226,7 +237,8 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
      * @throws RobotestException
      *             Selenium Driver unavailable or error
      */
-    public boolean pageTitleContainsUntil(final String title, final long seconds) throws RobotestException {
+    public boolean pageTitleContainsUntil(final String title,
+                                          final long seconds) throws RobotestException {
         boolean resultado = true;
         try {
             new WebDriverWait(getDriver(),
@@ -247,7 +259,8 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
     public boolean isAlertPresent() throws RobotestException {
         boolean resultado = true;
         try {
-            getDriver().switchTo().alert();
+            getDriver().switchTo()
+                       .alert();
         } catch (NoAlertPresentException e) {
             resultado = false;
         }
@@ -264,7 +277,8 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
      *             if Selenium Driver unavailable
      */
     public String closeAlertAndGetItsText(final boolean clickAccept) throws RobotestException {
-        Alert alert = getDriver().switchTo().alert();
+        Alert alert = getDriver().switchTo()
+                                 .alert();
         String alertText = alert.getText();
         if (clickAccept) {
             alert.accept();
@@ -289,7 +303,8 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
         while (ite.hasNext()) {
             popupHandle = ite.next();
             if (!popupHandle.contains(getDriver().getWindowHandle())) {
-                getDriver().switchTo().window(popupHandle);
+                getDriver().switchTo()
+                           .window(popupHandle);
                 break;
             }
         }
@@ -307,16 +322,21 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
      */
     public boolean switchToWindowThatContainsTitle(final String title) throws RobotestException {
         String windowParent = getDriver().getWindowHandle();
-        Iterator<String> availableWindows = getDriver().getWindowHandles().iterator();
+        Iterator<String> availableWindows = getDriver().getWindowHandles()
+                                                       .iterator();
         boolean resultado = false;
         while (!resultado && availableWindows.hasNext()) {
             String window = availableWindows.next();
             if (!windowParent.equals(window)) {
-                getDriver().switchTo().window(window);
-                if (getDriver().getTitle().toLowerCase().contains(title)) {
+                getDriver().switchTo()
+                           .window(window);
+                if (getDriver().getTitle()
+                               .toLowerCase()
+                               .contains(title)) {
                     resultado = true;
                 } else {
-                    getDriver().switchTo().window(windowParent);
+                    getDriver().switchTo()
+                               .window(windowParent);
                 }
             }
         }
@@ -333,10 +353,12 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
      * @throws RobotestException
      *             Selenium Driver unavailable or error
      */
-    public void addCookie(final String cookieName, final String cookieValue) throws RobotestException {
+    public void addCookie(final String cookieName,
+                          final String cookieValue) throws RobotestException {
         Cookie ck = new Cookie(cookieName,
                                cookieValue);
-        getDriver().manage().addCookie(ck);
+        getDriver().manage()
+                   .addCookie(ck);
     }
 
     /**
@@ -350,7 +372,8 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
      */
     public String getCookieValueByName(final String cookieName) throws RobotestException {
         String resultado = null;
-        Cookie c = getDriver().manage().getCookieNamed(cookieName);
+        Cookie c = getDriver().manage()
+                              .getCookieNamed(cookieName);
         if (null != c) {
             resultado = c.getValue();
         }
@@ -365,7 +388,8 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
      *             Selenium Driver unavailable or error
      */
     public Set<Cookie> listOfCookiesAvailable() throws RobotestException {
-        return getDriver().manage().getCookies();
+        return getDriver().manage()
+                          .getCookies();
     }
 
     /**
@@ -420,19 +444,27 @@ public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAcces
         List<ValidationEntry> resultado = new ArrayList<>();
         ValidationEntry tmpValidationEntry = null;
         try {
-            Logs logs = getDriver().manage().logs();
-            Iterator<String> itTiposLog = logs.getAvailableLogTypes().iterator();
+            Logs logs = getDriver().manage()
+                                   .logs();
+            Iterator<String> itTiposLog = logs.getAvailableLogTypes()
+                                              .iterator();
             while (itTiposLog.hasNext()) {
                 String tipoLog = itTiposLog.next();
                 LogEntries logEntries = logs.get(tipoLog);
                 for (LogEntry logEntry : logEntries) {
-                    if (logEntry.getLevel().intValue() >= desiredLogLevel.intValue()) {
-                        if (Level.WARNING.intValue() < logEntry.getLevel().intValue()) {
-                            tmpValidationEntry = ValidationEntry.buildError().withConsole(logEntry.getMessage());
-                        } else if (Level.WARNING.intValue() > logEntry.getLevel().intValue()) {
-                            tmpValidationEntry = ValidationEntry.buildInfo().withConsole(logEntry.getMessage());
+                    if (logEntry.getLevel()
+                                .intValue() >= desiredLogLevel.intValue()) {
+                        if (Level.WARNING.intValue() < logEntry.getLevel()
+                                                               .intValue()) {
+                            tmpValidationEntry = ValidationEntry.buildError()
+                                                                .withConsole(logEntry.getMessage());
+                        } else if (Level.WARNING.intValue() > logEntry.getLevel()
+                                                                      .intValue()) {
+                            tmpValidationEntry = ValidationEntry.buildInfo()
+                                                                .withConsole(logEntry.getMessage());
                         } else {
-                            tmpValidationEntry = ValidationEntry.buildWarning().withConsole(logEntry.getMessage());
+                            tmpValidationEntry = ValidationEntry.buildWarning()
+                                                                .withConsole(logEntry.getMessage());
                         }
                         resultado.add(tmpValidationEntry);
                     }

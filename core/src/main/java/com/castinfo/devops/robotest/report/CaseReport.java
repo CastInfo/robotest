@@ -248,18 +248,25 @@ public class CaseReport {
     public void writeCase(final JsonGenerator jGenerator) throws RobotestException {
         try {
             jGenerator.writeStartObject();
-            jGenerator.writeNumberField("order", caseOrder);
-            jGenerator.writeStringField("case", id);
-            jGenerator.writeStringField("description", description);
-            jGenerator.writeNumberField("initMillis", initMillis);
+            jGenerator.writeNumberField("order",
+                                        caseOrder);
+            jGenerator.writeStringField("case",
+                                        id);
+            jGenerator.writeStringField("description",
+                                        description);
+            jGenerator.writeNumberField("initMillis",
+                                        initMillis);
 
-            caseConfig.writeConfig(jGenerator, "config");
+            caseConfig.writeConfig(jGenerator,
+                                   "config");
 
             jGenerator.writeFieldName("caseOutStepErrors");
             jGenerator.writeStartArray();
             for (ValidationEntry toadd : outStepErrors) {
                 jGenerator.writeStartObject();
-                jGenerator.writeStringField("status", toadd.getStatus().name());
+                jGenerator.writeStringField("status",
+                                            toadd.getStatus()
+                                                 .name());
                 if (null != toadd.getResource()) {
                     jGenerator.writeArrayFieldStart("resource");
                     for (String res : toadd.getResource()) {
@@ -277,7 +284,8 @@ public class CaseReport {
                 step.writeStep(jGenerator);
             }
             jGenerator.writeEndArray();
-            jGenerator.writeNumberField("endMillis", endMillis);
+            jGenerator.writeNumberField("endMillis",
+                                        endMillis);
             jGenerator.writeEndObject();
         } catch (IOException e) {
             throw new RobotestException("ROBOTEST REPORTER ERROR CASE",
@@ -295,10 +303,14 @@ public class CaseReport {
      * @param status
      *            final status of step.
      */
-    public void endStep(final String caseId, final long endMs, final StepStatus status) {
+    public void endStep(final String caseId,
+                        final long endMs,
+                        final StepStatus status) {
         for (StepReport stepReport : stepReports) {
-            if (stepReport.getId().equals(caseId)) {
-                stepReport.endStep(status, endMs);
+            if (stepReport.getId()
+                          .equals(caseId)) {
+                stepReport.endStep(status,
+                                   endMs);
             }
         }
 

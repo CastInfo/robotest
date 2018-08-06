@@ -91,7 +91,8 @@ public interface IRobotestConfiguration {
      * @throws RobotestException
      *             errores de lectura o carga de configuraciones
      */
-    void loadAnnotationScopeConfig(RobotestConfig[] cfgAnnot, Annotation scope) throws RobotestException;
+    void loadAnnotationScopeConfig(RobotestConfig[] cfgAnnot,
+                                   Annotation scope) throws RobotestException;
 
     /**
      * Gets de basic/system configuration.
@@ -112,7 +113,8 @@ public interface IRobotestConfiguration {
      *            generic type to be cast
      * @return Config Object
      */
-    <T> T getAnnotationScopeCfg(Annotation scope, String key);
+    <T> T getAnnotationScopeCfg(Annotation scope,
+                                String key);
 
     /**
      * Reporting purposes adapter.

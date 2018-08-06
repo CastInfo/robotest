@@ -14,8 +14,6 @@ import com.castinfo.devops.robotest.annot.RobotestStep;
 /**
  * Test Cases related to Clientes section page
  *
- * @author Jordi.Artal
- *
  */
 public class ClientesPageObject extends PageObject {
 
@@ -29,9 +27,9 @@ public class ClientesPageObject extends PageObject {
                   captureScreenShootAtEndStep = true)
     public void checkContacto(final HomePageObject home) throws RobotestException {
         Assert.assertNotNull("element doesn't exists",
-                             this.findElementBy(By.xpath("//*[@id=\"post-503\"]/div/div[3]/div/div/div/a")));
+                             findElementBy(By.xpath("//*[@id=\"post-503\"]/div/div[3]/div/div/div/a")));
         home.checkCastCookies();
-        this.findElementBy(By.xpath("//*[@id=\"post-503\"]/div/div[3]/div/div/div/a")).click();
+        findElementBy(By.xpath("//*[@id=\"post-503\"]/div/div[3]/div/div/div/a")).click();
         home.checkUseForm();
     }
 
@@ -40,19 +38,23 @@ public class ClientesPageObject extends PageObject {
      */
     @RobotestStep(tag = "CLIENTES_STEP_002", description = "Check Clientes Links", captureScreenShootAtEndStep = true)
     public void checkClientesLinks() throws RobotestException {
-        String handler = this.getDriver().getWindowHandle();
+        String handler = getDriver().getWindowHandle();
         List<WebElement> listElem =
-                this.findElementsBy(By.xpath("//*[@id=\"post-503\"]/div/div[2]/div/div/div/div[2]/div/div"));
-        Assert.assertNotNull("No elements found", listElem);
-        JavascriptExecutor js = (JavascriptExecutor) this.getDriver();
+                findElementsBy(By.xpath("//*[@id=\"post-503\"]/div/div[2]/div/div/div/div[2]/div/div"));
+        Assert.assertNotNull("No elements found",
+                             listElem);
+        JavascriptExecutor js = (JavascriptExecutor) getDriver();
         for (WebElement elem : listElem) {
-            String link = elem.findElement(By.tagName("a")).getAttribute("href");
+            String link = elem.findElement(By.tagName("a"))
+                              .getAttribute("href");
             js.executeScript("window.open('" + link + "','_blank');");
-            this.switchToAnotherWindow();
-            Boolean okPage = this.getCurrentUrl().equals(link);
-            Assert.assertTrue("target URL and origin URL are not the same", okPage);
-            this.getDriver().close();
-            this.getDriver().switchTo().window(handler);
+            switchToAnotherWindow();
+            Boolean okPage = getCurrentUrl().equals(link);
+            Assert.assertTrue("target URL and origin URL are not the same",
+                              okPage);
+            getDriver().close();
+            getDriver().switchTo()
+                       .window(handler);
         }
     }
 }

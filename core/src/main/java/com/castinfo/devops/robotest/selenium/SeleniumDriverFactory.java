@@ -402,10 +402,10 @@ public class SeleniumDriverFactory {
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.merge(capabilities);
         List<String> arguments = new ArrayList<>();
-        arguments.add("--no-sandbox");
         if ("true".equals(getBrowserConfig().getHeadLess())) {
             arguments.add("--headless");
             arguments.add("--disable-gpu");
+            arguments.add("--no-sandbox");
         }
         arguments.add("--window-size=" + getBrowserConfig().getWindowWidth() + ","
                 + getBrowserConfig().getWindowHeight());

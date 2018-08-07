@@ -15,10 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-import { IScheduler } from 'rxjs/Scheduler';
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../../environments/environment';
 export interface IReport {
@@ -100,7 +99,7 @@ export interface ICapture {
 @Injectable()
 export class SuitesService {
 
-  constructor(private http: Http) {
+  constructor(private http: HttpClient) {
   }
 
   getBasePath(path: string) {
@@ -112,7 +111,7 @@ export class SuitesService {
         const url = this.getBasePath(path);
         this.http.get(url)
             .subscribe ( data => {
-                    resolve(data.json());
+                    resolve(data);
             },  error => errorCallback(error) );
       });
   }
@@ -122,7 +121,7 @@ export class SuitesService {
       const url = this.getBasePath(path);
       return this.http.get(url)
             .subscribe ( data => {
-               resolve(this.parseSuite(data.json()));
+               resolve(this.parseSuite(data));
             },  error => errorCallback(error) );
     });
   }
@@ -263,7 +262,7 @@ export class SuitesService {
   getSourceCapture(url: string, errorCallback) {
     return new Promise<string> (( resolve, reject ) => {
         this.http.get(url).subscribe ( data => {
-                    resolve(data.text());
+                    resolve(data.toString());
             },  error => errorCallback(error) );
       });
   }

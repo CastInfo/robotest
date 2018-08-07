@@ -18,7 +18,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { SuiteModule } from './suite.module';
 import { SuiteComponent } from './suite.component';
 
@@ -27,7 +27,7 @@ import { SuiteComponent } from './suite.component';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    HttpModule,
+    HttpClientModule,
     SuiteModule
   ],
   providers: [],

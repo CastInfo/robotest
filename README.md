@@ -3,7 +3,7 @@
 ![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)
 ![Maven Central](https://img.shields.io/maven-central/v/com.cast-info.devops/robotest-core.svg)
 ![GitHub issues](https://img.shields.io/github/issues/badges/shields.svg)
-![Release docs](https://img.shields.io/badge/docs-release.svg)
+![Release docs](https://img.shields.io/badge/docs-release-.svg)
 ![Code size](https://img.shields.io/github/languages/code-size/badges/shields.svg)
 
 - [INTRODUCTION](#introduction)
@@ -664,6 +664,15 @@ In the future we try to develop this new features:
 # GET INVOLVED
 
 See our [code of conduct](CODE_OF_CONDUCT.md) and [contributing guidelines](CONTRIBUTING.md)  
+
+Thank you to all our contributors!
+
+<a href="https://github.com/badges/shields/graphs/contributors"><img src="https://opencollective.com/shields/contributors.svg?width=890" /></a>
+
+Thank you to all our backers! 
+
+<a href="https://opencollective.com/shields#backers" target="_blank"><img src="https://opencollective.com/shields/backers.svg?width=890"></a>
+
 
 # ABOUT
 

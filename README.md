@@ -1,8 +1,6 @@
-# ROBOTEST
+# ROBOTEST ![Image of rebotest](robotest-logo.png)
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.cast-info.devops/robotest-core.svg)][maven-repo]
-
-![Image of rebotest](robotest-logo.png)
+![Maven Central](https://img.shields.io/maven-central/v/com.cast-info.devops/robotest-core.svg)
 
 - [INTRODUCTION](#introduction)
 - [VERSION 2 MOTIVATION](#version-2-motivation)

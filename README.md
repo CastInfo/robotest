@@ -2,9 +2,9 @@
 
 ![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)
 ![Maven Central](https://img.shields.io/maven-central/v/com.cast-info.devops/robotest-core.svg)
-![GitHub issues](https://img.shields.io/github/issues/badges/shields.svg)
+![GitHub issues](https://img.shields.io/github/issues/badges/robotest.svg)
 ![Release docs](https://img.shields.io/badge/docs-release-green.svg)
-![Code size](https://img.shields.io/github/languages/code-size/badges/shields.svg)
+![Code size](https://img.shields.io/github/languages/code-size/badges/robotest.svg)
 
 - [INTRODUCTION](#introduction)
 - [VERSION 2 MOTIVATION](#version-2-motivation)

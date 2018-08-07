@@ -2,7 +2,7 @@
 
 # compiled output
 /target
-#/dist
+/dist
 /tmp
 /out-tsc
 

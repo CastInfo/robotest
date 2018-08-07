@@ -1,9 +1,9 @@
 # ROBOTEST ![Image of rebotest](robotest-logo.png)
 
-![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)
+[![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE) 
 [![Maven Central](https://img.shields.io/maven-central/v/com.cast-info.devops/robotest-core.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.cast-info.devops%22)
-![GitHub issues](https://img.shields.io/github/issues/badges/robotest.svg)
-![Release docs](https://img.shields.io/badge/docs-release-green.svg)
+[![GitHub issues](https://img.shields.io/github/issues/badges/robotest.svg)](issues)
+[![Release docs](https://img.shields.io/badge/docs-release-green.svg)](docs)
 ![Code size](https://img.shields.io/github/languages/code-size/badges/robotest.svg)
 
 - [INTRODUCTION](#introduction)

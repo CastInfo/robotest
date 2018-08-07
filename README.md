@@ -1,6 +1,6 @@
 # ROBOTEST
 
-ACTUAL RELEASE: 2.0.0
+[![Maven Central](https://img.shields.io/maven-central/v/com.cast-info.devops/robotest-core.svg)][maven-repo]
 
 ![Image of rebotest](robotest-logo.png)
 

@@ -667,11 +667,11 @@ See our [code of conduct](CODE_OF_CONDUCT.md) and [contributing guidelines](CONT
 
 Thank you to all our contributors!
 
-<a href="https://github.com/badges/shields/graphs/contributors"><img src="https://opencollective.com/shields/contributors.svg?width=890" /></a>
+<a href="https://github.com/badges/castinfo/graphs/contributors"><img src="https://opencollective.com/castinfo/contributors.svg?width=890" /></a>
 
 Thank you to all our backers! 
 
-<a href="https://opencollective.com/shields#backers" target="_blank"><img src="https://opencollective.com/shields/backers.svg?width=890"></a>
+<a href="https://opencollective.com/castinfo#backers" target="_blank"><img src="https://opencollective.com/castinfo/backers.svg?width=890"></a>
 
 
 # ABOUT

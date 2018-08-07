@@ -14,7 +14,7 @@
 
         <ng-container matColumnDef="order">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Exec. Order </mat-header-cell>
-            <mat-cell *matCellDef="let row"> {{row.order}} </mat-cell>
+            <mat-cell *matCellDef="let row"> {{ row.order }} </mat-cell>
         </ng-container>
 
         <ng-container *ngIf="gridType=='SUITE'" matColumnDef="name">
@@ -51,7 +51,7 @@
             <mat-header-cell *matHeaderCellDef mat-sort-header> Resource </mat-header-cell>
             <mat-cell *matCellDef="let row">
                 <span *ngIf="row.resource.length == 1" [innerHTML]="row.resource[0]"></span>
-                <span *ngIf="row.resource.length > 1" [innerHTML]="row.resource[0]"> <br />...<b>and {{row.resource.length-1}} more...</b></span>
+                <span *ngIf="row.resource.length > 1" [innerHTML]="row.resource[0]"> <br />...<b>and {{ row.resource.length-1 }} more...</b></span>
             </mat-cell>
         </ng-container>      
 

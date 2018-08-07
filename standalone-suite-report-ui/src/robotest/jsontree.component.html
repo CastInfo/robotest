@@ -1,6 +1,6 @@
 <mat-toolbar color="robotest">
     <mat-toolbar-row>
-        <span>{{header}}</span>
+        <span>{{ header }}</span>
         <span class="toolbar-spacer"></span>
         <button mat-mini-fab color="robotest" class="pull-right" aria-label="Close" (click)="dialogRef.close()">
             <mat-icon color="robotest">close</mat-icon>
@@ -11,20 +11,20 @@
   <tr>
     <td *ngFor="let item of breadcumKey; let i=index" class="breadcum-row">
       <button mat-raised-button color="primary" (click)="spliceBreadcum(i)" *ngIf="!isBasicType(breadcumNode[i])">
-        <span *ngIf="isNotArrayAndNotBasicType(breadcumNode[i])">Object[{{item}}]</span>
-        <span *ngIf="isArray(breadcumNode[i])">Array Item[{{item}}]</span>
+        <span *ngIf="isNotArrayAndNotBasicType(breadcumNode[i])">Object[{{ item }}]</span>
+        <span *ngIf="isArray(breadcumNode[i])">Array Item[{{ item }}]</span>
       </button>
     </td>
     <td *ngIf="isBasicType(breadcum[breadcum.length-1])" class="breadcum-row">
         <button mat-button color="disabled">
-            {{getBasicType(breadcum[breadcum.length-1])}} : {{breadcum[breadcum.length-1]}}
+            {{ getBasicType(breadcum[breadcum.length-1]) }} : {{ breadcum[breadcum.length-1 ] }}
         </button>
     </td>
     <td *ngIf="!isBasicType(breadcum[breadcum.length-1])">
         <div *ngFor="let item of getObjectPropertiesKeys(breadcum[breadcum.length-1]);">
           <button mat-button color="primary" (click)="pushBreadcum(breadcum[breadcum.length-1],item)">
-              <span *ngIf="isNotArrayAndNotBasicType(breadcum[breadcum.length-1])">Object[{{item}}]</span>
-              <span *ngIf="isArray(breadcum[breadcum.length-1])">Array Item[{{item}}]</span>
+              <span *ngIf="isNotArrayAndNotBasicType(breadcum[breadcum.length-1])">Object[{{ item }}]</span>
+              <span *ngIf="isArray(breadcum[breadcum.length-1])">Array Item[{{ item }}]</span>
           </button>
         </div>
     </td>

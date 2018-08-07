@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
 import { Component, Inject } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 
 @Component({
   selector: 'robotest-jsontree',
@@ -29,15 +29,15 @@ export class JsonTreeComponent {
   breadcumNode: Array<any> = [];
   breadcum: Array<any> = [];
 
-  constructor(public dialogRef: MatDialogRef<JsonTreeComponent>, @Inject(MAT_DIALOG_DATA) data: any) {
-      this.header = data.header;
-      this.breadcum.push(data.config);
+  constructor(public dialogRef: MatDialogRef <JsonTreeComponent>, @Inject(MAT_DIALOG_DATA) data: any) {
+    this.header = data.header;
+    this.breadcum.push(data.config);
   }
 
-  pushBreadcum(parent: any, nodeKey: any) {
+  pushBreadcum( parent: any, nodeKey: any )  {
     this.breadcumKey.push(nodeKey);
     this.breadcumNode.push(parent);
-    this.breadcum.push(parent[nodeKey]);
+    this.breadcum.push( parent[nodeKey] );
   }
 
   spliceBreadcum(from: number) {

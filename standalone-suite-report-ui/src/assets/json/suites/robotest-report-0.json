@@ -1,130 +1,573 @@
 {
+  "order": 0,
+  "suite": "CASTINFO_SUITE_001",
+  "description": "Standad navigetion through Cast-Info page",
+  "initMillis": 1533632999589,
+  "config": [{
+    "ROBOTEST_CONFIG_BASIC": {
+      "env": "local",
+      "reportFilePath": "C:\\eb2\\git\\robotest\\examples-basic\\target/failsafe-reports/robotest-suite-reports/assets/json/suites",
+      "http": {
+        "generalTimeout": "10000",
+        "proxyHost": "",
+        "proxyPort": "",
+        "noproxyfor": "",
+        "proxyUser": "",
+        "proxySecret": ""
+      },
+      "browser": {
+        "browserName": "CHROME",
+        "headLess": "false",
+        "windowWidth": "1024",
+        "windowHeight": "768",
+        "maximized": "true",
+        "consoleLogLevel": "WARNING"
+      }
+    }
+  }],
+  "cases": [{
     "order": 0,
-    "suite": "SHOP_SUITE_001",
-    "description": "Navegación PreHome",
-    "initMillis": 1522747040577,
-    "config": [{
-        "ROBOTEST_BASE_CONFIG": {
-            "env": "local",
-            "browser": {
-                "browserName": "firefox",
-                "headLess": "true",
-                "windowWidth": "1024",
-                "windowHeight": "768",
-                "maximized": "true",
-                "consoleLogLevel": "WARNING"
-            },
-            "generalTimeout": "10000",
-            "reportFilePath": "C:\\eb2\\git\\139\\devopsstack\\robotest-examples\\legacy-compatibilities\\target/surefire-reports/robotest-suite-reports/assets/json/suites"
-        }
-    }],
-    "cases": [{
+    "case": "EMPRESA_CASE_002",
+    "description": "Empresa Case Sections",
+    "initMillis": 1533633004828,
+    "config": [],
+    "caseOutStepErrors": [],
+    "steps": [{
+      "order": 0,
+      "step": "EMPRESA_STEP_002",
+      "description": "Check Empresa Sections",
+      "initMillis": 1533633008248,
+      "endMillis": 1533633009431,
+      "status": "INFO",
+      "config": [],
+      "validations": [{
         "order": 0,
-        "case": "SHOP_PAISIDIOMA_001",
-        "description": "Robotest1 PaisIdioma compatible",
-        "initMillis": 1522747058123,
-        "config": [],
-        "caseOutStepErrors": [],
-        "steps": [{
-            "order": 0,
-            "step": "Acceder a la página de inicio y seleccionar el país <b>España</b>, el idioma <b>Castellano</b> y acceder",
-            "description": "Se accede correctamente al pais / idioma seleccionados",
-            "initMillis": 1522747058885,
-            "endMillis": 1522747071302,
-            "status": "INFO",
-            "config": [],
-            "validations": [{
-                "order": 0,
-                "status": "INFO",
-                "type": "text",
-                "resource": ["1) Se cumplen las validaciones genéricas de SEO<br>2) No hay errores JavaScript<br>4) No hay literales sin traducir (contienen \"???\" o \"#\")"]
-            }, {
-                "order": 1,
-                "status": "INFO",
-                "type": "text",
-                "resource": ["1) Aparece el div de contenido asociado al país España (001)"]
-            }, {
-                "order": 2,
-                "status": "INFO",
-                "type": "text",
-                "resource": ["1) Aparece la home de marcas/multimarcas según el país<br>2) No aparece ningún tag de error"]
-            }, {
-                "order": 3,
-                "status": "INFO",
-                "type": "text",
-                "resource": ["1) <b>Sí</b> aparece el link de la línea \"<b>nuevo</b>\"<br>2) <b>Sí</b> aparece el link de la línea \"<b>she</b>\"<br>3) <b>Sí</b> aparece el link de la línea \"<b>he</b>\"<br>4) <b>Sí</b> aparece el link de la línea \"<b>nina</b>\"<br>5) <b>Sí</b> aparece el link de la línea \"<b>nino</b>\"<br>6) <b>Sí</b> aparece el link de la línea \"<b>violeta</b>\"<br>7) <b>Sí</b> aparece el link de la línea \"<b>edits</b>\"<br>"]
-            }]
-        }, {
-            "order": 1,
-            "step": "Seleccionar la <b style=\"color:chocolate\">Línea</b> <b style=\"color:brown;\">\"HE\"</b>",
-            "description": "Aparece la página correcta asociada a la línea HE",
-            "initMillis": 1522747064842,
-            "endMillis": 1522747071303,
-            "status": "INFO",
-            "config": [],
-            "validations": [{
-                "order": 0,
-                "status": "INFO",
-                "type": "text",
-                "resource": ["1) Aparece el logo/link correcto correspondiente al canal, país, línea"]
-            }, {
-                "order": 1,
-                "status": "INFO",
-                "type": "text",
-                "resource": ["1) Está seleccionada la línea <b>he</b>"]
-            }, {
-                "order": 2,
-                "status": "INFO",
-                "type": "text",
-                "resource": ["1) <b>Sí</b> es posible comprar (aparece la capa relacionada con la bolsa)"]
-            }, {
-                "order": 3,
-                "status": "INFO",
-                "type": "text",
-                "resource": ["1) El bloque de contenido (homeContent o bannerHome) existe y tiene >= 1 banner o >=1 map o >=1 items-edit"]
-            }, {
-                "order": 4,
-                "status": "INFO",
-                "type": "text",
-                "resource": ["1) No hay SRCs con HTTPs maliciosos<br>2) Aparece el footer<br>3) Aparece el div de contenido asociado al país 001"]
-            }, {
-                "order": 5,
-                "status": "INFO",
-                "type": "text",
-                "resource": ["1) Se cumplen las validaciones genéricas de SEO<br>2) No hay errores JavaScript<br>3) No hay ninguna imagen cortada<br>4) No hay literales sin traducir (contienen \"???\" o \"#\")"]
-            }]
-        }, {
-            "order": 2,
-            "step": "Seleccionar el menú superior\" he / null / pantalones\"",
-            "description": "Aparece la galería de \"pantalones",
-            "initMillis": 1522747067578,
-            "endMillis": 1522747071303,
-            "status": "INFO",
-            "config": [],
-            "validations": [{
-                "order": 0,
-                "status": "INFO",
-                "type": "text",
-                "resource": ["1) Como mínimo se obtiene un artículo al cabo de 3 segundos<br>2) Cada artículo tiene 1 icono de favoritos asociado"]
-            }, {
-                "order": 1,
-                "status": "INFO",
-                "type": "text",
-                "resource": ["1) Es visible el selector de precios"]
-            }, {
-                "order": 2,
-                "status": "INFO",
-                "type": "text",
-                "resource": ["1) Está seleccionada la línea <b>he</b>"]
-            }, {
-                "order": 3,
-                "status": "INFO",
-                "type": "text",
-                "resource": ["1) Se cumplen las validaciones genéricas de SEO<br>2) No hay errores JavaScript<br>4) No hay literales sin traducir (contienen \"???\" o \"#\")"]
-            }]
-        }],
-        "endMillis": 1522747071304
+        "status": "INFO",
+        "type": "SCREENSHOT",
+        "resource": ["EMPRESA_STEP_002_1.png"]
+      }]
     }],
-    "suiteOutCaseErrors": [],
-    "endMillis": 1522747072415
+    "endMillis": 1533633011364
+  }, {
+    "order": 1,
+    "case": "HOME_CASE_003",
+    "description": "Home Case Check top-menu-items",
+    "initMillis": 1533633008043,
+    "config": [],
+    "caseOutStepErrors": [],
+    "steps": [{
+      "order": 1,
+      "step": "HOME_STEP_006",
+      "description": "Check Top Menu exists",
+      "initMillis": 1533633010614,
+      "endMillis": 1533633011627,
+      "status": "INFO",
+      "config": [],
+      "validations": [{
+        "order": 0,
+        "status": "INFO",
+        "type": "SCREENSHOT",
+        "resource": ["HOME_STEP_006_2.png"]
+      }]
+    }, {
+      "order": 0,
+      "step": "HOME_STEP_007",
+      "description": "Check top Menu Links",
+      "initMillis": 1533633011627,
+      "endMillis": 1533633033760,
+      "status": "INFO",
+      "config": [],
+      "validations": [{
+        "order": 0,
+        "status": "INFO",
+        "type": "SCREENSHOT",
+        "resource": ["HOME_STEP_007_3.png"]
+      }]
+    }],
+    "endMillis": 1533633033764
+  }, {
+    "order": 2,
+    "case": "SOLUCIONES_CASE_001",
+    "description": "Soluciones Case Link List",
+    "initMillis": 1533633011359,
+    "config": [],
+    "caseOutStepErrors": [],
+    "steps": [{
+      "order": 1,
+      "step": "SOLUTIONS_STEP_001",
+      "description": "Check Soluciones Link List",
+      "initMillis": 1533633014145,
+      "endMillis": 1533633038152,
+      "status": "INFO",
+      "config": [],
+      "validations": [{
+        "order": 0,
+        "status": "INFO",
+        "type": "SCREENSHOT",
+        "resource": ["SOLUTIONS_STEP_001_4.png"]
+      }]
+    }],
+    "endMillis": 1533633038155
+  }, {
+    "order": 4,
+    "case": "EMPLEO_CASE_001",
+    "description": "Empleo Case Delegacion",
+    "initMillis": 1533633038022,
+    "config": [],
+    "caseOutStepErrors": [],
+    "steps": [{
+      "order": 0,
+      "step": "EMPLEO_STEP_001",
+      "description": "Check Empleo Delegacion",
+      "initMillis": 1533633041108,
+      "endMillis": 1533633053308,
+      "status": "INFO",
+      "config": [],
+      "validations": [{
+        "order": 0,
+        "status": "INFO",
+        "type": "SCREENSHOT",
+        "resource": ["EMPLEO_STEP_001_5.png"]
+      }]
+    }],
+    "endMillis": 1533633053308
+  }, {
+    "order": 5,
+    "case": "EMPRESA_CASE_005",
+    "description": "Empresa Case Google Maps",
+    "initMillis": 1533633042098,
+    "config": [],
+    "caseOutStepErrors": [],
+    "steps": [{
+      "order": 0,
+      "step": "EMPRESA_STEP_006",
+      "description": "Check Empresa Google Maps Popups",
+      "initMillis": 1533633046084,
+      "endMillis": 1533633055645,
+      "status": "INFO",
+      "config": [],
+      "validations": [{
+        "order": 0,
+        "status": "INFO",
+        "type": "SCREENSHOT",
+        "resource": ["EMPRESA_STEP_006_6.png"]
+      }]
+    }],
+    "endMillis": 1533633057256
+  }, {
+    "order": 6,
+    "case": "EMPRESA_CASE_003",
+    "description": "Empresa Case Calidad Links",
+    "initMillis": 1533633057256,
+    "config": [],
+    "caseOutStepErrors": [],
+    "steps": [{
+      "order": 0,
+      "step": "EMPRESA_STEP_003",
+      "description": "Check Empresa certifications links",
+      "initMillis": 1533633061702,
+      "endMillis": 1533633063319,
+      "status": "INFO",
+      "config": [],
+      "validations": [{
+        "order": 0,
+        "status": "INFO",
+        "type": "SCREENSHOT",
+        "resource": ["EMPRESA_STEP_003_7.png"]
+      }]
+    }],
+    "endMillis": 1533633063319
+  }, {
+    "order": 7,
+    "case": "EMPLEO_CASE_002",
+    "description": "Empleo Case eMail",
+    "initMillis": 1533633061253,
+    "config": [],
+    "caseOutStepErrors": [],
+    "steps": [{
+      "order": 1,
+      "step": "EMPLEO_STEP_002",
+      "description": "Check Empleo Mail",
+      "initMillis": 1533633064244,
+      "endMillis": 1533633066274,
+      "status": "INFO",
+      "config": [],
+      "validations": [{
+        "order": 0,
+        "status": "INFO",
+        "type": "SCREENSHOT",
+        "resource": ["EMPLEO_STEP_002_9.png"]
+      }]
+    }, {
+      "order": 2,
+      "step": "HOME_STEP_010",
+      "description": "Check Cookies",
+      "initMillis": 1533633064244,
+      "endMillis": 1533633065314,
+      "status": "INFO",
+      "config": [],
+      "validations": [{
+        "order": 0,
+        "status": "INFO",
+        "type": "SCREENSHOT",
+        "resource": ["HOME_STEP_010_8.png"]
+      }]
+    }],
+    "endMillis": 1533633067292
+  }, {
+    "order": 8,
+    "case": "NOTICIAS_CASE_001",
+    "description": "Noticias Case Search",
+    "initMillis": 1533633067292,
+    "config": [],
+    "caseOutStepErrors": [],
+    "steps": [{
+      "order": 0,
+      "step": "NOTICIAS_STEP_002",
+      "description": "Check Noticias Search",
+      "initMillis": 1533633071629,
+      "endMillis": 1533633076328,
+      "status": "INFO",
+      "config": [],
+      "validations": [{
+        "order": 0,
+        "status": "INFO",
+        "type": "SCREENSHOT",
+        "resource": ["NOTICIAS_STEP_002_10.png"]
+      }]
+    }],
+    "endMillis": 1533633076329
+  }, {
+    "order": 9,
+    "case": "HOME_CASE_006",
+    "description": "Home Case Cookies",
+    "initMillis": 1533633071353,
+    "config": [],
+    "caseOutStepErrors": [],
+    "steps": [{
+      "order": 1,
+      "step": "HOME_STEP_010",
+      "description": "Check Cookies",
+      "initMillis": 1533633076421,
+      "endMillis": 1533633077661,
+      "status": "INFO",
+      "config": [],
+      "validations": [{
+        "order": 0,
+        "status": "INFO",
+        "type": "SCREENSHOT",
+        "resource": ["HOME_STEP_010_11.png"]
+      }]
+    }, {
+      "order": 2,
+      "step": "HOME_STEP_011",
+      "description": "Check Create Cookie",
+      "initMillis": 1533633077661,
+      "endMillis": 1533633078643,
+      "status": "INFO",
+      "config": [],
+      "validations": [{
+        "order": 0,
+        "status": "INFO",
+        "type": "SCREENSHOT",
+        "resource": ["HOME_STEP_011_12.png"]
+      }]
+    }, {
+      "order": 3,
+      "step": "HOME_STEP_012",
+      "description": "Check Cast Cookie",
+      "initMillis": 1533633078644,
+      "endMillis": 1533633079482,
+      "status": "INFO",
+      "config": [],
+      "validations": [{
+        "order": 0,
+        "status": "INFO",
+        "type": "SCREENSHOT",
+        "resource": ["HOME_STEP_012_13.png"]
+      }]
+    }],
+    "endMillis": 1533633080336
+  }, {
+    "order": 11,
+    "case": "EMPRESA_CASE_001",
+    "description": "Empresa Case Title",
+    "initMillis": 1533633084327,
+    "config": [],
+    "caseOutStepErrors": [],
+    "steps": [{
+      "order": 2,
+      "step": "EMPRESA_STEP_001",
+      "description": "Check empresa title",
+      "initMillis": 1533633089315,
+      "endMillis": 1533633090665,
+      "status": "INFO",
+      "config": [],
+      "validations": [{
+        "order": 0,
+        "status": "INFO",
+        "type": "SCREENSHOT",
+        "resource": ["EMPRESA_STEP_001_15.png"]
+      }]
+    }],
+    "endMillis": 1533633090665
+  }, {
+    "order": 12,
+    "case": "HOME_CASE_001",
+    "description": "Home Case Check Title",
+    "initMillis": 1533633094614,
+    "config": [],
+    "caseOutStepErrors": [],
+    "steps": [{
+      "order": 0,
+      "step": "HOME_STEP_001",
+      "description": "Check home title",
+      "initMillis": 1533633100427,
+      "endMillis": 1533633101163,
+      "status": "INFO",
+      "config": [],
+      "validations": [{
+        "order": 0,
+        "status": "INFO",
+        "type": "SCREENSHOT",
+        "resource": ["HOME_STEP_001_16.png"]
+      }]
+    }],
+    "endMillis": 1533633101163
+  }, {
+    "order": 13,
+    "case": "HOME_CASE_005",
+    "description": "Home Case Slider Controls",
+    "initMillis": 1533633105098,
+    "config": [],
+    "caseOutStepErrors": [{
+      "status": "CRITICAL",
+      "resource": ["org.openqa.selenium.NoSuchElementException with message: no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//*[@id=\"post-42\"]/div/div[1]/div/div[1]/div[1]/div/div/div/a\"}\n  (Session info: chrome=67.0.3396.99)\n  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 10.0.16299 x86_64) (WARNING: The server did not provide any stacktrace information)\nCommand duration or timeout: 0 milliseconds\nFor documentation on this error, please visit: http://seleniumhq.org/exceptions/no_such_element.html\nBuild info: version: '3.12.0', revision: '7c6e0b3', time: '2018-05-08T14:04:26.12Z'\nSystem info: host: 'BCN-CLI-P155', ip: '10.0.75.1', os.name: 'Windows 10', os.arch: 'amd64', os.version: '10.0', java.version: '1.8.0_131'\nDriver info: org.openqa.selenium.chrome.ChromeDriver\nCapabilities {acceptInsecureCerts: true, acceptSslCerts: true, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 2.41.578737 (49da6702b16031..., userDataDir: C:\\Users\\MIGUEL~1.RUI\\AppDa...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:57835}, handlesAlerts: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: XP, platformName: XP, rotatable: false, setWindowRect: true, takesHeapSnapshot: true, takesScreenshot: true, unexpectedAlertBehaviour: , unhandledPromptBehavior: , version: 67.0.3396.99, webStorageEnabled: true}\nSession ID: 149b1df1d8db124ba943f4a3505ce46e\n*** Element info: {Using=xpath, value=//*[@id=\"post-42\"]/div/div[1]/div/div[1]/div[1]/div/div/div/a} in sun.reflect.NativeConstructorAccessorImpl.newInstance0"]
+    }],
+    "steps": [{
+      "order": 0,
+      "step": "HOME_STEP_009",
+      "description": "Check Slider Buttons Home Page",
+      "initMillis": 1533633110241,
+      "endMillis": 1533633111137,
+      "status": "ERROR",
+      "config": [],
+      "validations": [{
+        "order": 0,
+        "status": "ERROR",
+        "type": "TEXT",
+        "resource": ["org.openqa.selenium.NoSuchElementException with message: no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//*[@id=\"post-42\"]/div/div[1]/div/div[1]/div[1]/div/div/div/a\"}\n  (Session info: chrome=67.0.3396.99)\n  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 10.0.16299 x86_64) (WARNING: The server did not provide any stacktrace information)\nCommand duration or timeout: 0 milliseconds\nFor documentation on this error, please visit: http://seleniumhq.org/exceptions/no_such_element.html\nBuild info: version: '3.12.0', revision: '7c6e0b3', time: '2018-05-08T14:04:26.12Z'\nSystem info: host: 'BCN-CLI-P155', ip: '10.0.75.1', os.name: 'Windows 10', os.arch: 'amd64', os.version: '10.0', java.version: '1.8.0_131'\nDriver info: org.openqa.selenium.chrome.ChromeDriver\nCapabilities {acceptInsecureCerts: true, acceptSslCerts: true, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 2.41.578737 (49da6702b16031..., userDataDir: C:\\Users\\MIGUEL~1.RUI\\AppDa...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:57835}, handlesAlerts: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: XP, platformName: XP, rotatable: false, setWindowRect: true, takesHeapSnapshot: true, takesScreenshot: true, unexpectedAlertBehaviour: , unhandledPromptBehavior: , version: 67.0.3396.99, webStorageEnabled: true}\nSession ID: 149b1df1d8db124ba943f4a3505ce46e\n*** Element info: {Using=xpath, value=//*[@id=\"post-42\"]/div/div[1]/div/div[1]/div[1]/div/div/div/a} in sun.reflect.NativeConstructorAccessorImpl.newInstance0"]
+      }, {
+        "order": 1,
+        "status": "ERROR",
+        "type": "SCREENSHOT",
+        "resource": ["HOME_STEP_009_17.png"]
+      }]
+    }],
+    "endMillis": 1533633111140
+  }, {
+    "order": 14,
+    "case": "CLIENTES_CASE_001",
+    "description": "Clientes Case Link List",
+    "initMillis": 1533633115079,
+    "config": [],
+    "caseOutStepErrors": [{
+      "status": "CRITICAL",
+      "resource": ["org.openqa.selenium.NoSuchElementException with message: no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//*[@id=\"post-503\"]/div/div[3]/div/div/div/a\"}\n  (Session info: chrome=67.0.3396.99)\n  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 10.0.16299 x86_64) (WARNING: The server did not provide any stacktrace information)\nCommand duration or timeout: 0 milliseconds\nFor documentation on this error, please visit: http://seleniumhq.org/exceptions/no_such_element.html\nBuild info: version: '3.12.0', revision: '7c6e0b3', time: '2018-05-08T14:04:26.12Z'\nSystem info: host: 'BCN-CLI-P155', ip: '10.0.75.1', os.name: 'Windows 10', os.arch: 'amd64', os.version: '10.0', java.version: '1.8.0_131'\nDriver info: org.openqa.selenium.chrome.ChromeDriver\nCapabilities {acceptInsecureCerts: true, acceptSslCerts: true, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 2.41.578737 (49da6702b16031..., userDataDir: C:\\Users\\MIGUEL~1.RUI\\AppDa...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:57878}, handlesAlerts: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: XP, platformName: XP, rotatable: false, setWindowRect: true, takesHeapSnapshot: true, takesScreenshot: true, unexpectedAlertBehaviour: , unhandledPromptBehavior: , version: 67.0.3396.99, webStorageEnabled: true}\nSession ID: cbf924848a56a1cb1c397587052d69d7\n*** Element info: {Using=xpath, value=//*[@id=\"post-503\"]/div/div[3]/div/div/div/a} in sun.reflect.NativeConstructorAccessorImpl.newInstance0"]
+    }],
+    "steps": [{
+      "order": 0,
+      "step": "CLIENTES_STEP_001",
+      "description": "Check Clientes Contact form",
+      "initMillis": 1533633119536,
+      "endMillis": 1533633120564,
+      "status": "ERROR",
+      "config": [],
+      "validations": [{
+        "order": 0,
+        "status": "ERROR",
+        "type": "TEXT",
+        "resource": ["org.openqa.selenium.NoSuchElementException with message: no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//*[@id=\"post-503\"]/div/div[3]/div/div/div/a\"}\n  (Session info: chrome=67.0.3396.99)\n  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 10.0.16299 x86_64) (WARNING: The server did not provide any stacktrace information)\nCommand duration or timeout: 0 milliseconds\nFor documentation on this error, please visit: http://seleniumhq.org/exceptions/no_such_element.html\nBuild info: version: '3.12.0', revision: '7c6e0b3', time: '2018-05-08T14:04:26.12Z'\nSystem info: host: 'BCN-CLI-P155', ip: '10.0.75.1', os.name: 'Windows 10', os.arch: 'amd64', os.version: '10.0', java.version: '1.8.0_131'\nDriver info: org.openqa.selenium.chrome.ChromeDriver\nCapabilities {acceptInsecureCerts: true, acceptSslCerts: true, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 2.41.578737 (49da6702b16031..., userDataDir: C:\\Users\\MIGUEL~1.RUI\\AppDa...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:57878}, handlesAlerts: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: XP, platformName: XP, rotatable: false, setWindowRect: true, takesHeapSnapshot: true, takesScreenshot: true, unexpectedAlertBehaviour: , unhandledPromptBehavior: , version: 67.0.3396.99, webStorageEnabled: true}\nSession ID: cbf924848a56a1cb1c397587052d69d7\n*** Element info: {Using=xpath, value=//*[@id=\"post-503\"]/div/div[3]/div/div/div/a} in sun.reflect.NativeConstructorAccessorImpl.newInstance0"]
+      }, {
+        "order": 1,
+        "status": "ERROR",
+        "type": "SCREENSHOT",
+        "resource": ["CLIENTES_STEP_001_18.png"]
+      }]
+    }],
+    "endMillis": 1533633120565
+  }, {
+    "order": 10,
+    "case": "EMPRESA_CASE_004",
+    "description": "Empresa Case Clients",
+    "initMillis": 1533633080335,
+    "config": [],
+    "caseOutStepErrors": [],
+    "steps": [{
+      "order": 0,
+      "step": "EMPRESA_STEP_004",
+      "description": "Check Empresa clientes arrows",
+      "initMillis": 1533633084391,
+      "endMillis": 1533633085380,
+      "status": "INFO",
+      "config": [],
+      "validations": [{
+        "order": 0,
+        "status": "INFO",
+        "type": "SCREENSHOT",
+        "resource": ["EMPRESA_STEP_004_14.png"]
+      }]
+    }, {
+      "order": 1,
+      "step": "EMPRESA_STEP_005",
+      "description": "Check Empresa clientes links",
+      "initMillis": 1533633085380,
+      "endMillis": 1533633147076,
+      "status": "INFO",
+      "config": [],
+      "validations": [{
+        "order": 0,
+        "status": "INFO",
+        "type": "SCREENSHOT",
+        "resource": ["EMPRESA_STEP_005_19.png"]
+      }]
+    }],
+    "endMillis": 1533633147077
+  }, {
+    "order": 16,
+    "case": "HOME_CASE_002",
+    "description": "Home Case Check Form Contacto",
+    "initMillis": 1533633151263,
+    "config": [],
+    "caseOutStepErrors": [],
+    "steps": [{
+      "order": 0,
+      "step": "HOME_STEP_002",
+      "description": "Check search Contacto",
+      "initMillis": 1533633156304,
+      "endMillis": 1533633157353,
+      "status": "ERROR",
+      "config": [],
+      "validations": [{
+        "order": 0,
+        "status": "ERROR",
+        "type": "TEXT",
+        "resource": ["org.openqa.selenium.NoSuchElementException with message: no such element: Unable to locate element: {\"method\":\"id\",\"selector\":\"et_top_search\"}\n  (Session info: chrome=67.0.3396.99)\n  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 10.0.16299 x86_64) (WARNING: The server did not provide any stacktrace information)\nCommand duration or timeout: 0 milliseconds\nFor documentation on this error, please visit: http://seleniumhq.org/exceptions/no_such_element.html\nBuild info: version: '3.12.0', revision: '7c6e0b3', time: '2018-05-08T14:04:26.12Z'\nSystem info: host: 'BCN-CLI-P155', ip: '10.0.75.1', os.name: 'Windows 10', os.arch: 'amd64', os.version: '10.0', java.version: '1.8.0_131'\nDriver info: org.openqa.selenium.chrome.ChromeDriver\nCapabilities {acceptInsecureCerts: true, acceptSslCerts: true, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 2.41.578737 (49da6702b16031..., userDataDir: C:\\Users\\MIGUEL~1.RUI\\AppDa...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:58004}, handlesAlerts: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: XP, platformName: XP, rotatable: false, setWindowRect: true, takesHeapSnapshot: true, takesScreenshot: true, unexpectedAlertBehaviour: , unhandledPromptBehavior: , version: 67.0.3396.99, webStorageEnabled: true}\nSession ID: 9d8ad768570525665b0ed37346d4e227\n*** Element info: {Using=id, value=et_top_search} in sun.reflect.NativeConstructorAccessorImpl.newInstance0"]
+      }, {
+        "order": 1,
+        "status": "ERROR",
+        "type": "SCREENSHOT",
+        "resource": ["HOME_STEP_002_20.png"]
+      }]
+    }],
+    "endMillis": 1533633157354
+  }, {
+    "order": 3,
+    "case": "HOME_CASE_004",
+    "description": "Home Case Check all links",
+    "initMillis": 1533633015323,
+    "config": [],
+    "caseOutStepErrors": [],
+    "steps": [{
+      "order": 0,
+      "step": "HOME_STEP_008",
+      "description": "Check internal Links Home Page",
+      "initMillis": 1533633020606,
+      "endMillis": 1533633184684,
+      "status": "INFO",
+      "config": [],
+      "validations": [{
+        "order": 0,
+        "status": "INFO",
+        "type": "SCREENSHOT",
+        "resource": ["HOME_STEP_008_21.png"]
+      }]
+    }],
+    "endMillis": 1533633184684
+  }, {
+    "order": 8,
+    "case": "NOTICIAS_CASE_001",
+    "description": "Noticias Case Search",
+    "initMillis": 1533633067292,
+    "config": [],
+    "caseOutStepErrors": [],
+    "steps": [{
+      "order": 0,
+      "step": "NOTICIAS_STEP_002",
+      "description": "Check Noticias Search",
+      "initMillis": 1533633071629,
+      "endMillis": 1533633076328,
+      "status": "INFO",
+      "config": [],
+      "validations": [{
+        "order": 0,
+        "status": "INFO",
+        "type": "SCREENSHOT",
+        "resource": ["NOTICIAS_STEP_002_10.png"]
+      }]
+    }, {
+      "order": 0,
+      "step": "NOTICIAS_STEP_001",
+      "description": "Check Noticias Post",
+      "initMillis": 1533633128761,
+      "endMillis": 1533633197535,
+      "status": "INFO",
+      "config": [],
+      "validations": [{
+        "order": 0,
+        "status": "INFO",
+        "type": "SCREENSHOT",
+        "resource": ["NOTICIAS_STEP_001_22.png"]
+      }]
+    }],
+    "endMillis": 1533633197536
+  }, {
+    "order": 15,
+    "case": "NOTICIAS_CASE_001",
+    "description": "Noticias Case Post",
+    "initMillis": 1533633124457,
+    "config": [],
+    "caseOutStepErrors": [],
+    "steps": [{
+      "order": 1,
+      "step": "NOTICIAS_STEP_001",
+      "description": "Check Noticias Post",
+      "initMillis": 1533633128761,
+      "endMillis": 1533633197535,
+      "status": "INFO",
+      "config": [],
+      "validations": [{
+        "order": 0,
+        "status": "INFO",
+        "type": "SCREENSHOT",
+        "resource": ["NOTICIAS_STEP_001_22.png"]
+      }]
+    }],
+    "endMillis": 1533633197536
+  }, {
+    "order": 17,
+    "case": "CLIENTES_CASE_002",
+    "description": "Clientes Case Link List",
+    "initMillis": 1533633161319,
+    "config": [],
+    "caseOutStepErrors": [],
+    "steps": [{
+      "order": 0,
+      "step": "CLIENTES_STEP_002",
+      "description": "Check Clientes Links",
+      "initMillis": 1533633165832,
+      "endMillis": 1533633213147,
+      "status": "INFO",
+      "config": [],
+      "validations": [{
+        "order": 0,
+        "status": "INFO",
+        "type": "SCREENSHOT",
+        "resource": ["CLIENTES_STEP_002_23.png"]
+      }]
+    }],
+    "endMillis": 1533633213147
+  }],
+  "suiteOutCaseErrors": [],
+  "endMillis": 1533633226401
 }

@@ -15,8 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Component } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material';
 import {  SuitesService,
           IReport,
           ISuite,
@@ -45,7 +45,7 @@ export class SuiteComponent  {
   dialogOERef: MatDialogRef<OutErrorsComponent>;
 
   public doughnutChartLabels: string[] = ['Errors', 'Infos', 'Warnings'];
-  public doughnutChartType  = 'doughnut';
+  public doughnutChartType = 'doughnut';
 
   public lineChartLegend = false;
   public lineChartType = 'line';

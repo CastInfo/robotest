@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
 import { Component, Inject } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { IValidation } from '../providers/suites/suites.service';
 
 @Component({
@@ -25,6 +25,7 @@ import { IValidation } from '../providers/suites/suites.service';
   styles: []
 })
 export class OutErrorsComponent {
+
   header: any;
   errors: Array<IValidation> = [];
 

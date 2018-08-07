@@ -107,17 +107,17 @@ export class SuitesService {
   }
 
   getSuiteList(path: string, errorCallback) {
-    return new Promise (( resolve, reject ) => {
-        const url = this.getBasePath(path);
-        this.http.get(url)
-            .subscribe ( data => {
-                    resolve(data);
-            },  error => errorCallback(error) );
-      });
+    return new Promise (( resolve) => {
+                                        const url = this.getBasePath(path);
+                                        this.http.get(url).subscribe ( data => { resolve(data); },
+                                                                       error => errorCallback(error)
+                                                                     );
+                                      }
+                       );
   }
 
   getSuite(path: string, errorCallback): Promise<ISuite> {
-    return new Promise<ISuite> (( resolve, reject ) => {
+    return new Promise<ISuite> (( resolve ) => {
       const url = this.getBasePath(path);
       return this.http.get(url)
             .subscribe ( data => {
@@ -260,11 +260,12 @@ export class SuitesService {
   }
 
   getSourceCapture(url: string, errorCallback) {
-    return new Promise<string> (( resolve, reject ) => {
-        this.http.get(url).subscribe ( data => {
-                    resolve(data.toString());
-            },  error => errorCallback(error) );
-      });
+    return new Promise<string> (( resolve) => {
+                                                this.http.get(url, { responseType: 'text' } )
+                                                            .subscribe ( data => { resolve(data.toString()); },
+                                                                          error => errorCallback(error) );
+                                               }
+                               );
   }
 
   timeMillisDifference(timeEnd, timeStart): string {

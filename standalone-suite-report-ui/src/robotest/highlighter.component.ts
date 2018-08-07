@@ -15,10 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-import {Component, ViewChild, Input} from '@angular/core';
-import {MatPaginator, MatSort, MatTableDataSource, MatFormField} from '@angular/material';
-import { OnInit, AfterViewInit } from '@angular/core/src/metadata/lifecycle_hooks';
-import {  SuitesService } from '../providers/suites/suites.service';
+import {Component, Input} from '@angular/core';
+import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
+import { SuitesService } from '../providers/suites/suites.service';
 @Component({
   selector: 'robotest-highlighter',
   styleUrls: ['highlighter.component.scss'],

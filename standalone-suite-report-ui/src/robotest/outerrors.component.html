@@ -1,6 +1,6 @@
 <mat-toolbar color="robotest">
     <mat-toolbar-row>
-        <span>{{header}}</span>
+        <span>{{ header }}</span>
         <span class="toolbar-spacer"></span>
         <button mat-mini-fab color="robotest" class="pull-right" aria-label="Close" (click)="dialogRef.close()">
             <mat-icon color="robotest">close</mat-icon>
@@ -29,7 +29,7 @@
             </td>
             <td>
                 <span *ngFor="let resource of item.resource">
-                    {{resource}}
+                    {{ resource }}
                     <hr />
                 </span>
             </td>

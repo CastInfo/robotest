@@ -2,7 +2,6 @@
     "suites" : [
         "robotest-report-0.json",
         "robotest-report-1.json",
-        "robotest-report-2.json",      
-        "robotest-report-3.json"           
+        "robotest-report-2.json"
     ]
 }

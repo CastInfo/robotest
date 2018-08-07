@@ -28,16 +28,16 @@
       </thead>
       <tbody>
         <tr>
-          <td>{{report.suiteSelected.order}}</td>
-          <td>{{report.suiteSelected.description}}</td>
+          <td>{{ report.suiteSelected.order }}</td>
+          <td>{{ report.suiteSelected.description }}</td>
           <td>
             <button mat-mini-fab color="robotest" *ngIf="report.suiteSelected.outCaseErrors && report.suiteSelected.outCaseErrors.length > 0" (click)="showOutErrors(report.suiteSelected.outCaseErrors,'Out Case Suite Errors: ' + report.suiteSelected.name)" tooltip="Out Case Suite Errors">
               <mat-icon color="robotest">error</mat-icon>
             </button>
           </td>
-          <td>{{report.suiteSelected.initMillis|date:'medium'}}</td>
-          <td>{{report.suiteSelected.endMillis|date:'medium'}}</td>
-          <td matTooltip="{{ report.suiteSelected.durationMillis }} ms.">{{report.suiteSelected.duration}}</td>
+          <td>{{ report.suiteSelected.initMillis|date:'medium' }}</td>
+          <td>{{ report.suiteSelected.endMillis|date:'medium' }}</td>
+          <td matTooltip="{{ report.suiteSelected.durationMillis }} ms.">{{ report.suiteSelected.duration }}</td>
           <td>
             <button mat-mini-fab color="robotest" *ngIf="report.suiteSelected.config != ''" (click)="showConfig(report.suiteSelected.config,'Suite Config: ' + report.suiteSelected.name)" tooltip="Suite Config">
               <mat-icon color="robotest">library_books</mat-icon>
@@ -53,7 +53,7 @@
           <canvas baseChart [datasets]="report.suiteSelected.lineChartData" [labels]="report.suiteSelected.lineChartLabels" [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType"></canvas>
       </div>
 
-      <div class="robotest2 col-md-{{(report.suiteSelected.caseSelected)?12:9}}">
+      <div class="robotest2 col-md-{{ (report.suiteSelected.caseSelected)?12:9 }}">
 
         <robotest-mgrid *ngIf="!report.suiteSelected.caseSelected && report.suiteSelected.cases.length > 0" [gridData]="report.suiteSelected" [gridType]="CASE"></robotest-mgrid>
 
@@ -78,11 +78,11 @@
               </thead>
               <tbody>
                   <tr>
-                      <td>{{report.suiteSelected.caseSelected.order}}</td>
-                      <td>{{report.suiteSelected.caseSelected.description}}</td>
-                      <td>{{report.suiteSelected.caseSelected.initMillis|date:'medium'}}</td>
-                      <td>{{report.suiteSelected.caseSelected.endMillis|date:'medium'}}</td>
-                      <td matTooltip="{{ report.suiteSelected.caseSelected.durationMillis }} ms.">{{report.suiteSelected.caseSelected.duration}}</td>
+                      <td>{{ report.suiteSelected.caseSelected.order }}</td>
+                      <td>{{ report.suiteSelected.caseSelected.description }}</td>
+                      <td>{{ report.suiteSelected.caseSelected.initMillis|date:'medium' }}</td>
+                      <td>{{ report.suiteSelected.caseSelected.endMillis|date:'medium' }}</td>
+                      <td matTooltip="{{ report.suiteSelected.caseSelected.durationMillis }} ms.">{{ report.suiteSelected.caseSelected.duration }}</td>
                       <td>
                           <button mat-mini-fab color="robotest" *ngIf="report.suiteSelected.caseSelected.outStepErrors  && report.suiteSelected.caseSelected.outStepErrors.length > 0" (click)="showOutErrors(report.suiteSelected.caseSelected.outStepErrors,'Out Step Case Errors: ' + report.suiteSelected.caseSelected.name)" tooltip="Out Step Case Errors">
                             <mat-icon color="robotest">error</mat-icon>
@@ -108,7 +108,7 @@
           <canvas baseChart [datasets]="report.suiteSelected.caseSelected.lineChartData" [labels]="report.suiteSelected.caseSelected.lineChartLabels" [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType"></canvas>
       </div>
 
-      <div class="robotest2 col-md-{{(report.suiteSelected.caseSelected.stepSelected)?12:9}}">
+      <div class="robotest2 col-md-{{ (report.suiteSelected.caseSelected.stepSelected)?12:9 }}">
 
           <robotest-mgrid *ngIf="!report.suiteSelected.caseSelected.stepSelected  && report.suiteSelected.caseSelected.steps.length > 0" [gridData]="report.suiteSelected.caseSelected" [gridType]="STEP"></robotest-mgrid>
 
@@ -133,11 +133,11 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td>{{report.suiteSelected.caseSelected.stepSelected.order}}</td>
-                    <td>{{report.suiteSelected.caseSelected.stepSelected.description}}</td>
-                    <td>{{report.suiteSelected.caseSelected.stepSelected.initMillis|date:'medium'}}</td>
-                    <td>{{report.suiteSelected.caseSelected.stepSelected.endMillis|date:'medium'}}</td>
-                    <td matTooltip="{{ report.suiteSelected.caseSelected.stepSelected.durationMillis }} ms.">{{report.suiteSelected.caseSelected.stepSelected.duration}}</td>
+                    <td>{{ report.suiteSelected.caseSelected.stepSelected.order }}</td>
+                    <td>{{ report.suiteSelected.caseSelected.stepSelected.description }}</td>
+                    <td>{{ report.suiteSelected.caseSelected.stepSelected.initMillis|date:'medium' }}</td>
+                    <td>{{ report.suiteSelected.caseSelected.stepSelected.endMillis|date:'medium' }}</td>
+                    <td matTooltip="{{ report.suiteSelected.caseSelected.stepSelected.durationMillis }} ms.">{{ report.suiteSelected.caseSelected.stepSelected.duration }}</td>
                     <td>
                       <button mat-mini-fab color="robotest" *ngIf="report.suiteSelected.caseSelected.stepSelected.config != ''" (click)="showConfig(report.suiteSelected.caseSelected.stepSelected.config,'Case Config: ' + report.suiteSelected.caseSelected.stepSelected.name)" tooltip="Step Config">
                         <mat-icon color="robotest">library_books</mat-icon>
@@ -156,7 +156,7 @@
           <canvas baseChart [data]="report.suiteSelected.caseSelected.stepSelected.doughnutChartData" [labels]="doughnutChartLabels" [chartType]="doughnutChartType" [options]="doughnutChartOptions"></canvas>
       </div>
 
-      <div class="robotest2 col-md-{{(report.suiteSelected.caseSelected.stepSelected.validationSelected)?12:9}}">
+      <div class="robotest2 col-md-{{ (report.suiteSelected.caseSelected.stepSelected.validationSelected)?12:9 }}">
 
         <mat-tab-group *ngIf="!report.suiteSelected.caseSelected.stepSelected.validationSelected">
             <mat-tab>
@@ -171,9 +171,9 @@
               </ng-template>
               <carousel>
                   <slide *ngFor="let capture of report.suiteSelected.caseSelected.stepSelected.captures">
-                      <img src="{{capture.url}}" style="width: 100%;" />
+                      <img src="{{ capture.url }}" style="width: 100%;" />
                       <div class="carousel-caption">
-                          <p>Validation nº: {{capture.order}}</p>
+                          <p>Validation nº: {{ capture.order }}</p>
                       </div>
                   </slide>
               </carousel>
@@ -190,7 +190,7 @@
           <table class="table robotest3">
             <tr *ngIf="report.suiteSelected.caseSelected.stepSelected.validationSelected.order">
               <td><b>Exec. Order</b></td>
-              <td>{{report.suiteSelected.caseSelected.stepSelected.validationSelected.order}}</td>
+              <td>{{ report.suiteSelected.caseSelected.stepSelected.validationSelected.order }}</td>
             </tr>
             <tr *ngIf="report.suiteSelected.caseSelected.stepSelected.validationSelected.status">
               <td><b>Status</b></td>
@@ -230,7 +230,7 @@
               </tr>            
             <tr *ngIf="report.suiteSelected.caseSelected.stepSelected.validationSelected.type ==='SCREENSHOT'">
               <td><b>ScreenShot Capture</b></td>
-              <td><img src="{{report.suiteSelected.caseSelected.stepSelected.validationSelected.resource_link}}" style="width: 100%;" /></td>
+              <td><img src="{{ report.suiteSelected.caseSelected.stepSelected.validationSelected.resource_link }}" style="width: 100%;" /></td>
             </tr>
           </table>
         </span>

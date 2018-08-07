@@ -1,5 +1,7 @@
 # ROBOTEST ![Image of rebotest](robotest-logo.png)
 
+[![Maven Central](https://img.shields.io/maven-central/v/com.bernardomg.maven.skins/docs-maven-skin.svg)][maven-repo]
+
 ![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)
 ![Maven Central](https://img.shields.io/maven-central/v/com.cast-info.devops/robotest-core.svg)
 ![GitHub issues](https://img.shields.io/github/issues/badges/robotest.svg)

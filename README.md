@@ -1,6 +1,6 @@
 # ROBOTEST
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.cast-info.devops/robotest-core.svg)][maven-repo]
+![Maven Central](https://img.shields.io/maven-central/v/com.cast-info.devops/robotest-core.svg)
 
 ![Image of rebotest](robotest-logo.png)
 

@@ -5,8 +5,6 @@
 ![GitHub issues](https://img.shields.io/github/issues/badges/shields.svg)
 ![Release docs](https://img.shields.io/badge/docs-release.svg)
 ![Code size](https://img.shields.io/github/languages/code-size/badges/shields.svg)
-![Top language](https://img.shields.io/github/languages/top/badges/shields.svg)
-![language count](https://img.shields.io/github/languages/count/badges/shields.svg)
 
 - [INTRODUCTION](#introduction)
 - [VERSION 2 MOTIVATION](#version-2-motivation)

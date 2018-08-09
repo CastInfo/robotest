@@ -66,7 +66,7 @@
       <pages>
         <index project="reflow-parent">
           <!-- Override the title -->
-          <titleTemplate>ROBOTEST End2End test engine</titleTemplate>
+          <titleTemplate>ROBOTEST DevOps End2End Test Engine</titleTemplate>
           <!-- no breadcrumbs on the main index page -->
           <breadcrumbs>false</breadcrumbs>
           <!-- no ToC on the main index page -->

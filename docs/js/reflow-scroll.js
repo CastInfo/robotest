@@ -1,5 +1,5 @@
 // Support for smooth scrolling
-// (simplified version, taken from http://stackoverflow.com/a/14805098/1173184)
+// (simplified version, taken from https://stackoverflow.com/a/14805098/1173184)
 $(window).load(function(){
   $('a[href^="#"]:not([href^="#carousel"]):not([data-toggle="dropdown"])').on('click', function(e) {
 

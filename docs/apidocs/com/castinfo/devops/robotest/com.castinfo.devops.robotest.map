@@ -1,0 +1,18 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./TestContext.html" title="com.castinfo.devops.robotest.TestContext" alt="" coords="16,99,139,256"/>
+<area shape="rect" id="node1" href="./TestContext.html" title="&lt;TABLE&gt;" alt="" coords="5,93,149,261"/>
+<area shape="rect" id="node2_1" href="./TestCase.html" title="com.castinfo.devops.robotest.TestCase" alt="" coords="184,135,312,219"/>
+<area shape="rect" id="node2" href="./TestCase.html" title="&lt;TABLE&gt;" alt="" coords="173,130,323,225"/>
+<area shape="rect" id="node3_2" href="./SuiteContext.html" title="com.castinfo.devops.robotest.SuiteContext" alt="" coords="357,25,555,329"/>
+<area shape="rect" id="node3" href="./SuiteContext.html" title="&lt;TABLE&gt;" alt="" coords="347,20,565,335"/>
+<area shape="rect" id="node4_3" href="./StepStatus.html" title="com.castinfo.devops.robotest.StepStatus" alt="" coords="601,99,703,256"/>
+<area shape="rect" id="node4" href="./StepStatus.html" title="&lt;TABLE&gt;" alt="" coords="590,93,714,261"/>
+<area shape="rect" id="node5_4" href="./StepInterceptor.html" title="com.castinfo.devops.robotest.StepInterceptor" alt="" coords="749,143,851,212"/>
+<area shape="rect" id="node5" href="./StepInterceptor.html" title="&lt;TABLE&gt;" alt="" coords="739,137,861,217"/>
+<area shape="rect" id="node6_5" href="./RobotestExecutionContext.html" title="com.castinfo.devops.robotest.RobotestExecutionContext" alt="" coords="897,55,1130,300"/>
+<area shape="rect" id="node6" href="./RobotestExecutionContext.html" title="&lt;TABLE&gt;" alt="" coords="886,49,1141,305"/>
+<area shape="rect" id="node7_6" href="./RobotestException.html" title="com.castinfo.devops.robotest.RobotestException" alt="" coords="1175,165,1297,189"/>
+<area shape="rect" id="node7" href="./RobotestException.html" title="&lt;TABLE&gt;" alt="" coords="1165,153,1307,201"/>
+<area shape="rect" id="node8_7" href="./PageObject.html" title="com.castinfo.devops.robotest.PageObject" alt="" coords="1343,11,1572,344"/>
+<area shape="rect" id="node8" href="./PageObject.html" title="&lt;TABLE&gt;" alt="" coords="1332,5,1583,349"/>
+</map>

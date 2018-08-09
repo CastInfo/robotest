@@ -49,6 +49,12 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<!-- Dependency versions -->
 		<surfire-failsafe.version>2.21.0</surfire-failsafe.version>
+		<findbugs.version>3.0.5</findbugs.version>
+		<checkstyle.version>3.0.0</checkstyle.version>
+		<mavendependency.version>3.1.1</mavendependency.version>
+		<dependencycheck.version>3.3.1</dependencycheck.version>
+		<jacoco.version>0.7.9</jacoco.version>
+		<javadocplugin.version>2.10.4</javadocplugin.version>
 		<junit.version>4.12</junit.version>
 		<testng.version>6.14.3</testng.version>
 		<spring-boot.version>1.5.7.RELEASE</spring-boot.version>
@@ -390,7 +396,7 @@
 					<!-- compatibility with sonar 4.5.5 -->
 					<!-- <version>0.7.4.201502262128</version> -->
 					<!-- <version>0.7.7.201606060606</version> -->
-					<version>0.7.9</version>
+					<version>${jacoco.version}</version>
 					<configuration>
 						<haltOnFailure>false</haltOnFailure>
 					</configuration>
@@ -414,7 +420,7 @@
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>findbugs-maven-plugin</artifactId>
-					<version>3.0.5</version>
+					<version>${findbugs.version}</version>
 					<configuration>
 						<effort>Max</effort>
 						<threshold>High</threshold>
@@ -449,7 +455,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-checkstyle-plugin</artifactId>
-					<version>3.0.0</version>
+					<version>${checkstyle.version}</version>
 					<dependencies>
 						<dependency>
 							<groupId>com.puppycrawl.tools</groupId>
@@ -612,12 +618,13 @@
 				<plugin>
 					<groupId>org.owasp</groupId>
 					<artifactId>dependency-check-maven</artifactId>
-					<version>3.2.0</version>
+					<version>${dependencycheck.version}</version>
 					<configuration>
 						<failOnError>false</failOnError>
 					</configuration>
 					<executions>
 						<execution>
+							<phase>install</phase>
 							<goals>
 								<goal>check</goal>
 							</goals>
@@ -628,7 +635,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-dependency-plugin</artifactId>
-					<version>3.1.0</version>
+					<version>${mavendependency.version}</version>
 					<executions>
 						<execution>
 							<id>analyze</id>
@@ -663,7 +670,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>2.10.4</version>
+					<version>${javadocplugin.version}</version>
 					<configuration>
 						<failOnError>false</failOnError>
 						<aggregate>true</aggregate>
@@ -676,6 +683,28 @@
 							</goals>
 						</execution>
 					</executions>
+				</plugin>
+				<!-- Ant -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>3.7.1</version>
+					<dependencies>
+				        <dependency>
+				          <groupId>lt.velykis.maven.skins</groupId>
+				          <artifactId>reflow-velocity-tools</artifactId>
+				          <version>1.1.1</version>
+				        </dependency>
+				        <dependency>
+				          <groupId>org.apache.velocity</groupId>
+				          <artifactId>velocity</artifactId>
+				          <version>1.7</version>
+				        </dependency>
+					</dependencies>
+					<configuration>
+						<relativizeDecorationLinks>false</relativizeDecorationLinks>
+						<detail>true</detail>
+					</configuration>
 				</plugin>
 				<!-- Ant -->
 				<plugin>
@@ -784,6 +813,75 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>${mavendependency.version}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.owasp</groupId>
+				<artifactId>dependency-check-maven</artifactId>
+				<version>${dependencycheck.version}</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>aggregate</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco.version}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>${surfire-failsafe.version}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>${findbugs.version}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>${checkstyle.version}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${javadocplugin.version}</version>
+				<configuration>
+					<doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
+					<docletArtifact>
+						<groupId>org.umlgraph</groupId>
+						<artifactId>umlgraph</artifactId>
+						<version>5.6.6</version>
+					</docletArtifact>
+					<additionalparam>-inferrel -inferdep -quiet -hide java.*
+						-collpackages java.util.* -qualify
+						-postfixpackage -nodefontsize
+						9
+						-nodefontpackagesize 7 -attributes -operations
+						-enumerations
+						-enumconstants -views -visibility -verbose</additionalparam>
+				</configuration>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>aggregate</report>
+						</reports>
+					</reportSet>
+				</reportSets>				
+			</plugin>
+		</plugins>
+	</reporting>
 
 	<profiles>
 		<profile>
@@ -1188,30 +1286,6 @@
 								</goals>
 							</execution>
 						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>siteJavaDoc</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<configuration>
-							<doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
-							<docletArtifact>
-								<groupId>org.umlgraph</groupId>
-								<artifactId>umlgraph</artifactId>
-								<version>5.6.6</version>
-							</docletArtifact>
-							<additionalparam>-inferrel -inferdep -quiet -hide java.*
-								-collpackages java.util.* -qualify
-								-postfixpackage -nodefontsize 9 -nodefontpackagesize 7 -attributes -operations
-								-enumerations
-								-enumconstants -views -visibility -verbose</additionalparam>
-						</configuration>
 					</plugin>
 				</plugins>
 			</build>

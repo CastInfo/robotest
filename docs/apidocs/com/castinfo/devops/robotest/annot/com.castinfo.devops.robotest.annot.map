@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./RobotestSuite.html" title="com.castinfo.devops.robotest.annot.RobotestSuite" alt="" coords="15,17,113,41"/>
+<area shape="rect" id="node1" href="./RobotestSuite.html" title="&lt;TABLE&gt;" alt="" coords="5,5,123,53"/>
+<area shape="rect" id="node2_1" href="./RobotestStep.html" title="com.castinfo.devops.robotest.annot.RobotestStep" alt="" coords="159,17,252,41"/>
+<area shape="rect" id="node2" href="./RobotestStep.html" title="&lt;TABLE&gt;" alt="" coords="148,5,263,53"/>
+<area shape="rect" id="node3_2" href="./RobotestConfig.html" title="com.castinfo.devops.robotest.annot.RobotestConfig" alt="" coords="297,17,367,41"/>
+<area shape="rect" id="node3" href="./RobotestConfig.html" title="&lt;TABLE&gt;" alt="" coords="287,5,377,53"/>
+<area shape="rect" id="node4_3" href="./RobotestCase.html" title="com.castinfo.devops.robotest.annot.RobotestCase" alt="" coords="412,17,497,41"/>
+<area shape="rect" id="node4" href="./RobotestCase.html" title="&lt;TABLE&gt;" alt="" coords="401,5,508,53"/>
+</map>

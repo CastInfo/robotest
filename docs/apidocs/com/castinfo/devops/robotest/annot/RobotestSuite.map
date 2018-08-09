@@ -1,0 +1,14 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./RobotestSuite.html" title="com.castinfo.devops.robotest.annot.RobotestSuite" alt="" coords="194,924,291,948"/>
+<area shape="rect" id="node1" href="./RobotestSuite.html" title="&lt;TABLE&gt;" alt="" coords="183,912,302,960"/>
+<area shape="rect" id="node2_1" href="../config/RobotestConfiguration.html" title="com.castinfo.devops.robotest.config.RobotestConfiguration" alt="" coords="148,630,337,829"/>
+<area shape="rect" id="node2" href="../config/RobotestConfiguration.html" title="&lt;TABLE&gt;" alt="" coords="137,625,348,834"/>
+<area shape="rect" id="node3_2" href="../config/IRobotestConfiguration.html" title="com.castinfo.devops.robotest.config.IRobotestConfiguration" alt="" coords="98,387,289,541"/>
+<area shape="rect" id="node3" href="../config/IRobotestConfiguration.html" title="&lt;TABLE&gt;" alt="" coords="87,381,299,547"/>
+<area shape="rect" id="node4_3" href="../TestContext.html" title="com.castinfo.devops.robotest.TestContext" alt="" coords="383,645,529,814"/>
+<area shape="rect" id="node4" href="../TestContext.html" title="&lt;TABLE&gt;" alt="" coords="373,639,539,819"/>
+<area shape="rect" id="node5_4" href="../SuiteContext.html" title="com.castinfo.devops.robotest.SuiteContext" alt="" coords="16,11,213,327"/>
+<area shape="rect" id="node5" href="../SuiteContext.html" title="&lt;TABLE&gt;" alt="" coords="5,6,224,333"/>
+<area shape="rect" id="node6_5" href="../RobotestExecutionContext.html" title="com.castinfo.devops.robotest.RobotestExecutionContext" alt="" coords="574,601,807,858"/>
+<area shape="rect" id="node6" href="../RobotestExecutionContext.html" title="&lt;TABLE&gt;" alt="" coords="563,595,818,863"/>
+</map>

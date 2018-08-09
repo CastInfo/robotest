@@ -2,9 +2,8 @@
 
 [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE) 
 [![Maven Central](https://img.shields.io/maven-central/v/com.cast-info.devops/robotest-core.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.cast-info.devops%22)
-[![GitHub issues](https://img.shields.io/github/issues/badges/robotest.svg)](issues)
-[![Release docs](https://img.shields.io/badge/docs-release-green.svg)](docs)
-![Code size](https://img.shields.io/github/languages/code-size/badges/robotest.svg)
+[![GitHub issues](https://img.shields.io/github/issues/badges/robotest.svg)](https://github.com/CastInfo/robotest/issues)
+[![Release docs](https://img.shields.io/badge/docs-release-green.svg)](https://castinfo.github.io/robotest)
 
 - [INTRODUCTION](#introduction)
 - [VERSION 2 MOTIVATION](#version-2-motivation)
@@ -182,8 +181,8 @@ Optional:
 
 To **build** ROBOTEST you need too:
 
-* node.js 6.+ and npm 5.+ installed and in PATH to build ROBOTEST suite reporting tool
-* Optional: binaries of Graphviz 2.27 in PATH to generate UML with JavaDoc in MAVEN if you wan't to build ROBOTEST core (with siteJavaDoc mvn profile)
+* node.js 8.+ and npm 6.+ installed and in PATH to build ROBOTEST suite reporting tool.
+* Optional: binaries of Graphviz 2.27 in PATH to generate UML with JavaDoc in MAVEN to generate site docs in ROBOTEST core.
 
 
 # HELLO WORLD MAVEN PROJECT

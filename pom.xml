@@ -1,0 +1,21 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.cast-info.devops</groupId>
+	<artifactId>robotest</artifactId>
+	<name>${project.groupId}:${project.artifactId}</name>
+	<description>ROBOTEST End2End test tool based on Selenium and RestAssured</description>
+	<packaging>pom</packaging>
+	<version>2.0.1-SNAPSHOT</version>
+	<!-- This is a trick to compile all projects -->
+	<!-- This artifact will not be deployed to maven central -->
+	<modules>
+		<module>bom</module>
+		<module>core</module>
+		<module>standalone-suite-report-ui</module>
+		<module>suite-cases-json-generator</module>
+		<module>examples-basic</module>
+	</modules>
+
+</project>

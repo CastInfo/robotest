@@ -1,0 +1,12 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./StepStatus.html" title="com.castinfo.devops.robotest.StepStatus" alt="" coords="134,1760,236,1917"/>
+<area shape="rect" id="node1" href="./StepStatus.html" title="&lt;TABLE&gt;" alt="" coords="123,1755,247,1923"/>
+<area shape="rect" id="node2_1" href="./report/ValidationEntry.html" title="com.castinfo.devops.robotest.report.ValidationEntry" alt="" coords="181,1312,320,1701"/>
+<area shape="rect" id="node2" href="./report/ValidationEntry.html" title="&lt;TABLE&gt;" alt="" coords="170,1307,330,1707"/>
+<area shape="rect" id="node3_2" href="./report/SuiteReport.html" title="com.castinfo.devops.robotest.report.SuiteReport" alt="" coords="216,11,386,415"/>
+<area shape="rect" id="node3" href="./report/SuiteReport.html" title="&lt;TABLE&gt;" alt="" coords="206,6,396,421"/>
+<area shape="rect" id="node5_3" href="./report/CaseReport.html" title="com.castinfo.devops.robotest.report.CaseReport" alt="" coords="64,475,236,835"/>
+<area shape="rect" id="node5" href="./report/CaseReport.html" title="&lt;TABLE&gt;" alt="" coords="54,469,247,840"/>
+<area shape="rect" id="node4_4" href="./report/StepReport.html" title="com.castinfo.devops.robotest.report.StepReport" alt="" coords="64,893,202,1253"/>
+<area shape="rect" id="node4" href="./report/StepReport.html" title="&lt;TABLE&gt;" alt="" coords="53,888,213,1259"/>
+</map>

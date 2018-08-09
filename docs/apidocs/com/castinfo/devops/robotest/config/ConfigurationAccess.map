@@ -1,0 +1,12 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./ConfigurationAccess.html" title="com.castinfo.devops.robotest.config.ConfigurationAccess" alt="" coords="212,241,399,471"/>
+<area shape="rect" id="node1" href="./ConfigurationAccess.html" title="&lt;TABLE&gt;" alt="" coords="201,235,409,477"/>
+<area shape="rect" id="node3_1" href="../TestCase.html" title="com.castinfo.devops.robotest.TestCase" alt="" coords="15,663,161,759"/>
+<area shape="rect" id="node3" href="../TestCase.html" title="&lt;TABLE&gt;" alt="" coords="5,657,171,764"/>
+<area shape="rect" id="node4_2" href="../SuiteContext.html" title="com.castinfo.devops.robotest.SuiteContext" alt="" coords="207,553,404,869"/>
+<area shape="rect" id="node4" href="../SuiteContext.html" title="&lt;TABLE&gt;" alt="" coords="196,547,415,874"/>
+<area shape="rect" id="node5_3" href="../selenium/SeleniumBrowserResourcesWrapper.html" title="com.castinfo.devops.robotest.selenium.SeleniumBrowserResourcesWrapper" alt="" coords="449,531,676,891"/>
+<area shape="rect" id="node5" href="../selenium/SeleniumBrowserResourcesWrapper.html" title="&lt;TABLE&gt;" alt="" coords="439,525,687,896"/>
+<area shape="rect" id="node2_4" href="../TestContext.html" title="com.castinfo.devops.robotest.TestContext" alt="" coords="233,11,378,181"/>
+<area shape="rect" id="node2" href="../TestContext.html" title="&lt;TABLE&gt;" alt="" coords="222,6,389,186"/>
+</map>

@@ -1,0 +1,9 @@
+com.castinfo.devops.robotest
+com.castinfo.devops.robotest.annot
+com.castinfo.devops.robotest.config
+com.castinfo.devops.robotest.docker
+com.castinfo.devops.robotest.junit
+com.castinfo.devops.robotest.report
+com.castinfo.devops.robotest.restassured
+com.castinfo.devops.robotest.selenium
+com.castinfo.devops.robotest.testng

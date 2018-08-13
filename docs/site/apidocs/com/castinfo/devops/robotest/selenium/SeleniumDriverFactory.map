@@ -1,0 +1,18 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../config/RobotestBrowserConfig.html" title="com.castinfo.devops.robotest.config.RobotestBrowserConfig" alt="" coords="15,986,166,1273"/>
+<area shape="rect" id="node1" href="../config/RobotestBrowserConfig.html" title="&lt;TABLE&gt;" alt="" coords="5,981,177,1278"/>
+<area shape="rect" id="node2_1" href="../config/RobotestBasicConfig.html" title="com.castinfo.devops.robotest.config.RobotestBasicConfig" alt="" coords="259,419,432,706"/>
+<area shape="rect" id="node2" href="../config/RobotestBasicConfig.html" title="&lt;TABLE&gt;" alt="" coords="248,414,443,711"/>
+<area shape="rect" id="node3_2" href="../config/DockerConfig.html" title="com.castinfo.devops.robotest.config.DockerConfig" alt="" coords="212,795,404,1463"/>
+<area shape="rect" id="node3" href="../config/DockerConfig.html" title="&lt;TABLE&gt;" alt="" coords="201,790,415,1469"/>
+<area shape="rect" id="node4_3" href="../config/BrowserStackConfig.html" title="com.castinfo.devops.robotest.config.BrowserStackConfig" alt="" coords="449,1015,585,1243"/>
+<area shape="rect" id="node4" href="../config/BrowserStackConfig.html" title="&lt;TABLE&gt;" alt="" coords="439,1010,596,1249"/>
+<area shape="rect" id="node5_4" href="./SeleniumDriverFactory.html" title="com.castinfo.devops.robotest.selenium.SeleniumDriverFactory" alt="" coords="415,11,675,330"/>
+<area shape="rect" id="node5" href="./SeleniumDriverFactory.html" title="&lt;TABLE&gt;" alt="" coords="405,6,686,335"/>
+<area shape="rect" id="node11_5" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openqa/selenium/remote/DesiredCapabilities.html" title="org.openqa.selenium.remote.DesiredCapabilities" alt="" coords="528,390,696,735"/>
+<area shape="rect" id="node11" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openqa/selenium/remote/DesiredCapabilities.html" title="&lt;TABLE&gt;" alt="" coords="517,385,707,741"/>
+<area shape="rect" id="node13_6" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openqa/selenium/WebDriver.html" title="org.openqa.selenium.WebDriver" alt="" coords="742,427,885,699"/>
+<area shape="rect" id="node13" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openqa/selenium/WebDriver.html" title="&lt;TABLE&gt;" alt="" coords="731,421,895,704"/>
+<area shape="rect" id="node16_7" href="http://java.sun.com/j2se/1.4.2/docs/api/org/apache/commons/lang3/tuple/Pair.html" title="org.apache.commons.lang3.tuple.Pair" alt="" coords="931,456,1059,669"/>
+<area shape="rect" id="node16" href="http://java.sun.com/j2se/1.4.2/docs/api/org/apache/commons/lang3/tuple/Pair.html" title="&lt;TABLE&gt;" alt="" coords="920,451,1069,675"/>
+</map>

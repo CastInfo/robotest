@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RestAssuredWrapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.cast-info.devops:robotest-core</a> &gt; <a href="index.source.html" class="el_package">com.castinfo.devops.robotest.restassured</a> &gt; <span class="el_source">RestAssuredWrapper.java</span></div><h1>RestAssuredWrapper.java</h1><pre class="source lang-java linenums">/********************************************************************************
+ * ROBOTEST
+ * Copyright (C) 2018 CAST-INFO, S.A. www.cast-info.es
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *******************************************************************************/
+package com.castinfo.devops.robotest.restassured;
+
+import static io.restassured.RestAssured.given;
+import static io.restassured.authentication.FormAuthConfig.formAuthConfig;
+import static io.restassured.authentication.FormAuthConfig.springSecurity;
+import static io.restassured.config.HttpClientConfig.httpClientConfig;
+
+import java.util.Map;
+
+import org.apache.http.HttpStatus;
+
+import com.castinfo.devops.robotest.RobotestException;
+import com.castinfo.devops.robotest.config.RobotestHttpConnConfig;
+
+import io.restassured.RestAssured;
+import io.restassured.authentication.FormAuthConfig;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.builder.ResponseSpecBuilder;
+import io.restassured.config.HttpClientConfig;
+import io.restassured.config.RestAssuredConfig;
+import io.restassured.http.ContentType;
+import io.restassured.http.Cookies;
+import io.restassured.http.Method;
+import io.restassured.response.Response;
+import io.restassured.specification.ProxySpecification;
+import io.restassured.specification.RequestSpecification;
+
+/**
+ *
+ * RestAssured utility wrapper.
+ *
+ * Creates a object with RequestSpecBuilder and ResponseSpecBuilder RestAssured objects to take profit from his fluent
+ * API to do REST API Calls.
+ *
+ * Feel free to use, extend, improve or implement your own utilities.
+ *
+ * See com.castinfo.devops.robotest.restassured.RestTest for basic use example.
+ *
+ */
+public class RestAssuredWrapper {
+
+    private RequestSpecBuilder requestSpecBuilder;
+    private ResponseSpecBuilder responseSpecBuilder;
+    private RequestSpecification requestSpec;
+    private RestAssuredConfig clientConfig;
+<span class="fc" id="L63">    private Response response = null;</span>
+
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L68">    public RestAssuredWrapper() {</span>
+<span class="fc" id="L69">        requestSpecBuilder = new RequestSpecBuilder();</span>
+<span class="fc" id="L70">        responseSpecBuilder = new ResponseSpecBuilder();</span>
+<span class="fc" id="L71">        requestSpec = null;</span>
+<span class="fc" id="L72">        clientConfig = RestAssured.config;</span>
+<span class="fc" id="L73">    }</span>
+
+    /**
+     * Constructor with HttpConn settings.
+     *
+     * @param httpConfig
+     *            ROBOTEST config for http settings
+     */
+<span class="fc" id="L81">    public RestAssuredWrapper(final RobotestHttpConnConfig httpConfig) {</span>
+<span class="fc" id="L82">        requestSpecBuilder = new RequestSpecBuilder();</span>
+<span class="fc" id="L83">        responseSpecBuilder = new ResponseSpecBuilder();</span>
+<span class="fc" id="L84">        requestSpec = null;</span>
+        HttpClientConfig httpClientConfig =
+<span class="fc" id="L86">                httpClientConfig().httpClientFactory(new RestAssuredHttpClientConfig(httpConfig));</span>
+<span class="fc" id="L87">        clientConfig = new RestAssuredConfig().httpClient(httpClientConfig);</span>
+<span class="fc" id="L88">    }</span>
+
+    /**
+     * Getter method for request.
+     *
+     * @return the request
+     */
+    public RequestSpecBuilder getRequestSpecBuilder() {
+<span class="nc" id="L96">        return requestSpecBuilder;</span>
+    }
+
+    /**
+     * Getter method for response.
+     *
+     * @return the response
+     */
+    public ResponseSpecBuilder getResponseSpecBuilder() {
+<span class="fc" id="L105">        return responseSpecBuilder;</span>
+    }
+
+    /**
+     * Add headers.
+     *
+     * @param headers
+     *            map of headers
+     * @return The same object for fluent api.
+     */
+    public RestAssuredWrapper withHeaders(final Map&lt;String, String&gt; headers) {
+<span class="nc" id="L116">        requestSpecBuilder.addHeaders(headers);</span>
+<span class="nc" id="L117">        return this;</span>
+    }
+
+    /**
+     * Add cookies.
+     *
+     * @param cookies
+     *            map of params
+     * @return The same object for fluent api.
+     */
+    public RestAssuredWrapper withCookies(final Cookies cookies) {
+<span class="nc" id="L128">        requestSpecBuilder.addCookies(cookies);</span>
+<span class="nc" id="L129">        return this;</span>
+    }
+
+    /**
+     * Add path params.
+     *
+     * @param pathParams
+     *            map of params
+     * @return The same object for fluent api.
+     */
+    public RestAssuredWrapper withPathParams(final Map&lt;String, ?&gt; pathParams) {
+<span class="nc" id="L140">        requestSpecBuilder.addPathParams(pathParams);</span>
+<span class="nc" id="L141">        return this;</span>
+    }
+
+    /**
+     * Add qry params.
+     *
+     * @param queryParams
+     *            map of params
+     * @return The same object for fluent api.
+     */
+    public RestAssuredWrapper withQueryParams(final Map&lt;String, ?&gt; queryParams) {
+<span class="fc" id="L152">        requestSpecBuilder.addQueryParams(queryParams);</span>
+<span class="fc" id="L153">        return this;</span>
+    }
+
+    /**
+     * Add body params.
+     *
+     * @param bodyParams
+     *            map of params
+     * @return The same object for fluent api.
+     */
+    public RestAssuredWrapper withBodyParams(final Map&lt;String, ?&gt; bodyParams) {
+<span class="nc" id="L164">        requestSpecBuilder.addParams(bodyParams);</span>
+<span class="nc" id="L165">        return this;</span>
+    }
+
+    /**
+     * Add form params.
+     *
+     * @param formParams
+     *            map of params
+     * @return The same object for fluent api.
+     */
+    public RestAssuredWrapper withFormParams(final Map&lt;String, ?&gt; formParams) {
+<span class="nc" id="L176">        requestSpecBuilder.addFormParams(formParams);</span>
+<span class="nc" id="L177">        return this;</span>
+    }
+
+    /**
+     * Add proxy to rest connect.
+     *
+     * @param proxySpecification
+     *            Proxy conf
+     * @return The same object for fluent api.
+     */
+    public RestAssuredWrapper withProxy(final ProxySpecification proxySpecification) {
+<span class="nc" id="L188">        loadGivenSpecWhen().proxy(proxySpecification);</span>
+<span class="nc" id="L189">        return this;</span>
+    }
+
+    /**
+     * Add content type to the request spec.
+     *
+     * @param contentType
+     *            use {@link ContentType}
+     * @return The same object for fluent api.
+     */
+    public RestAssuredWrapper withContentType(final ContentType contentType) {
+<span class="fc" id="L200">        loadGivenSpecWhen().contentType(contentType);</span>
+<span class="fc" id="L201">        return this;</span>
+    }
+
+    /**
+     * Digest auth.
+     *
+     * @param username
+     *            user
+     * @param password
+     *            psw
+     * @return The same object for fluent api.
+     */
+    public RestAssuredWrapper withDigest(final String username,
+                                         final String password) {
+<span class="nc" id="L215">        loadGivenSpecWhen().auth()</span>
+<span class="nc" id="L216">                           .digest(username,</span>
+                                   password);
+<span class="nc" id="L218">        return this;</span>
+    }
+
+    /**
+     * Basic preemtive basic auth.
+     *
+     * @param username
+     *            user
+     * @param password
+     *            psw
+     * @return The same object for fluent api.
+     */
+    public RestAssuredWrapper withBasicPreemptive(final String username,
+                                                  final String password) {
+<span class="nc" id="L232">        loadGivenSpecWhen().auth()</span>
+<span class="nc" id="L233">                           .preemptive()</span>
+<span class="nc" id="L234">                           .basic(username,</span>
+                                  password);
+<span class="nc" id="L236">        return this;</span>
+    }
+
+    /**
+     * Basic auth.
+     *
+     * @param username
+     *            user
+     * @param password
+     *            psw
+     * @return The same object for fluent api.
+     */
+    public RestAssuredWrapper withChallengedBasic(final String username,
+                                                  final String password) {
+<span class="nc" id="L250">        loadGivenSpecWhen().auth()</span>
+<span class="nc" id="L251">                           .basic(username,</span>
+                                  password);
+<span class="nc" id="L253">        return this;</span>
+    }
+
+    /**
+     * Utility to minimize code for add additional form field.
+     *
+     * @param formConfig
+     *            form
+     * @param additionalFields
+     *            add fields
+     */
+    private void formAdditionalFieldNames(final FormAuthConfig formConfig,
+                                          final Map&lt;String, ?&gt; additionalFields) {
+<span class="nc bnc" id="L266" title="All 4 branches missed.">        if (null != additionalFields &amp;&amp; !additionalFields.isEmpty()) {</span>
+<span class="nc bnc" id="L267" title="All 2 branches missed.">            for (String fieldName : additionalFields.keySet()) {</span>
+<span class="nc" id="L268">                formConfig.withAdditionalField(fieldName);</span>
+<span class="nc" id="L269">            }</span>
+        }
+<span class="nc" id="L271">    }</span>
+
+    /**
+     * Form auth prepare call helper.
+     *
+     * @param authFormUrl
+     *            formurl
+     * @param formName
+     *            form name
+     * @param usernameInputName
+     *            user input name
+     * @param passwordInputName
+     *            secret input name
+     * @param username
+     *            user
+     * @param password
+     *            secret
+     * @param additionalFields
+     *            additional fields
+     *
+     *
+     * @return The same object for fluent api.
+     */
+    public RestAssuredWrapper withFormAuth(final String authFormUrl,
+                                           final String formName,
+                                           final String usernameInputName,
+                                           final String passwordInputName,
+                                           final String username,
+                                           final String password,
+                                           final Map&lt;String, ?&gt; additionalFields) {
+<span class="nc" id="L301">        FormAuthConfig formConfig = new FormAuthConfig(formName,</span>
+                                                       usernameInputName,
+                                                       passwordInputName);
+<span class="nc" id="L304">        formAdditionalFieldNames(formConfig,</span>
+                                 additionalFields);
+<span class="nc" id="L306">        given().auth()</span>
+<span class="nc" id="L307">               .form(username,</span>
+                     password,
+                     formConfig)
+<span class="nc" id="L310">               .when()</span>
+<span class="nc" id="L311">               .get(authFormUrl)</span>
+<span class="nc" id="L312">               .then()</span>
+<span class="nc" id="L313">               .statusCode(HttpStatus.SC_OK);</span>
+<span class="nc" id="L314">        loadGivenSpecWhen();</span>
+<span class="nc" id="L315">        return this;</span>
+    }
+
+    /**
+     * CSRF prepare call helper for spring security form.
+     *
+     * @param authFormUrl
+     *            formurl
+     * @param username
+     *            user
+     * @param password
+     *            secret
+     * @param additionalFields
+     *            additional fields
+     *
+     *
+     * @return The same object for fluent api.
+     */
+    public RestAssuredWrapper withFormSpringSecurityAuth(final String authFormUrl,
+                                                         final String username,
+                                                         final String password,
+                                                         final Map&lt;String, ?&gt; additionalFields) {
+<span class="nc" id="L337">        FormAuthConfig formConfig = FormAuthConfig.springSecurity();</span>
+<span class="nc" id="L338">        formAdditionalFieldNames(formConfig,</span>
+                                 additionalFields);
+<span class="nc" id="L340">        given().auth()</span>
+<span class="nc" id="L341">               .form(username,</span>
+                     password,
+                     formConfig)
+<span class="nc" id="L344">               .formParams(additionalFields)</span>
+<span class="nc" id="L345">               .when()</span>
+<span class="nc" id="L346">               .get(authFormUrl)</span>
+<span class="nc" id="L347">               .then()</span>
+<span class="nc" id="L348">               .statusCode(HttpStatus.SC_OK);</span>
+<span class="nc" id="L349">        loadGivenSpecWhen();</span>
+<span class="nc" id="L350">        return this;</span>
+    }
+
+    /**
+     * CSRF prepare call helper.
+     *
+     * @param authFormUrl
+     *            formurl
+     * @param username
+     *            user
+     * @param password
+     *            secret
+     * @param additionalFields
+     *            additional fields
+     *
+     *
+     * @return The same object for fluent api.
+     */
+    public RestAssuredWrapper withFormCSRF(final String authFormUrl,
+                                           final String username,
+                                           final String password,
+                                           final Map&lt;String, ?&gt; additionalFields) {
+<span class="nc" id="L372">        FormAuthConfig formConfig = formAuthConfig().withAutoDetectionOfCsrf();</span>
+<span class="nc" id="L373">        formAdditionalFieldNames(formConfig,</span>
+                                 additionalFields);
+<span class="nc" id="L375">        given().auth()</span>
+<span class="nc" id="L376">               .form(username,</span>
+                     password,
+                     formConfig)
+<span class="nc" id="L379">               .formParams(additionalFields)</span>
+<span class="nc" id="L380">               .when()</span>
+<span class="nc" id="L381">               .get(authFormUrl)</span>
+<span class="nc" id="L382">               .then()</span>
+<span class="nc" id="L383">               .statusCode(HttpStatus.SC_OK);</span>
+<span class="nc" id="L384">        loadGivenSpecWhen();</span>
+<span class="nc" id="L385">        return this;</span>
+    }
+
+    /**
+     * CSRF prepare call helper with provided field name.
+     *
+     * @param authFormUrl
+     *            formurl
+     * @param username
+     *            user
+     * @param password
+     *            secret
+     * @param csrfFieldName
+     *            csrf field name
+     * @param csrfFieldAsHeader
+     *            send as header if true
+     * @param additionalFields
+     *            additional fields
+     *
+     *
+     * @return The same object for fluent api.
+     */
+    public RestAssuredWrapper withFormCSRFWithProvidedFieldName(final String authFormUrl,
+                                                                final String username,
+                                                                final String password,
+                                                                final String csrfFieldName,
+                                                                final boolean csrfFieldAsHeader,
+                                                                final Map&lt;String, ?&gt; additionalFields) {
+<span class="nc" id="L413">        FormAuthConfig formConfig = springSecurity().withCsrfFieldName(csrfFieldName);</span>
+<span class="nc bnc" id="L414" title="All 2 branches missed.">        if (csrfFieldAsHeader) {</span>
+<span class="nc" id="L415">            formConfig = formConfig.sendCsrfTokenAsHeader();</span>
+        }
+<span class="nc" id="L417">        given().auth()</span>
+<span class="nc" id="L418">               .form(username,</span>
+                     password,
+                     formConfig)
+<span class="nc" id="L421">               .formParams(additionalFields)</span>
+<span class="nc" id="L422">               .when()</span>
+<span class="nc" id="L423">               .get(authFormUrl)</span>
+<span class="nc" id="L424">               .then()</span>
+<span class="nc" id="L425">               .statusCode(HttpStatus.SC_OK);</span>
+<span class="nc" id="L426">        loadGivenSpecWhen();</span>
+<span class="nc" id="L427">        return this;</span>
+    }
+
+    /**
+     * OAUth1 prepare call helper.
+     *
+     * @param consumerKey
+     *            consumer key
+     * @param consumerSecret
+     *            secret key
+     *
+     * @param accessToken
+     *            access token.
+     * @param secretToken
+     *            secret token
+     *
+     * @return The same object for fluent api.
+     */
+    public RestAssuredWrapper withOAuth(final String consumerKey,
+                                        final String consumerSecret,
+                                        final String accessToken,
+                                        final String secretToken) {
+<span class="nc" id="L449">        loadGivenSpecWhen().auth()</span>
+<span class="nc" id="L450">                           .oauth(consumerKey,</span>
+                                  consumerSecret,
+                                  accessToken,
+                                  secretToken);
+<span class="nc" id="L454">        return this;</span>
+    }
+
+    /**
+     * OAUth2 prepare call helper.
+     *
+     * @param accessToken
+     *            access token.
+     *
+     * @return The same object for fluent api.
+     */
+    public RestAssuredWrapper withOAuth2(final String accessToken) {
+<span class="nc" id="L466">        loadGivenSpecWhen().auth()</span>
+<span class="nc" id="L467">                           .oauth2(accessToken);</span>
+<span class="nc" id="L468">        return this;</span>
+    }
+
+    /**
+     * Utility method to create Rq spec.
+     *
+     * @return Rspec {@link RequestSpecification}
+     */
+    private RequestSpecification loadGivenSpecWhen() {
+<span class="fc bfc" id="L477" title="All 2 branches covered.">        if (null == requestSpec) {</span>
+<span class="fc" id="L478">            requestSpec = given().config(clientConfig)</span>
+<span class="fc" id="L479">                                 .spec(requestSpecBuilder.build())</span>
+<span class="fc" id="L480">                                 .when();</span>
+        }
+<span class="fc" id="L482">        return requestSpec;</span>
+    }
+
+    /**
+     * Do the Call with the spec request, url and method.
+     *
+     * Be aware that wrapper can't execute N times this call, but you must control response specs reuse.
+     *
+     * @param url
+     *            By default only relative path to http://localhost:80 you can specify you wan't.
+     * @param httpMethod
+     *            The RestAssured supported {@link Method}
+     * @return The Response Object.
+     */
+    public Response when(final String url,
+                         final Method httpMethod) {
+<span class="fc" id="L498">        loadGivenSpecWhen();</span>
+<span class="pc bpc" id="L499" title="1 of 2 branches missed.">        if (Method.GET.equals(httpMethod)) {</span>
+<span class="fc" id="L500">            response = requestSpec.get(url);</span>
+<span class="nc bnc" id="L501" title="All 2 branches missed.">        } else if (Method.POST.equals(httpMethod)) {</span>
+<span class="nc" id="L502">            response = requestSpec.post(url);</span>
+<span class="nc bnc" id="L503" title="All 2 branches missed.">        } else if (Method.PUT.equals(httpMethod)) {</span>
+<span class="nc" id="L504">            response = requestSpec.put(url);</span>
+<span class="nc bnc" id="L505" title="All 2 branches missed.">        } else if (Method.DELETE.equals(httpMethod)) {</span>
+<span class="nc" id="L506">            response = requestSpec.delete(url);</span>
+<span class="nc bnc" id="L507" title="All 2 branches missed.">        } else if (Method.PATCH.equals(httpMethod)) {</span>
+<span class="nc" id="L508">            response = requestSpec.patch(url);</span>
+<span class="nc bnc" id="L509" title="All 2 branches missed.">        } else if (Method.OPTIONS.equals(httpMethod)) {</span>
+<span class="nc" id="L510">            response = requestSpec.options(url);</span>
+        } else {
+<span class="nc" id="L512">            response = requestSpec.head(url);</span>
+        }
+<span class="fc" id="L514">        response.then()</span>
+<span class="fc" id="L515">                .spec(responseSpecBuilder.build());</span>
+<span class="fc" id="L516">        requestSpec = null;</span>
+<span class="fc" id="L517">        return response;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

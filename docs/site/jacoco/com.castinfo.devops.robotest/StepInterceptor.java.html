@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StepInterceptor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.cast-info.devops:robotest-core</a> &gt; <a href="index.source.html" class="el_package">com.castinfo.devops.robotest</a> &gt; <span class="el_source">StepInterceptor.java</span></div><h1>StepInterceptor.java</h1><pre class="source lang-java linenums">/********************************************************************************
+ * ROBOTEST
+ * Copyright (C) 2018 CAST-INFO, S.A. www.cast-info.es
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *******************************************************************************/
+package com.castinfo.devops.robotest;
+
+import java.io.File;
+import java.lang.reflect.Method;
+import java.util.List;
+
+import com.castinfo.devops.robotest.annot.RobotestStep;
+import com.castinfo.devops.robotest.report.ValidationEntry;
+
+import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
+
+/**
+ * This class implement interceptor of PageObject/PageObject to provide proxy for automate reporting purposes.
+ *
+ */
+<span class="fc" id="L34">public class StepInterceptor implements MethodInterceptor {</span>
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see net.sf.cglib.proxy.MethodInterceptor#intercept(java.lang.Object, java.lang.reflect.Method,
+     * java.lang.Object[], net.sf.cglib.proxy.MethodProxy)
+     */
+    @Override
+    public Object intercept(final Object obj,
+                            final Method method,
+                            final Object[] args,
+                            final MethodProxy proxy) throws Throwable {
+<span class="fc" id="L47">        Object resultado = null;</span>
+<span class="fc" id="L48">        Throwable errorTest = null;</span>
+<span class="fc" id="L49">        StepStatus resultadoStatusStep = StepStatus.INFO;</span>
+<span class="fc" id="L50">        PageObject pageFragment = (PageObject) obj;</span>
+<span class="fc" id="L51">        RobotestStep stepAnnot = method.getAnnotation(RobotestStep.class);</span>
+<span class="fc" id="L52">        SuiteContext sCtx = atStartAnnotationActions(pageFragment,</span>
+                                                     stepAnnot);
+        try {
+<span class="fc" id="L55">            resultado = proxy.invokeSuper(obj,</span>
+                                          args);
+<span class="nc" id="L57">        } catch (Exception | AssertionError e) {</span>
+<span class="nc" id="L58">            errorTest = e;</span>
+<span class="fc" id="L59">        }</span>
+<span class="pc bpc" id="L60" title="3 of 4 branches missed.">        if (null != stepAnnot &amp;&amp; null != sCtx) {</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">            if (null != errorTest) {</span>
+<span class="nc" id="L62">                resultadoStatusStep = StepStatus.ERROR;</span>
+<span class="nc" id="L63">                sCtx.addAdditionalStepEntry(pageFragment,</span>
+<span class="nc" id="L64">                                            new ValidationEntry(resultadoStatusStep).withException(errorTest));</span>
+            }
+<span class="nc" id="L66">            atEndAnnotationActions(pageFragment,</span>
+                                   sCtx,
+                                   stepAnnot,
+                                   resultadoStatusStep);
+<span class="nc" id="L70">            sCtx.endStep(pageFragment,</span>
+                         resultadoStatusStep,
+<span class="nc" id="L72">                         System.currentTimeMillis());</span>
+        } else {
+<span class="pc bpc" id="L74" title="1 of 2 branches missed.">            if (null != errorTest) {</span>
+<span class="nc" id="L75">                RobotestExecutionContext.getSuite(pageFragment.getSuiteAnnot())</span>
+<span class="nc" id="L76">                                        .putCaseError(pageFragment.getCaseAnnot(),</span>
+<span class="nc" id="L77">                                                      ValidationEntry.buildCritical()</span>
+<span class="nc" id="L78">                                                                     .withException(errorTest));</span>
+            }
+        }
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">        if (null != errorTest) {</span>
+<span class="nc" id="L82">            throw errorTest;</span>
+        }
+<span class="fc" id="L84">        return resultado;</span>
+    }
+
+    /**
+     * Do start annotation actions.
+     *
+     * @param pageFragment
+     *            page Object
+     * @param stepAnnot
+     *            step annot.
+     * @return SuiteContext of execution.
+     * @throws RobotestException
+     */
+    private SuiteContext atStartAnnotationActions(final PageObject pageFragment,
+                                                  final RobotestStep stepAnnot) throws RobotestException {
+<span class="fc" id="L99">        SuiteContext sCtx = null;</span>
+<span class="pc bpc" id="L100" title="1 of 2 branches missed.">        if (null != stepAnnot) {</span>
+<span class="nc" id="L101">            pageFragment.setStepAnnot(stepAnnot);</span>
+<span class="nc" id="L102">            sCtx = RobotestExecutionContext.getSuite(pageFragment.getSuiteAnnot());</span>
+<span class="nc" id="L103">            sCtx.initStep(pageFragment,</span>
+<span class="nc" id="L104">                          System.currentTimeMillis());</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">            if (stepAnnot.captureScreenShootAtStartStep()) {</span>
+                try {
+<span class="nc" id="L107">                    File screnShoot = pageFragment.takeScreenShoot(stepAnnot.tag());</span>
+<span class="nc" id="L108">                    sCtx.addAdditionalStepEntry(pageFragment,</span>
+<span class="nc" id="L109">                                                ValidationEntry.buildInfo()</span>
+<span class="nc" id="L110">                                                               .withCapture(screnShoot));</span>
+<span class="nc" id="L111">                } catch (RobotestException e) {</span>
+<span class="nc" id="L112">                    ValidationEntry err = ValidationEntry.buildCritical();</span>
+<span class="nc" id="L113">                    err.withException(new RobotestException(&quot;IS NOT POSIBLE TO CAPTURE IMAGE SCRENSHOOT&quot;,</span>
+                                                            e));
+<span class="nc" id="L115">                    sCtx.addAdditionalStepEntry(pageFragment,</span>
+                                                err);
+<span class="nc" id="L117">                }</span>
+            }
+        }
+<span class="fc" id="L120">        return sCtx;</span>
+    }
+
+    /**
+     * Do pagefragment at end step annotaded jobs: capture screenshots, pagesource and browser CONSOLE logs.
+     *
+     * @param pageFragment
+     *            page fragment
+     * @param sCtx
+     *            suite context
+     * @param stepAnnot
+     *            step annotation
+     * @param resultadoStatusStep
+     *            step results
+     * @throws RobotestException
+     *             errors in reporting actions.
+     */
+    private void atEndAnnotationActions(final PageObject pageFragment,
+                                        final SuiteContext sCtx,
+                                        final RobotestStep stepAnnot,
+                                        final StepStatus resultadoStatusStep) throws RobotestException {
+<span class="nc bnc" id="L141" title="All 2 branches missed.">        if (stepAnnot.capturePageSourceAtEndStep()) {</span>
+            try {
+<span class="nc" id="L143">                File pageSrc = pageFragment.takePageSource(stepAnnot.tag());</span>
+<span class="nc" id="L144">                sCtx.addAdditionalStepEntry(pageFragment,</span>
+<span class="nc" id="L145">                                            new ValidationEntry(resultadoStatusStep).withHtmlSource(pageSrc));</span>
+<span class="nc" id="L146">            } catch (RobotestException e) {</span>
+<span class="nc" id="L147">                ValidationEntry err = ValidationEntry.buildCritical();</span>
+<span class="nc" id="L148">                err.withException(new RobotestException(&quot;IS NOT POSIBLE TO CAPTURE PAGE SOURCE&quot;,</span>
+                                                        e));
+<span class="nc" id="L150">                sCtx.addAdditionalStepEntry(pageFragment,</span>
+                                            err);
+<span class="nc" id="L152">            }</span>
+        }
+<span class="nc bnc" id="L154" title="All 2 branches missed.">        if (stepAnnot.captureScreenShootAtEndStep()) {</span>
+            try {
+<span class="nc" id="L156">                File screnShoot = pageFragment.takeScreenShoot(stepAnnot.tag());</span>
+<span class="nc" id="L157">                sCtx.addAdditionalStepEntry(pageFragment,</span>
+<span class="nc" id="L158">                                            new ValidationEntry(resultadoStatusStep).withCapture(screnShoot));</span>
+<span class="nc" id="L159">            } catch (RobotestException e) {</span>
+<span class="nc" id="L160">                ValidationEntry err = ValidationEntry.buildCritical();</span>
+<span class="nc" id="L161">                err.withException(new RobotestException(&quot;IS NOT POSIBLE TO CAPTURE IMAGE SCRENSHOOT&quot;,</span>
+                                                        e));
+<span class="nc" id="L163">                sCtx.addAdditionalStepEntry(pageFragment,</span>
+                                            err);
+<span class="nc" id="L165">            }</span>
+        }
+<span class="nc bnc" id="L167" title="All 2 branches missed.">        if (stepAnnot.captureConsoleErrorLogsAtEndStep()) {</span>
+            try {
+<span class="nc" id="L169">                List&lt;ValidationEntry&gt; logs = pageFragment.takeBrowserConsoleLogs();</span>
+<span class="nc bnc" id="L170" title="All 2 branches missed.">                for (ValidationEntry log : logs) {</span>
+<span class="nc" id="L171">                    sCtx.addAdditionalStepEntry(pageFragment,</span>
+                                                log);
+<span class="nc" id="L173">                }</span>
+<span class="nc" id="L174">            } catch (RobotestException e) {</span>
+<span class="nc" id="L175">                ValidationEntry err = ValidationEntry.buildCritical();</span>
+<span class="nc" id="L176">                err.withException(new RobotestException(&quot;IS NOT POSIBLE TO RETRIVE BROWSER CONSOLE LOGS&quot;,</span>
+                                                        e));
+<span class="nc" id="L178">                sCtx.addAdditionalStepEntry(pageFragment,</span>
+                                            err);
+<span class="nc" id="L180">            }</span>
+        }
+<span class="nc" id="L182">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

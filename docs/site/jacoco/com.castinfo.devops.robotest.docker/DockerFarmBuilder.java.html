@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DockerFarmBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.cast-info.devops:robotest-core</a> &gt; <a href="index.source.html" class="el_package">com.castinfo.devops.robotest.docker</a> &gt; <span class="el_source">DockerFarmBuilder.java</span></div><h1>DockerFarmBuilder.java</h1><pre class="source lang-java linenums">/********************************************************************************
+ * ROBOTEST
+ * Copyright (C) 2018 CAST-INFO, S.A. www.cast-info.es
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *******************************************************************************/
+package com.castinfo.devops.robotest.docker;
+
+import java.io.IOException;
+import java.net.URI;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.castinfo.devops.robotest.RobotestException;
+import com.castinfo.devops.robotest.config.DockerConfig;
+import com.castinfo.devops.robotest.selenium.SeleniumBrowser;
+import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.command.CreateContainerCmd;
+import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.command.InspectContainerResponse;
+import com.github.dockerjava.api.model.Bind;
+import com.github.dockerjava.api.model.ExposedPort;
+import com.github.dockerjava.api.model.Volume;
+import com.github.dockerjava.core.DefaultDockerClientConfig;
+import com.github.dockerjava.core.DefaultDockerClientConfig.Builder;
+import com.github.dockerjava.core.DockerClientBuilder;
+
+/**
+ * This class build and run Selenium Docker Images in a Docker machine.
+ *
+ * @author md.ruiz
+ *
+ */
+public class DockerFarmBuilder {
+
+    private static final String BRIDGE_NETWORK_METHOD = &quot;bridge&quot;;
+    private static final String ROBOTEST_CONTAINER_PREFIX = &quot;robotest_&quot;;
+<span class="fc" id="L55">    private static final Logger LOG = LoggerFactory.getLogger(DockerFarmBuilder.class);</span>
+    private static final int ONE_SECOND_IN_MILLIS = 1000;
+    private static final String SEL_SERVER_END = &quot;Selenium Server is up and running&quot;;
+
+<span class="fc" id="L59">    private static Map&lt;String, Boolean&gt; pullableDockerImagesStatus = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L60">    private static Object pullingBlocker = new Object();</span>
+
+<span class="fc" id="L62">    private DockerClient docker = null;</span>
+<span class="fc" id="L63">    private DockerConfig dockerBaseCfg = null;</span>
+<span class="fc" id="L64">    private AtomicInteger dockerInstancesNumber = new AtomicInteger(0);</span>
+
+    /**
+     * Constructor.
+     *
+     * @param dockerBaseCfg
+     *            docker Base Cfg
+     *
+     */
+<span class="fc" id="L73">    public DockerFarmBuilder(final DockerConfig dockerBaseCfg) {</span>
+<span class="fc" id="L74">        setDockerBaseCfg(dockerBaseCfg);</span>
+<span class="fc" id="L75">        if (DockerFarmBuilder.getPullableDockerImagesStatus()</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">                             .isEmpty()) {</span>
+<span class="fc" id="L77">            DockerFarmBuilder.getPullableDockerImagesStatus()</span>
+<span class="fc" id="L78">                             .put(this.dockerBaseCfg.getChromeImageTag(),</span>
+                                  Boolean.FALSE);
+<span class="fc" id="L80">            DockerFarmBuilder.getPullableDockerImagesStatus()</span>
+<span class="fc" id="L81">                             .put(this.dockerBaseCfg.getChromeDebugImageTag(),</span>
+                                  Boolean.FALSE);
+<span class="fc" id="L83">            DockerFarmBuilder.getPullableDockerImagesStatus()</span>
+<span class="fc" id="L84">                             .put(this.dockerBaseCfg.getFirefoxImageTag(),</span>
+                                  Boolean.FALSE);
+<span class="fc" id="L86">            DockerFarmBuilder.getPullableDockerImagesStatus()</span>
+<span class="fc" id="L87">                             .put(this.dockerBaseCfg.getFirefoxDebugImageTag(),</span>
+                                  Boolean.FALSE);
+        }
+<span class="fc" id="L90">    }</span>
+
+    /**
+     * Getter method for dockerBaseCfg.
+     *
+     * @return the dockerBaseCfg
+     */
+    public DockerConfig getDockerBaseCfg() {
+<span class="nc" id="L98">        return dockerBaseCfg;</span>
+    }
+
+    /**
+     * Setter method for the dockerBaseCfg.
+     *
+     * @param dockerBaseCfg
+     *            the dockerBaseCfg to set
+     */
+    public void setDockerBaseCfg(final DockerConfig dockerBaseCfg) {
+<span class="fc" id="L108">        this.dockerBaseCfg = dockerBaseCfg;</span>
+<span class="fc" id="L109">    }</span>
+
+    /**
+     * Getter method for docker.
+     *
+     * @return the docker
+     */
+    public DockerClient getDockerClient() {
+<span class="fc" id="L117">        return docker;</span>
+    }
+
+    /**
+     * Setter method for docker.
+     *
+     * @param dockerCli
+     *            client docker
+     *
+     */
+    public void setDockerClient(final DockerClient dockerCli) {
+<span class="fc" id="L128">        docker = dockerCli;</span>
+<span class="fc" id="L129">    }</span>
+
+    /**
+     * Mandatory to provide connetion to docker host.
+     *
+     * @throws RobotestException
+     *             if no connetion to docker provided
+     */
+    public void connectDockerClient() throws RobotestException {
+<span class="pc bpc" id="L138" title="1 of 2 branches missed.">        if (StringUtils.isEmpty(dockerBaseCfg.getHost())) {</span>
+<span class="fc" id="L139">            throw new RobotestException(&quot;DOCKER CONN IS REQUIRED, REVISE BASE CONFIG&quot;);</span>
+        }
+<span class="nc" id="L141">        Builder builder = DefaultDockerClientConfig.createDefaultConfigBuilder()</span>
+<span class="nc" id="L142">                                                   .withDockerHost(dockerBaseCfg.getHost());</span>
+<span class="nc bnc" id="L143" title="All 2 branches missed.">        if (StringUtils.isNotEmpty(dockerBaseCfg.getCertsPath())) {</span>
+<span class="nc" id="L144">            builder.withDockerTlsVerify(true)</span>
+<span class="nc" id="L145">                   .withDockerCertPath(dockerBaseCfg.getCertsPath());</span>
+        }
+<span class="nc bnc" id="L147" title="All 2 branches missed.">        if (StringUtils.isNotEmpty(dockerBaseCfg.getDockerRegistryUrl())) {</span>
+<span class="nc" id="L148">            builder.withRegistryUrl(dockerBaseCfg.getDockerRegistryUrl());</span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">            if (StringUtils.isNotEmpty(dockerBaseCfg.getDockerRegistryUser())) {</span>
+<span class="nc" id="L150">                builder.withRegistryUsername(dockerBaseCfg.getDockerRegistryUser());</span>
+            }
+<span class="nc bnc" id="L152" title="All 2 branches missed.">            if (StringUtils.isNotEmpty(dockerBaseCfg.getDockerRegistrySecret())) {</span>
+<span class="nc" id="L153">                builder.withRegistryPassword(dockerBaseCfg.getDockerRegistrySecret());</span>
+            }
+<span class="nc bnc" id="L155" title="All 2 branches missed.">            if (StringUtils.isNotEmpty(dockerBaseCfg.getDockerRegistryEmail())) {</span>
+<span class="nc" id="L156">                builder.withRegistryEmail(dockerBaseCfg.getDockerRegistryEmail());</span>
+            }
+        }
+<span class="nc" id="L159">        setDockerClient(DockerClientBuilder.getInstance(builder)</span>
+<span class="nc" id="L160">                                           .build());</span>
+<span class="nc" id="L161">        DockerFarmBuilder.LOG.info(&quot;DOCKER CLIENT RUNING: {}&quot;,</span>
+<span class="nc" id="L162">                                   getDockerClient().infoCmd()</span>
+<span class="nc" id="L163">                                                    .exec());</span>
+<span class="nc" id="L164">    }</span>
+
+    /**
+     * Getter method for pullableDockerImagesStatus.
+     *
+     * @return the pullableDockerImagesStatus
+     */
+    protected static Map&lt;String, Boolean&gt; getPullableDockerImagesStatus() {
+<span class="fc" id="L172">        return DockerFarmBuilder.pullableDockerImagesStatus;</span>
+    }
+
+    /**
+     * Create Selenium Docker node.
+     *
+     * @param browser
+     *            the browser type
+     *
+     * @return The Docker object.
+     * @throws RobotestException
+     *             errors in creation.
+     */
+    public DockerConfig createBrowser(final String browser) throws RobotestException {
+<span class="nc" id="L186">        DockerConfig dockerBrowser = new DockerConfig();</span>
+<span class="nc" id="L187">        generateContainerName(dockerBrowser);</span>
+        try {
+<span class="nc" id="L189">            resolveImageAndCreateBrowserContainer(browser,</span>
+                                                  dockerBrowser);
+<span class="nc" id="L191">            resolveBrowserHub(dockerBrowser);</span>
+<span class="nc" id="L192">        } catch (Exception e) {</span>
+            try {
+<span class="nc" id="L194">                stopNode(dockerBrowser.getContainerName());</span>
+<span class="nc" id="L195">            } catch (Exception e2) {</span>
+<span class="nc" id="L196">                LOG.error(&quot;ERROR STOPPING CONTAINER&quot;,</span>
+                          e2);
+<span class="nc" id="L198">            }</span>
+<span class="nc bnc" id="L199" title="All 2 branches missed.">            if (e instanceof RobotestException) {</span>
+<span class="nc" id="L200">                throw e;</span>
+            }
+<span class="nc" id="L202">            throw new RobotestException(&quot;UNEXEPTED ERROR CREATING CONTAINER&quot;,</span>
+                                        e);
+<span class="nc" id="L204">        }</span>
+<span class="nc" id="L205">        return dockerBrowser;</span>
+    }
+
+    /**
+     * Resolve Docker image tag and create de associated browser.
+     *
+     * @param browser
+     *            browser type FIREFOX or CHROME.
+     * @param dockerBrowser
+     *            config Docker instance created in Docker.
+     * @throws RobotestException
+     *             errors creating image browser container.
+     */
+    public void resolveImageAndCreateBrowserContainer(final String browser,
+                                                      final DockerConfig dockerBrowser) throws RobotestException {
+<span class="nc" id="L220">        dockerBrowser.setExposePort(&quot;4444&quot;);</span>
+<span class="nc bnc" id="L221" title="All 2 branches missed.">        if (null == dockerBaseCfg.getLabels() || dockerBaseCfg.getLabels()</span>
+<span class="nc bnc" id="L222" title="All 2 branches missed.">                                                              .isEmpty()) {</span>
+<span class="nc" id="L223">            dockerBrowser.setLabels(new HashMap&lt;&gt;());</span>
+        } else {
+<span class="nc" id="L225">            dockerBrowser.setLabels(dockerBaseCfg.getLabels());</span>
+        }
+<span class="nc bnc" id="L227" title="All 2 branches missed.">        if (StringUtils.isEmpty(dockerBaseCfg.getNetworkMode())) {</span>
+<span class="nc" id="L228">            dockerBrowser.setNetworkMode(BRIDGE_NETWORK_METHOD);</span>
+        } else {
+<span class="nc" id="L230">            dockerBrowser.setNetworkMode(dockerBaseCfg.getNetworkMode());</span>
+        }
+<span class="nc" id="L232">        if (SeleniumBrowser.CHROME.name()</span>
+<span class="nc bnc" id="L233" title="All 2 branches missed.">                                  .equalsIgnoreCase(browser)) {</span>
+<span class="nc bnc" id="L234" title="All 2 branches missed.">            if (&quot;true&quot;.equalsIgnoreCase(dockerBaseCfg.getExposeDebugPort())) {</span>
+<span class="nc" id="L235">                dockerBrowser.setExposeDebugPort(&quot;5900&quot;);</span>
+<span class="nc" id="L236">                dockerBrowser.setImage(dockerBaseCfg.getChromeDebugImageTag());</span>
+            } else {
+<span class="nc" id="L238">                dockerBrowser.setImage(dockerBaseCfg.getChromeImageTag());</span>
+            }
+<span class="nc" id="L240">        } else if (SeleniumBrowser.FIREFOX.name()</span>
+<span class="nc bnc" id="L241" title="All 2 branches missed.">                                          .equalsIgnoreCase(browser)) {</span>
+<span class="nc bnc" id="L242" title="All 2 branches missed.">            if (&quot;true&quot;.equalsIgnoreCase(dockerBaseCfg.getExposeDebugPort())) {</span>
+<span class="nc" id="L243">                dockerBrowser.setExposeDebugPort(&quot;5900&quot;);</span>
+<span class="nc" id="L244">                dockerBrowser.setImage(dockerBaseCfg.getFirefoxDebugImageTag());</span>
+            } else {
+<span class="nc" id="L246">                dockerBrowser.setImage(dockerBaseCfg.getFirefoxImageTag());</span>
+            }
+        } else {
+<span class="nc" id="L249">            throw new RobotestException(&quot;BROWSER DON'T HAVE DOCKER IMAGE TAG:&quot; + browser);</span>
+        }
+<span class="nc" id="L251">        pullImage(dockerBrowser.getImage());</span>
+<span class="nc" id="L252">        dockerBrowser.setIdContainer(createBrowserContainer(dockerBrowser));</span>
+
+<span class="nc" id="L254">    }</span>
+
+    /**
+     * Generate name of robotest with format: robotest_[ROBOTEST_DOCKER_CONTAINER_EXEC_TAG_]number
+     *
+     *
+     * @param dockerBrowser
+     *            browser config.
+     */
+    public void generateContainerName(final DockerConfig dockerBrowser) {
+<span class="nc" id="L264">        StringBuilder containerName = new StringBuilder(ROBOTEST_CONTAINER_PREFIX);</span>
+<span class="nc bnc" id="L265" title="All 2 branches missed.">        if (StringUtils.isNotEmpty(dockerBaseCfg.getContainerName())) {</span>
+<span class="nc" id="L266">            containerName.append(dockerBaseCfg.getContainerName());</span>
+<span class="nc" id="L267">            containerName.append(&quot;_&quot;);</span>
+        }
+<span class="nc" id="L269">        containerName.append(dockerInstancesNumber.incrementAndGet());</span>
+<span class="nc" id="L270">        dockerBrowser.setContainerName(containerName.toString());</span>
+<span class="nc" id="L271">    }</span>
+
+    /**
+     * Internal Docker image pull, build and run Selenium Image.
+     *
+     * @param dockerBrowser
+     *            config Docker instance created
+     * @return Container ID
+     * @throws RobotestException
+     */
+    @SuppressWarnings(&quot;resource&quot;) // when docker.socket can't be closed
+    private String createBrowserContainer(final DockerConfig dockerBrowser) throws RobotestException {
+<span class="nc" id="L283">        CreateContainerResponse containerResp = null;</span>
+        try {
+<span class="nc" id="L285">            CreateContainerCmd containerCmd = getDockerClient().createContainerCmd(dockerBrowser.getImage());</span>
+<span class="nc" id="L286">            DockerContainerCallback createCallback = new DockerContainerCallback(DockerFarmBuilder.SEL_SERVER_END);</span>
+<span class="nc" id="L287">            DockerFarmBuilder.LOG.info(&quot;DOCKER CREATE CONTAINER FROM: {}&quot;,</span>
+                                       dockerBrowser);
+<span class="nc" id="L289">            containerCmd.withName(dockerBrowser.getContainerName());</span>
+<span class="nc" id="L290">            containerCmd.withLabels(dockerBrowser.getLabels());</span>
+<span class="nc" id="L291">            containerCmd.withNetworkMode(dockerBrowser.getNetworkMode());</span>
+<span class="nc bnc" id="L292" title="All 2 branches missed.">            if (StringUtils.isNotEmpty(dockerBrowser.getExposeDebugPort())) {</span>
+<span class="nc" id="L293">                containerCmd.withExposedPorts(ExposedPort.tcp(Integer.parseInt(dockerBrowser.getExposeDebugPort())));</span>
+            }
+<span class="nc" id="L295">            containerCmd.withExposedPorts(ExposedPort.tcp(Integer.parseInt(dockerBrowser.getExposePort())));</span>
+<span class="nc" id="L296">            containerCmd.withPublishAllPorts(true);</span>
+<span class="nc" id="L297">            Volume sharedMemory = new Volume(&quot;/dev/shm&quot;);</span>
+<span class="nc" id="L298">            containerCmd.withVolumes(sharedMemory)</span>
+<span class="nc" id="L299">                        .withBinds(new Bind(&quot;/dev/shm&quot;,</span>
+                                            sharedMemory));
+<span class="nc" id="L301">            containerResp = containerCmd.exec();</span>
+<span class="nc" id="L302">            getDockerClient().startContainerCmd(containerResp.getId())</span>
+<span class="nc" id="L303">                             .exec();</span>
+<span class="nc" id="L304">            getDockerClient().logContainerCmd(containerResp.getId())</span>
+<span class="nc" id="L305">                             .withStdOut(true)</span>
+<span class="nc" id="L306">                             .withStdErr(true)</span>
+<span class="nc" id="L307">                             .withTailAll()</span>
+<span class="nc" id="L308">                             .withFollowStream(true)</span>
+<span class="nc" id="L309">                             .exec(createCallback);</span>
+            do {
+<span class="nc" id="L311">                Thread.sleep(DockerFarmBuilder.ONE_SECOND_IN_MILLIS);</span>
+<span class="nc bnc" id="L312" title="All 2 branches missed.">            } while (!createCallback.isServerSeleniumLoaded());</span>
+<span class="nc" id="L313">            DockerFarmBuilder.LOG.info(&quot;DOCKER NODE UP&amp;RUNING: {}&quot;,</span>
+<span class="nc" id="L314">                                       containerResp.getId());</span>
+<span class="nc" id="L315">        } catch (Exception e) {</span>
+<span class="nc bnc" id="L316" title="All 2 branches missed.">            if (null != containerResp) {</span>
+<span class="nc" id="L317">                stopNode(containerResp.getId());</span>
+            }
+<span class="nc" id="L319">            throw new RobotestException(&quot;ERROR DOCKER ROBOTEST&quot;,</span>
+                                        e);
+<span class="nc" id="L321">        }</span>
+<span class="nc" id="L322">        return containerResp.getId();</span>
+    }
+
+    /**
+     * Pull image in docker host only if not already pulled.
+     *
+     * @param imageName
+     *            name of image.
+     * @throws RobotestException
+     *             Error pulling Docker image.
+     */
+    private void pullImage(final String imageName) throws RobotestException {
+<span class="nc" id="L334">        synchronized (DockerFarmBuilder.pullingBlocker) {</span>
+<span class="nc bnc" id="L335" title="All 2 branches missed.">            if (Boolean.FALSE.equals(DockerFarmBuilder.getPullableDockerImagesStatus()</span>
+<span class="nc" id="L336">                                                      .get(imageName))) {</span>
+<span class="nc" id="L337">                try (DockerBasicImagePullResultCallback pullCallback = new DockerBasicImagePullResultCallback()) {</span>
+<span class="nc" id="L338">                    DockerFarmBuilder.LOG.info(&quot;DOCKER PULL INIT: {}&quot;,</span>
+                                               imageName);
+<span class="nc" id="L340">                    getDockerClient().pullImageCmd(imageName)</span>
+<span class="nc" id="L341">                                     .exec(pullCallback)</span>
+<span class="nc" id="L342">                                     .awaitCompletion();</span>
+<span class="nc" id="L343">                    DockerFarmBuilder.getPullableDockerImagesStatus()</span>
+<span class="nc" id="L344">                                     .put(imageName,</span>
+                                          Boolean.TRUE);
+<span class="nc" id="L346">                } catch (InterruptedException | IOException e) {</span>
+<span class="nc" id="L347">                    throw new RobotestException(&quot;ERROR DOCKER PULL &quot; + imageName,</span>
+                                                e);
+<span class="nc" id="L349">                }</span>
+            } else {
+<span class="nc" id="L351">                DockerFarmBuilder.LOG.info(&quot;DOCKER PULL END: {}&quot;,</span>
+                                           imageName);
+            }
+<span class="nc" id="L354">        }</span>
+<span class="nc" id="L355">    }</span>
+
+    /**
+     * Selenium HUB port will not be exposed to avoid port conflicts, real ports and host used will be returned by this
+     * method.
+     *
+     * @param dockerBrowser
+     *            docker resolved config
+     * @throws RobotestException
+     *             Docker unix socket conn needs public host configuration
+     */
+    public void resolveBrowserHub(final DockerConfig dockerBrowser) throws RobotestException {
+<span class="fc" id="L367">        DockerFarmBuilder.LOG.info(&quot;RESOLVING HUB FOR CONTAINER: {}&quot;,</span>
+<span class="fc" id="L368">                                   dockerBrowser.getIdContainer());</span>
+<span class="fc" id="L369">        InspectContainerResponse contenedor = getDockerClient().inspectContainerCmd(dockerBrowser.getIdContainer())</span>
+<span class="fc" id="L370">                                                               .exec();</span>
+<span class="fc" id="L371">        dockerBrowser.setExposePort(&quot;4444&quot;);</span>
+<span class="fc" id="L372">        if (!contenedor.getNetworkSettings()</span>
+<span class="fc" id="L373">                       .getPorts()</span>
+<span class="fc" id="L374">                       .getBindings()</span>
+<span class="pc bpc" id="L375" title="1 of 2 branches missed.">                       .isEmpty()</span>
+<span class="pc bpc" id="L376" title="1 of 2 branches missed.">                &amp;&amp; &quot;true&quot;.equals(dockerBaseCfg.getInspectRealPort())) {</span>
+<span class="nc" id="L377">            ExposedPort expPort = ExposedPort.tcp(Integer.parseInt(dockerBrowser.getExposePort()));</span>
+<span class="nc" id="L378">            dockerBrowser.setExposePort(contenedor.getNetworkSettings()</span>
+<span class="nc" id="L379">                                                  .getPorts()</span>
+<span class="nc" id="L380">                                                  .getBindings()</span>
+<span class="nc" id="L381">                                                  .get(expPort)[0].getHostPortSpec());</span>
+        }
+<span class="pc bpc" id="L383" title="1 of 2 branches missed.">        if (StringUtils.isNotEmpty(dockerBaseCfg.getHub())) {</span>
+<span class="fc" id="L384">            dockerBrowser.setHub(dockerBaseCfg.getHub());</span>
+        } else {
+<span class="nc" id="L386">            if (contenedor.getNetworkSettings()</span>
+<span class="nc" id="L387">                          .getNetworks()</span>
+<span class="nc bnc" id="L388" title="All 2 branches missed.">                          .isEmpty()) {</span>
+<span class="nc" id="L389">                dockerBrowser.setHub(dockerBrowser.getContainerName());</span>
+            } else {
+<span class="nc" id="L391">                String ip = null;</span>
+<span class="nc bnc" id="L392" title="All 2 branches missed.">                for (String network : contenedor.getNetworkSettings()</span>
+<span class="nc" id="L393">                                                .getNetworks()</span>
+<span class="nc" id="L394">                                                .keySet()) {</span>
+<span class="nc" id="L395">                    ip = contenedor.getNetworkSettings()</span>
+<span class="nc" id="L396">                                   .getNetworks()</span>
+<span class="nc" id="L397">                                   .get(network)</span>
+<span class="nc" id="L398">                                   .getIpAddress();</span>
+<span class="nc bnc" id="L399" title="All 2 branches missed.">                    if (StringUtils.isNotEmpty(contenedor.getNetworkSettings()</span>
+<span class="nc" id="L400">                                                         .getNetworks()</span>
+<span class="nc" id="L401">                                                         .get(network)</span>
+<span class="nc" id="L402">                                                         .getIpAddress())) {</span>
+<span class="nc" id="L403">                        ip = contenedor.getNetworkSettings()</span>
+<span class="nc" id="L404">                                       .getNetworks()</span>
+<span class="nc" id="L405">                                       .get(network)</span>
+<span class="nc" id="L406">                                       .getIpAddress();</span>
+                    }
+<span class="nc" id="L408">                }</span>
+<span class="nc bnc" id="L409" title="All 2 branches missed.">                if (StringUtils.isEmpty(ip)) {</span>
+<span class="nc" id="L410">                    dockerBrowser.setHub(dockerBrowser.getContainerName());</span>
+                } else {
+<span class="nc" id="L412">                    dockerBrowser.setHub(ip);</span>
+                }
+            }
+        }
+<span class="fc" id="L416">        dockerBrowser.setHub(String.format(&quot;http://%1$s:%2$s/wd/hub&quot;,</span>
+<span class="fc" id="L417">                                           dockerBrowser.getHub(),</span>
+<span class="fc" id="L418">                                           dockerBrowser.getExposePort()));</span>
+<span class="pc bpc" id="L419" title="1 of 2 branches missed.">        if (uriValidator(dockerBrowser.getHub(),</span>
+                         &quot;http&quot;)) {
+<span class="fc" id="L421">            DockerFarmBuilder.LOG.info(&quot;DOCKER RESOLVED HUB : {}&quot;,</span>
+<span class="fc" id="L422">                                       dockerBrowser.getHub());</span>
+        } else {
+<span class="nc" id="L424">            throw new RobotestException(&quot;DOCKER CONN URI NOT VALID, REVISE CFG: &quot; + dockerBaseCfg.getHost());</span>
+        }
+
+<span class="fc" id="L427">    }</span>
+
+    /**
+     * Utility method to valite URIs
+     *
+     * @param uri
+     *            the string contain the uri
+     * @param validSchemes
+     *            valid schema tipes
+     * @return
+     */
+    private boolean uriValidator(final String uri,
+                                 final String... validSchemes) {
+        boolean isValid;
+        final URI uriObj;
+        try {
+<span class="fc" id="L443">            uriObj = new URI(uri);</span>
+<span class="fc" id="L444">            isValid = Arrays.asList(validSchemes)</span>
+<span class="fc" id="L445">                            .contains(uriObj.getScheme());</span>
+<span class="nc" id="L446">        } catch (Exception e) {</span>
+<span class="nc" id="L447">            isValid = false;</span>
+<span class="fc" id="L448">        }</span>
+<span class="fc" id="L449">        return isValid;</span>
+    }
+
+    /**
+     * Stop docker node.
+     *
+     * @param idContainer
+     *            Docker container id.
+     */
+    public void stopNode(final String idContainer) {
+<span class="nc" id="L459">        DockerFarmBuilder.LOG.info(&quot;TRY TO STOP DOCKER CONTAINER: {}&quot;,</span>
+                                   idContainer);
+<span class="nc" id="L461">        getDockerClient().stopContainerCmd(idContainer)</span>
+<span class="nc" id="L462">                         .exec();</span>
+<span class="nc" id="L463">        DockerFarmBuilder.LOG.info(&quot;TRY TO REMOVE DOCKER CONTAINER: {}&quot;,</span>
+                                   idContainer);
+<span class="nc" id="L465">        getDockerClient().removeContainerCmd(idContainer)</span>
+<span class="nc" id="L466">                         .exec();</span>
+<span class="nc" id="L467">        DockerFarmBuilder.LOG.info(&quot;STOPED AND REMOVED DOCKER CONTAINER: {}&quot;,</span>
+                                   idContainer);
+<span class="nc" id="L469">    }</span>
+
+    /**
+     * Destroy docker client.
+     *
+     * @throws RobotestException
+     *             Errors IO.
+     */
+    public void destroyDockerClient() throws RobotestException {
+<span class="fc" id="L478">        DockerFarmBuilder.LOG.info(&quot;TRY TO STOP DOCKER CLIENT {}&quot;,</span>
+<span class="fc" id="L479">                                   dockerBaseCfg.getHost());</span>
+<span class="pc bpc" id="L480" title="1 of 2 branches missed.">        if (null != docker) {</span>
+            try {
+<span class="fc" id="L482">                docker.close();</span>
+<span class="nc" id="L483">            } catch (IOException e) {</span>
+<span class="nc" id="L484">                throw new RobotestException(&quot;DOCKER ERROR CLOSING CLIENT&quot;,</span>
+                                            e);
+<span class="fc" id="L486">            }</span>
+<span class="fc" id="L487">            DockerFarmBuilder.LOG.info(&quot;STOP DOCKER CLIENT {}&quot;,</span>
+<span class="fc" id="L488">                                       dockerBaseCfg.getHost());</span>
+        }
+<span class="fc" id="L490">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

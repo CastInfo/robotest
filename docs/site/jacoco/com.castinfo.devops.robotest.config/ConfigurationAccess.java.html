@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConfigurationAccess.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.cast-info.devops:robotest-core</a> &gt; <a href="index.source.html" class="el_package">com.castinfo.devops.robotest.config</a> &gt; <span class="el_source">ConfigurationAccess.java</span></div><h1>ConfigurationAccess.java</h1><pre class="source lang-java linenums">/********************************************************************************
+ * ROBOTEST
+ * Copyright (C) 2018 CAST-INFO, S.A. www.cast-info.es
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *******************************************************************************/
+package com.castinfo.devops.robotest.config;
+
+import java.lang.annotation.Annotation;
+import java.util.Properties;
+
+import com.castinfo.devops.robotest.RobotestException;
+import com.castinfo.devops.robotest.SuiteContext;
+import com.castinfo.devops.robotest.TestContext;
+
+/**
+ * Access utility methods to retrieve context config under execution.
+ */
+<span class="fc" id="L30">public abstract class ConfigurationAccess extends TestContext {</span>
+
+    /**
+     * Get basic ROBOTEST execution configuration.
+     *
+     * @return BasicConfig Object.
+     * @throws RobotestException
+     *             If suite initialization problems happens.
+     */
+    public RobotestBasicConfig getBasicCfg() throws RobotestException {
+<span class="fc" id="L40">        return this.getBasicCfg(getSuiteContext());</span>
+    }
+
+    /**
+     * Get basic Robotest execution configuration.
+     *
+     * @param suiteContext
+     *            SuiteContext necessary to retrive config.
+     * @return BasicConfig Object.
+     */
+    public RobotestBasicConfig getBasicCfg(final SuiteContext suiteContext) {
+<span class="fc" id="L51">        return suiteContext.getConfig()</span>
+<span class="fc" id="L52">                           .getConfigBasic();</span>
+    }
+
+    /**
+     * Gets config test object identified by key, and cast type.
+     *
+     * @param suiteContext
+     *            SuiteContext necessary to retrive config.
+     * @param scope
+     *            The suite, case or step annotation scope of config to search.
+     * @param key
+     *            key cfg
+     * @param &lt;T&gt;
+     *            generic type to be cast
+     * @return T cfg casted object.
+     */
+    public &lt;T&gt; T getTestCfgInScope(final SuiteContext suiteContext,
+                                   final Annotation scope,
+                                   final String key) {
+<span class="nc" id="L71">        return suiteContext.getConfig()</span>
+<span class="nc" id="L72">                           .getAnnotationScopeCfg(scope,</span>
+                                                  key);
+    }
+
+    /**
+     * Gets config test object identified by key, and cast type, recursively, first in step scope, second in case scope,
+     * and last in suite.
+     *
+     * @param configKey
+     *            key cfg
+     * @param &lt;T&gt;
+     *            generic type to be cast
+     * @return T cfg object.
+     * @throws RobotestException
+     *             If suite initialization problems happens.
+     */
+    public abstract &lt;T&gt; T getTestCfg(String configKey) throws RobotestException;
+
+    /**
+     * Gets one user configuration String value in annotation scope context config Properties.
+     *
+     * @param suiteContext
+     *            SuiteContext necessary to retrive config.
+     * @param scope
+     *            The suite, case, step annotation scope to search config.
+     * @param configKey
+     *            Config Key
+     * @param keyProperty
+     *            Object config Key.
+     * @return The value of properties config key.
+     */
+    public String getTestPropertyCfgInScope(final SuiteContext suiteContext,
+                                            final Annotation scope,
+                                            final String configKey,
+                                            final String keyProperty) {
+<span class="nc" id="L107">        String resultado = null;</span>
+<span class="nc" id="L108">        Properties scopedConfig = this.getTestCfgInScope(suiteContext,</span>
+                                                         scope,
+                                                         configKey);
+<span class="nc bnc" id="L111" title="All 2 branches missed.">        if (null != scopedConfig) {</span>
+<span class="nc" id="L112">            resultado = scopedConfig.getProperty(keyProperty);</span>
+        }
+<span class="nc" id="L114">        return resultado;</span>
+    }
+
+    /**
+     * GGets one user configuration String value in annotation scopes contexts config Properties, recursively, first in
+     * step scope, second in case scope, and last in suite scope.
+     *
+     * @param configKey
+     *            Config Key
+     * @param keyProperty
+     *            Object config Key.
+     * @return The value of properties config key.
+     * @throws RobotestException
+     *             If suite initialization problems happens.
+     */
+    public String getTestPropertyCfg(final String configKey,
+                                     final String keyProperty) throws RobotestException {
+<span class="nc" id="L131">        String result = null;</span>
+<span class="nc" id="L132">        Properties scopedConfig = this.getTestCfg(configKey);</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">        if (null != scopedConfig) {</span>
+<span class="nc" id="L134">            result = scopedConfig.getProperty(keyProperty);</span>
+        }
+<span class="nc" id="L136">        return result;</span>
+    }
+
+    /**
+     * Returns config step object.
+     *
+     * @param configKey
+     *            Object config Key.
+     * @param &lt;T&gt;
+     *            generic type to be cast
+     * @return The object config.
+     * @throws RobotestException
+     *             If suite initialization problems happens
+     */
+    public &lt;T&gt; T getStepTestCfg(final String configKey) throws RobotestException {
+<span class="nc" id="L151">        return this.getTestCfgInScope(getSuiteContext(),</span>
+<span class="nc" id="L152">                                      getStepAnnot(),</span>
+                                      configKey);
+    }
+
+    /**
+     * Gets one user configuration String value in step scope context config Properties.
+     *
+     * @param configKey
+     *            Config Key
+     * @param keyProperty
+     *            Object config Key.
+     * @return The value of properties config key.
+     * @throws RobotestException
+     *             If suite initialization problems happens.
+     */
+    public String getStepTestPropertyCfg(final String configKey,
+                                         final String keyProperty) throws RobotestException {
+<span class="nc" id="L169">        return getTestPropertyCfgInScope(getSuiteContext(),</span>
+<span class="nc" id="L170">                                         getStepAnnot(),</span>
+                                         configKey,
+                                         keyProperty);
+    }
+
+    /**
+     * Returns config step object.
+     *
+     * @param configKey
+     *            Object config Key.
+     * @param &lt;T&gt;
+     *            generic type to be cast
+     * @return The object config.
+     * @throws RobotestException
+     *             If suite initialization problems happens
+     */
+    public &lt;T&gt; T getCaseTestCfg(final String configKey) throws RobotestException {
+<span class="nc" id="L187">        return this.getTestCfgInScope(getSuiteContext(),</span>
+<span class="nc" id="L188">                                      getCaseAnnot(),</span>
+                                      configKey);
+    }
+
+    /**
+     * Gets one user configuration String value in suite scope context config Properties.
+     *
+     * @param configKey
+     *            Config Key
+     * @param keyProperty
+     *            Object config Key.
+     * @return The value of properties config key.
+     * @throws RobotestException
+     *             If suite initialization problems happens.
+     */
+    public String getCaseTestPropertyCfg(final String configKey,
+                                         final String keyProperty) throws RobotestException {
+<span class="nc" id="L205">        return getTestPropertyCfgInScope(getSuiteContext(),</span>
+<span class="nc" id="L206">                                         getCaseAnnot(),</span>
+                                         configKey,
+                                         keyProperty);
+    }
+
+    /**
+     * Returns config step object.
+     *
+     * @param configKey
+     *            Object config Key.
+     * @param &lt;T&gt;
+     *            generic type to be cast
+     * @return The object config.
+     * @throws RobotestException
+     *             If suite initialization problems happens
+     */
+    public &lt;T&gt; T getSuiteTestCfg(final String configKey) throws RobotestException {
+<span class="nc" id="L223">        return this.getTestCfgInScope(getSuiteContext(),</span>
+<span class="nc" id="L224">                                      getSuiteAnnot(),</span>
+                                      configKey);
+    }
+
+    /**
+     * Gets one user configuration String value in suite scope context config Properties.
+     *
+     * @param configKey
+     *            Config Key
+     * @param keyProperty
+     *            Object config Key.
+     * @return The value of properties config key.
+     * @throws RobotestException
+     *             If suite initialization problems happens.
+     */
+    public String getSuiteTestPropertyCfg(final String configKey,
+                                          final String keyProperty) throws RobotestException {
+<span class="nc" id="L241">        return getTestPropertyCfgInScope(getSuiteContext(),</span>
+<span class="nc" id="L242">                                         getSuiteAnnot(),</span>
+                                         configKey,
+                                         keyProperty);
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

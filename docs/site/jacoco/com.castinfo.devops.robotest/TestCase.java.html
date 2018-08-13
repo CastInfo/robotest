@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TestCase.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.cast-info.devops:robotest-core</a> &gt; <a href="index.source.html" class="el_package">com.castinfo.devops.robotest</a> &gt; <span class="el_source">TestCase.java</span></div><h1>TestCase.java</h1><pre class="source lang-java linenums">/********************************************************************************
+ * ROBOTEST
+ * Copyright (C) 2018 CAST-INFO, S.A. www.cast-info.es
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *******************************************************************************/
+package com.castinfo.devops.robotest;
+
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.castinfo.devops.robotest.annot.RobotestCase;
+import com.castinfo.devops.robotest.annot.RobotestStep;
+import com.castinfo.devops.robotest.config.ConfigurationAccess;
+
+import net.sf.cglib.proxy.Enhancer;
+
+/**
+ * Suite classes extends this class to build context of Suite, Case and Step PageObjects/PageFragments context.
+ */
+public class TestCase extends ConfigurationAccess {
+
+<span class="fc" id="L39">    private static final Logger LOG = LoggerFactory.getLogger(TestCase.class);</span>
+<span class="fc" id="L40">    private static Map&lt;String, String&gt; pageFragmentTagClasses = new HashMap&lt;&gt;();</span>
+
+    /**
+     * Default no params constructor.
+     *
+     */
+<span class="fc" id="L46">    public TestCase() {</span>
+        try {
+<span class="fc" id="L48">            setSuiteAnnot(RobotestExecutionContext.getSuiteAnnotation(this.getClass()));</span>
+<span class="nc" id="L49">        } catch (RobotestException e) {</span>
+<span class="nc" id="L50">            LOG.error(&quot;NO SUITE ANNOTATION FOUND, EXECUTION MAY FAIL&quot;, e);</span>
+<span class="fc" id="L51">        }</span>
+<span class="fc" id="L52">    }</span>
+
+    /**
+     * Search the RobotestCase annotation tag invoker.
+     *
+     * @return Test tag of robotest case finded.
+     * @throws RobotestException
+     *             if no RobotestCase finded.
+     */
+    private RobotestCase searchInvokerCaseTag() throws RobotestException {
+<span class="fc" id="L62">        RobotestCase testTagAnnot = null;</span>
+<span class="fc" id="L63">        StackTraceElement[] stes = new Throwable().getStackTrace();</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        for (int is = 1; is &lt; stes.length; is++) {</span>
+<span class="fc" id="L65">            StackTraceElement ste = stes[is];</span>
+            try {
+<span class="fc" id="L67">                Method[] caseMethods = Class.forName(ste.getClassName()).getMethods();</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">                for (Method m : caseMethods) {</span>
+<span class="fc bfc" id="L69" title="All 4 branches covered.">                    if (m.getName().equals(ste.getMethodName()) &amp;&amp; m.isAnnotationPresent(RobotestCase.class)) {</span>
+<span class="fc" id="L70">                        testTagAnnot = m.getAnnotation(RobotestCase.class);</span>
+<span class="fc" id="L71">                        break;</span>
+                    }
+                }
+<span class="nc" id="L74">            } catch (NoClassDefFoundError | ClassNotFoundException | SecurityException e) {</span>
+                // ignore
+<span class="fc" id="L76">            }</span>
+        }
+<span class="fc bfc" id="L78" title="All 2 branches covered.">        if (null == testTagAnnot) {</span>
+<span class="fc" id="L79">            throw new RobotestException(&quot;CAN'T BUILD PAGE FRAGMENTS OUT OF ROBOTEST ANNOTATED CASE&quot;);</span>
+        }
+<span class="fc" id="L81">        return testTagAnnot;</span>
+    }
+
+    /**
+     * Search if class implements PageObject class or implementation of this.
+     *
+     * @param pageObject
+     *            po.
+     * @param &lt;T&gt;
+     *            page object to be cast
+     * @throws RobotestException
+     *             if no PageObject class finded.
+     */
+    private &lt;T&gt; void isPageObject(final Class&lt;T&gt; pageObject) throws RobotestException {
+<span class="fc" id="L95">        boolean isPageObject = false;</span>
+<span class="fc" id="L96">        Class&lt;?&gt; superClass = pageObject.getSuperclass();</span>
+<span class="fc bfc" id="L97" title="All 4 branches covered.">        while (!isPageObject &amp;&amp; null != superClass) {</span>
+<span class="fc bfc" id="L98" title="All 2 branches covered.">            if (superClass.equals(PageObject.class)) {</span>
+<span class="fc" id="L99">                isPageObject = true;</span>
+            } else {
+<span class="fc" id="L101">                superClass = superClass.getSuperclass();</span>
+            }
+        }
+<span class="fc bfc" id="L104" title="All 2 branches covered.">        if (!isPageObject) {</span>
+<span class="fc" id="L105">            throw new RobotestException(&quot;CAN'T BUILD NO PAGEOBJECT CLASS: &quot; + pageObject.getName());</span>
+        }
+<span class="fc" id="L107">    }</span>
+
+    /**
+     * Do validations of page fragment annotations
+     *
+     * @param pageObject
+     *            page object
+     * @param testTagAnnot
+     *            case annotation
+     * @param pfTagAnnot
+     * @param m
+     * @throws RobotestException
+     */
+    private void pageFragmentAnnotationValidations(final Class&lt;?&gt; pageObject,
+                                                   final String testTagAnnot,
+                                                   final String pfTagAnnot,
+                                                   final Method m) throws RobotestException {
+<span class="fc bfc" id="L124" title="All 2 branches covered.">        if (!Pattern.matches(RobotestExecutionContext.TAG_PATTERN, pfTagAnnot)) {</span>
+<span class="fc" id="L125">            throw new RobotestException(&quot;TAG OF FRAGMENT: &quot; + pageObject.getName() + &quot;.&quot; + m.getName()</span>
+                    + &quot; MUST ACOMPLISH &quot; + RobotestExecutionContext.TAG_PATTERN + &quot; REGEX PATTERN&quot;);
+        }
+<span class="fc bfc" id="L128" title="All 2 branches covered.">        if (TestCase.pageFragmentTagClasses.containsKey(pfTagAnnot) &amp;&amp; !(pageObject.getName() + &quot;.&quot;</span>
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">                + m.getName()).equals(TestCase.pageFragmentTagClasses.get(pfTagAnnot))) {</span>
+<span class="fc" id="L130">            throw new RobotestException(&quot;@RobotestStep TAG MUST BE UNIQUE: &quot; + testTagAnnot + &quot; IS DUPLICATED IN: &quot;</span>
+<span class="fc" id="L131">                    + pageObject.getName() + &quot;.&quot; + m.getName() + &quot; AND &quot;</span>
+<span class="fc" id="L132">                    + TestCase.pageFragmentTagClasses.get(pfTagAnnot));</span>
+        }
+<span class="fc" id="L134">    }</span>
+
+    /**
+     * You will use to Build WebFragment/PageObject context to execute. Validations applied are: - RobotestStep
+     * annotation tag attribute will acomplish TAG_PATTERN. - RobotestStep tag must be unique in PageObject/PageObject.
+     *
+     * @param pageObject
+     *            WebFragment
+     * @param &lt;T&gt;
+     *            page object to be cast
+     * @return PageObject with complete context tooling.
+     * @throws RobotestException
+     *             errors and validations
+     */
+    public &lt;T&gt; T buildPageObject(final Class&lt;T&gt; pageObject) throws RobotestException {
+<span class="fc" id="L149">        this.isPageObject(pageObject);</span>
+<span class="fc" id="L150">        setCaseAnnot(searchInvokerCaseTag());</span>
+<span class="fc" id="L151">        Method[] pageObjectMethods = pageObject.getMethods();</span>
+<span class="fc" id="L152">        String pfTagAnnot = null;</span>
+<span class="fc bfc" id="L153" title="All 2 branches covered.">        for (Method m : pageObjectMethods) {</span>
+<span class="fc bfc" id="L154" title="All 2 branches covered.">            if (m.isAnnotationPresent(RobotestStep.class)) {</span>
+<span class="fc" id="L155">                pfTagAnnot = m.getAnnotation(RobotestStep.class).tag();</span>
+<span class="fc" id="L156">                pageFragmentAnnotationValidations(pageObject, getCaseAnnot().tag(), pfTagAnnot, m);</span>
+<span class="fc" id="L157">                TestCase.pageFragmentTagClasses.put(pfTagAnnot, pageObject.getName() + &quot;.&quot; + m.getName());</span>
+            }
+        }
+<span class="fc" id="L160">        return this.buildEnhacedPageObject(pageObject);</span>
+    }
+
+    /**
+     * Build WebFragment execution context interceptor, enhacing tooling and automate execution of reporting utilities.
+     *
+     * @param pageObject
+     *            WebFragment class
+     * @param &lt;T&gt;
+     *            page object to be cast
+     * @return PageObject the builded implemented interceptor enhaced.
+     */
+    @SuppressWarnings(&quot;unchecked&quot;)
+    private &lt;T&gt; T buildEnhacedPageObject(final Class&lt;T&gt; pageObject) {
+<span class="fc" id="L174">        Enhancer enhancer = new Enhancer();</span>
+<span class="fc" id="L175">        enhancer.setSuperclass(pageObject);</span>
+<span class="fc" id="L176">        enhancer.setCallback(new StepInterceptor());</span>
+<span class="fc" id="L177">        PageObject enhaced = (PageObject) enhancer.create();</span>
+<span class="fc" id="L178">        enhaced.setSuiteAnnot(getSuiteAnnot());</span>
+<span class="fc" id="L179">        enhaced.setCaseAnnot(getCaseAnnot());</span>
+<span class="fc" id="L180">        return (T) enhaced;</span>
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.castinfo.devops.robotest.config.ConfigurationAccess#getTestCfg(java.lang.String)
+     */
+    @Override
+    public &lt;T&gt; T getTestCfg(final String configKey) throws RobotestException {
+<span class="nc" id="L190">        SuiteContext sContext = getSuiteContext();</span>
+<span class="nc" id="L191">        T scopedConfig = this.getTestCfgInScope(sContext, getCaseAnnot(), configKey);</span>
+<span class="nc bnc" id="L192" title="All 2 branches missed.">        if (null == scopedConfig) {</span>
+<span class="nc" id="L193">            scopedConfig = this.getTestCfgInScope(sContext, getSuiteAnnot(), configKey);</span>
+        }
+<span class="nc" id="L195">        return scopedConfig;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

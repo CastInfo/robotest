@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SeleniumElementsWrapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.cast-info.devops:robotest-core</a> &gt; <a href="index.source.html" class="el_package">com.castinfo.devops.robotest.selenium</a> &gt; <span class="el_source">SeleniumElementsWrapper.java</span></div><h1>SeleniumElementsWrapper.java</h1><pre class="source lang-java linenums">/********************************************************************************
+ * ROBOTEST
+ * Copyright (C) 2018 CAST-INFO, S.A. www.cast-info.es
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *******************************************************************************/
+package com.castinfo.devops.robotest.selenium;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptException;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.interactions.MoveTargetOutOfBoundsException;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.castinfo.devops.robotest.RobotestException;
+
+/**
+ * Wrapper of most used Selenium operations management (windows/tabs, clicks, pointer move and elements management).
+ *
+ */
+<span class="fc" id="L41">public abstract class SeleniumElementsWrapper extends SeleniumBrowserResourcesWrapper {</span>
+
+    /**
+     * Wrapper of Selenium findElement basic ops.
+     *
+     * @param search
+     *            By search
+     * @return WebElement The element finded
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public WebElement findElementBy(final By search) throws RobotestException {
+<span class="fc" id="L53">        return getDriver().findElement(search);</span>
+    }
+
+    /**
+     * Wrapper of Selenium findElements basic ops.
+     *
+     * @param search
+     *            By search
+     * @return List of elements finded
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public List&lt;WebElement&gt; findElementsBy(final By search) throws RobotestException {
+<span class="nc" id="L66">        return getDriver().findElements(search);</span>
+    }
+
+    /**
+     * Returns true if search element is present in entire present page scope.
+     *
+     * @param by
+     *            By search
+     * @return true if present
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public boolean isElementPresent(final By by) throws RobotestException {
+<span class="fc" id="L79">        boolean resultado = true;</span>
+        try {
+<span class="fc" id="L81">            getDriver().findElement(by);</span>
+<span class="fc" id="L82">        } catch (NoSuchElementException e) {</span>
+<span class="fc" id="L83">            resultado = false;</span>
+<span class="fc" id="L84">        }</span>
+<span class="fc" id="L85">        return resultado;</span>
+    }
+
+    /**
+     * Search if element is present inside another element scope.
+     *
+     * @param element
+     *            The parent element to inspect.
+     * @param by
+     *            By search.
+     * @return true if present.
+     */
+    public boolean isElementPresent(final WebElement element,
+                                    final By by) {
+<span class="fc" id="L99">        boolean resultado = true;</span>
+        try {
+<span class="fc" id="L101">            element.findElement(by);</span>
+<span class="fc" id="L102">        } catch (NoSuchElementException e) {</span>
+<span class="fc" id="L103">            resultado = false;</span>
+<span class="fc" id="L104">        }</span>
+<span class="fc" id="L105">        return resultado;</span>
+    }
+
+    /**
+     * Searh if element exists and is visible (not hidden) in entire present page scope.
+     *
+     * @param by
+     *            By search
+     * @return true if visible and exists.
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public boolean isElementVisible(final By by) throws RobotestException {
+<span class="fc" id="L118">        boolean resultado = false;</span>
+        try {
+<span class="fc" id="L120">            WebElement element = getDriver().findElement(by);</span>
+<span class="pc bpc" id="L121" title="2 of 4 branches missed.">            resultado = element != null &amp;&amp; element.isDisplayed();</span>
+<span class="fc" id="L122">        } catch (NoSuchElementException e) {</span>
+            // false
+<span class="fc" id="L124">        }</span>
+<span class="fc" id="L125">        return resultado;</span>
+    }
+
+    /**
+     * Searh for element inside another element and is visible (not hidden).
+     *
+     * @param element
+     *            Parent element
+     * @param by
+     *            By search
+     * @return true if exists and visible
+     */
+    public boolean isElementVisible(final WebElement element,
+                                    final By by) {
+<span class="fc" id="L139">        boolean resultado = false;</span>
+        try {
+<span class="fc" id="L141">            element.findElement(by);</span>
+<span class="fc" id="L142">            resultado = element.findElement(by)</span>
+<span class="fc" id="L143">                               .isDisplayed();</span>
+<span class="fc" id="L144">        } catch (NoSuchElementException e) {</span>
+<span class="fc" id="L145">            resultado = false;</span>
+<span class="fc" id="L146">        }</span>
+<span class="fc" id="L147">        return resultado;</span>
+    }
+
+    /**
+     * Search in time period, if element exist. If 0 timeout passed, will do not wait.
+     *
+     * @param by
+     *            By search
+     * @param seconds
+     *            timeout
+     * @return true if exist
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public boolean isElementPresentUntil(final By by,
+                                         final long seconds) throws RobotestException {
+<span class="fc" id="L163">        boolean resultado = true;</span>
+        try {
+<span class="fc" id="L165">            new WebDriverWait(getDriver(),</span>
+<span class="fc" id="L166">                              seconds).until(ExpectedConditions.presenceOfElementLocated(by));</span>
+<span class="fc" id="L167">        } catch (TimeoutException e) {</span>
+<span class="fc" id="L168">            resultado = false;</span>
+<span class="fc" id="L169">        }</span>
+<span class="fc" id="L170">        return resultado;</span>
+    }
+
+    /**
+     * Search for element visible (not hidden) in wait time period. If 0 timeout passed, will do not wait.
+     *
+     * @param by
+     *            By search
+     * @param seconds
+     *            timeout
+     * @return true if element visible
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public boolean isElementVisibleUntil(final By by,
+                                         final long seconds) throws RobotestException {
+<span class="fc" id="L186">        boolean resultado = true;</span>
+        try {
+<span class="fc" id="L188">            new WebDriverWait(getDriver(),</span>
+<span class="fc" id="L189">                              seconds).until(ExpectedConditions.visibilityOfElementLocated(by));</span>
+<span class="fc" id="L190">        } catch (TimeoutException e) {</span>
+<span class="fc" id="L191">            resultado = false;</span>
+<span class="fc" id="L192">        }</span>
+<span class="fc" id="L193">        return resultado;</span>
+    }
+
+    /**
+     * Search for element hidden (not visible) in wait time period. If 0 timeout passed, will do not wait.
+     *
+     * @param by
+     *            By search
+     * @param seconds
+     *            timeout
+     * @return true if element hidden but exists
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public boolean isElementInvisibleUntil(final By by,
+                                           final long seconds) throws RobotestException {
+<span class="fc" id="L209">        boolean resultado = true;</span>
+        try {
+<span class="fc" id="L211">            new WebDriverWait(getDriver(),</span>
+<span class="nc" id="L212">                              seconds).until(ExpectedConditions.invisibilityOfElementLocated(by));</span>
+<span class="fc" id="L213">        } catch (TimeoutException e) {</span>
+<span class="fc" id="L214">            resultado = false;</span>
+<span class="nc" id="L215">        }</span>
+<span class="fc" id="L216">        return resultado;</span>
+    }
+
+    /**
+     * Count visible (not hidden) elements of any search.
+     *
+     * @param by
+     *            By search.
+     * @return num elements visibles found.
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public int getNumElementsVisible(final By by) throws RobotestException {
+<span class="fc" id="L229">        int numberOfElements = 0;</span>
+<span class="fc bfc" id="L230" title="All 2 branches covered.">        for (WebElement element : getDriver().findElements(by)) {</span>
+<span class="pc bpc" id="L231" title="1 of 2 branches missed.">            if (element.isDisplayed()) {</span>
+<span class="fc" id="L232">                numberOfElements += 1;</span>
+            }
+<span class="fc" id="L234">        }</span>
+<span class="fc" id="L235">        return numberOfElements;</span>
+    }
+
+    /**
+     * Returns the list of visible elements in a search.
+     *
+     * @param by
+     *            By search
+     * @return List of visible elements found.
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public List&lt;WebElement&gt; getElementsVisible(final By by) throws RobotestException {
+<span class="fc" id="L248">        List&lt;WebElement&gt; listaReturn = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L249" title="All 2 branches covered.">        for (WebElement element : getDriver().findElements(by)) {</span>
+<span class="pc bpc" id="L250" title="1 of 2 branches missed.">            if (element.isDisplayed()) {</span>
+<span class="fc" id="L251">                listaReturn.add(element);</span>
+            }
+<span class="fc" id="L253">        }</span>
+<span class="fc" id="L254">        return listaReturn;</span>
+    }
+
+    /**
+     * An expectation for checking WebElement with given locator has attribute which contains specific value.
+     *
+     * @param element
+     *            used to check it's parameters
+     * @param attribute
+     *            used to define css or HTML attribute
+     * @param value
+     *            used as expected attribute value
+     * @return Boolean true when element has css or HTML attribute which contains the value
+     */
+    public boolean attributeContains(final WebElement element,
+                                     final String attribute,
+                                     final String value) {
+<span class="fc" id="L271">        boolean contains = false;</span>
+<span class="fc" id="L272">        String currentValue = null;</span>
+        try {
+<span class="fc" id="L274">            currentValue = element.getAttribute(attribute);</span>
+<span class="pc bpc" id="L275" title="2 of 4 branches missed.">            if (currentValue == null || currentValue.isEmpty()) {</span>
+<span class="nc" id="L276">                currentValue = element.getCssValue(attribute);</span>
+            }
+<span class="fc" id="L278">            contains = currentValue.contains(value);</span>
+<span class="nc" id="L279">        } catch (Exception e) {</span>
+            // ignore
+<span class="fc" id="L281">        }</span>
+<span class="fc" id="L282">        return contains;</span>
+
+    }
+
+    /**
+     * Validate if search element is clicable in a time period. If 0 timeout passed, will do not wait.
+     *
+     * @param by
+     *            By search
+     * @param seconds
+     *            timeout
+     * @return true if clicable
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public boolean isElementClickableUntil(final By by,
+                                           final long seconds) throws RobotestException {
+<span class="fc" id="L299">        boolean resultado = true;</span>
+        try {
+<span class="fc" id="L301">            new WebDriverWait(getDriver(),</span>
+<span class="fc" id="L302">                              seconds).until(ExpectedConditions.elementToBeClickable(by));</span>
+<span class="fc" id="L303">        } catch (TimeoutException e) {</span>
+<span class="fc" id="L304">            resultado = false;</span>
+<span class="fc" id="L305">        }</span>
+<span class="fc" id="L306">        return resultado;</span>
+    }
+
+    /**
+     * Validate if search element is NOT clicable in a time period. If 0 timeout passed, will do not wait.
+     *
+     * @param by
+     *            By search
+     * @param seconds
+     *            timeout
+     * @return true if not clicable
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public boolean isElementNoClickableUntil(final By by,
+                                             final long seconds) throws RobotestException {
+<span class="fc" id="L322">        boolean resultado = true;</span>
+        try {
+<span class="fc" id="L324">            new WebDriverWait(getDriver(),</span>
+<span class="nc" id="L325">                              seconds).until(ExpectedConditions.not(ExpectedConditions.elementToBeClickable(by)));</span>
+<span class="fc" id="L326">        } catch (TimeoutException e) {</span>
+<span class="fc" id="L327">            resultado = false;</span>
+<span class="nc" id="L328">        }</span>
+<span class="fc" id="L329">        return resultado;</span>
+    }
+
+    /**
+     * Click and expect to load page event.
+     *
+     * @param link
+     *            element to click
+     * @param pageLoadingWaitSeconds
+     *            time
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public void clickUntilLoadPage(final WebElement link,
+                                   final long pageLoadingWaitSeconds) throws RobotestException {
+<span class="fc" id="L344">        click(link);</span>
+<span class="fc" id="L345">        waitForPageLoaded(pageLoadingWaitSeconds);</span>
+<span class="fc" id="L346">    }</span>
+
+    /**
+     * Forzes click of search element. First do wait for element clicable and after, do the click, expecting page
+     * loading event. If 0 timeout passed, will do not wait.
+     *
+     * @param waitForLinkToClick
+     *            timeout element clicable
+     * @param by
+     *            By search
+     * @param pageLoadingWaitSeconds
+     *            timeout page loading
+     * @return true si se ha cargado el link clicado.
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public boolean clickUntilLoadPage(final long waitForLinkToClick,
+                                      final By by,
+                                      final long pageLoadingWaitSeconds) throws RobotestException {
+<span class="fc" id="L365">        boolean timeout = false;</span>
+<span class="pc bpc" id="L366" title="1 of 2 branches missed.">        if (waitForLinkToClick &gt; 0) {</span>
+            try {
+<span class="fc" id="L368">                new WebDriverWait(getDriver(),</span>
+<span class="fc" id="L369">                                  waitForLinkToClick).until(ExpectedConditions.elementToBeClickable(by));</span>
+<span class="nc" id="L370">            } catch (TimeoutException e) {</span>
+<span class="nc" id="L371">                timeout = true;</span>
+<span class="fc" id="L372">            }</span>
+        }
+<span class="pc bpc" id="L374" title="1 of 2 branches missed.">        if (!timeout) {</span>
+<span class="fc" id="L375">            WebElement link = getDriver().findElement(by);</span>
+<span class="fc" id="L376">            click(link);</span>
+<span class="fc" id="L377">            waitForPageLoaded(pageLoadingWaitSeconds);</span>
+        }
+<span class="fc" id="L379">        return timeout;</span>
+    }
+
+    /**
+     * Do a click without wait.
+     *
+     * @param link
+     *            clicable element.
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public void click(final WebElement link) throws RobotestException {
+        try {
+<span class="fc" id="L392">            link.click();</span>
+<span class="fc" id="L393">        } catch (WebDriverException e) {</span>
+            try {
+<span class="fc" id="L395">                JavascriptExecutor executor = (JavascriptExecutor) getDriver();</span>
+<span class="fc" id="L396">                executor.executeScript(&quot;arguments[0].click();&quot;,</span>
+                                       link);
+<span class="nc" id="L398">            } catch (JavascriptException e2) {</span>
+<span class="nc" id="L399">                throw new RobotestException(&quot;NOT CLICABLE ELEMENT&quot;,</span>
+                                            e2);
+<span class="fc" id="L401">            }</span>
+<span class="fc" id="L402">        }</span>
+<span class="fc" id="L403">    }</span>
+
+    /**
+     * Move to element.
+     *
+     * @param search
+     *            finded element
+     * @throws RobotestException
+     *             if Selenium Driver unavailable
+     */
+    public void moveToElement(final WebElement search) throws RobotestException {
+        try {
+<span class="fc" id="L415">            Actions mover = new Actions(getDriver());</span>
+<span class="fc" id="L416">            mover.moveToElement(search)</span>
+<span class="fc" id="L417">                 .build()</span>
+<span class="fc" id="L418">                 .perform();</span>
+<span class="nc" id="L419">        } catch (MoveTargetOutOfBoundsException e) {</span>
+<span class="nc" id="L420">            ((JavascriptExecutor) getDriver()).executeScript(&quot;arguments[0].scrollIntoView(true);&quot;,</span>
+                                                             search);
+<span class="fc" id="L422">        }</span>
+<span class="fc" id="L423">    }</span>
+
+    /**
+     * Move to link and perform click.
+     *
+     * @param link
+     *            link element
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public void moveToLinkAndClick(final WebElement link) throws RobotestException {
+<span class="fc" id="L434">        moveToElement(link);</span>
+<span class="fc" id="L435">        click(link);</span>
+<span class="fc" id="L436">    }</span>
+
+    /**
+     * Retries TEXT field input for n times, expecting introducing TEXT is OK (prevent Selenium API bugs).
+     *
+     * @param numRetry
+     *            max retries
+     * @param by
+     *            Text target
+     * @param keys
+     *            The TEXT.
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public void sendKeysWithRetry(final int numRetry,
+                                  final By by,
+                                  final String keys) throws RobotestException {
+<span class="fc" id="L453">        int i = 0;</span>
+        do {
+<span class="fc" id="L455">            getDriver().findElement(by)</span>
+<span class="fc" id="L456">                       .clear();</span>
+<span class="fc" id="L457">            getDriver().findElement(by)</span>
+<span class="fc" id="L458">                       .sendKeys(keys);</span>
+<span class="fc" id="L459">            i += 1;</span>
+<span class="fc" id="L460">        } while (getDriver().findElement(by)</span>
+<span class="fc" id="L461">                            .getAttribute(&quot;value&quot;)</span>
+<span class="pc bpc" id="L462" title="3 of 4 branches missed.">                            .compareTo(keys) != 0</span>
+                &amp;&amp; i &lt; numRetry);
+<span class="fc" id="L464">    }</span>
+
+    /**
+     * Select a option value in a selectable form.
+     *
+     * @param selectElement
+     *            Select element
+     * @param value
+     *            Value to search
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public void selectOption(final WebElement selectElement,
+                             final String value) throws RobotestException {
+<span class="nc" id="L478">        if (selectElement.getAttribute(&quot;value&quot;)</span>
+<span class="nc bnc" id="L479" title="All 2 branches missed.">                         .compareTo(value) != 0) {</span>
+<span class="nc" id="L480">            selectElement.sendKeys(value);</span>
+<span class="nc" id="L481">            if (selectElement.getAttribute(&quot;value&quot;)</span>
+<span class="nc bnc" id="L482" title="All 2 branches missed.">                             .compareTo(value) != 0) {</span>
+<span class="nc" id="L483">                JavascriptExecutor executor = (JavascriptExecutor) getDriver();</span>
+<span class="nc" id="L484">                executor.executeScript(&quot;const textToFind = '&quot; + value + &quot;';&quot; + &quot;const dd = arguments[0];&quot;</span>
+                        + &quot;dd.selectedIndex = [...dd.options].findIndex (option =&gt; option.text === textToFind);&quot;,
+                                       selectElement);
+            }
+        }
+<span class="nc" id="L489">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

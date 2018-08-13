@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TestContext.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.cast-info.devops:robotest-core</a> &gt; <a href="index.source.html" class="el_package">com.castinfo.devops.robotest</a> &gt; <span class="el_source">TestContext.java</span></div><h1>TestContext.java</h1><pre class="source lang-java linenums">/********************************************************************************
+ * ROBOTEST
+ * Copyright (C) 2018 CAST-INFO, S.A. www.cast-info.es
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *******************************************************************************/
+package com.castinfo.devops.robotest;
+
+import com.castinfo.devops.robotest.annot.RobotestCase;
+import com.castinfo.devops.robotest.annot.RobotestStep;
+import com.castinfo.devops.robotest.annot.RobotestSuite;
+
+/**
+ * Test context object properties.
+ *
+ */
+<span class="fc" id="L28">public class TestContext {</span>
+
+    private RobotestStep stepAnnot;
+
+    private RobotestCase caseAnnot;
+
+    private RobotestSuite suiteAnnot;
+
+    /**
+     * Getter step annotation.
+     *
+     * WARNING! In TestCase context ALWAYS null. Only have value y pageObject context.
+     *
+     * @return the stepAnnot
+     */
+    public RobotestStep getStepAnnot() {
+<span class="fc" id="L44">        return stepAnnot;</span>
+    }
+
+    /**
+     * Setter step annotation.
+     *
+     * @param stepAnnot
+     *            the stepAnnot to set
+     */
+    public void setStepAnnot(final RobotestStep stepAnnot) {
+<span class="fc" id="L54">        this.stepAnnot = stepAnnot;</span>
+<span class="fc" id="L55">    }</span>
+
+    /**
+     * Getter case annotation.
+     *
+     * @return the caseAnnot
+     */
+    public RobotestCase getCaseAnnot() {
+<span class="fc" id="L63">        return caseAnnot;</span>
+    }
+
+    /**
+     * Setter case annotation.
+     *
+     * @param caseAnnot
+     *            the caseAnnot to set
+     */
+    public void setCaseAnnot(final RobotestCase caseAnnot) {
+<span class="fc" id="L73">        this.caseAnnot = caseAnnot;</span>
+<span class="fc" id="L74">    }</span>
+
+    /**
+     * Getter suite annotation.
+     *
+     * @return the suiteAnnot
+     */
+    public RobotestSuite getSuiteAnnot() {
+<span class="fc" id="L82">        return suiteAnnot;</span>
+    }
+
+    /**
+     * Setter suite annotation.
+     *
+     * @param suiteAnnot
+     *            the suiteAnnot to set
+     */
+    public void setSuiteAnnot(final RobotestSuite suiteAnnot) {
+<span class="fc" id="L92">        this.suiteAnnot = suiteAnnot;</span>
+<span class="fc" id="L93">    }</span>
+
+    /**
+     * Internal suite ctx retrive.
+     *
+     * @return SuiteContext
+     * @throws RobotestException
+     *             if not suite initied.
+     */
+    public SuiteContext getSuiteContext() throws RobotestException {
+<span class="fc" id="L103">        SuiteContext sCtx = RobotestExecutionContext.getSuite(getSuiteAnnot());</span>
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">        if (null == sCtx) {</span>
+<span class="nc" id="L105">            throw new RobotestException(&quot;SUITE NOT INITIED, REVISE CONFIGURATION PARAMS&quot;);</span>
+        }
+<span class="fc" id="L107">        return sCtx;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

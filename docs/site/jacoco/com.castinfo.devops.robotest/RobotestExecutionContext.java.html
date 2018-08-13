@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RobotestExecutionContext.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.cast-info.devops:robotest-core</a> &gt; <a href="index.source.html" class="el_package">com.castinfo.devops.robotest</a> &gt; <span class="el_source">RobotestExecutionContext.java</span></div><h1>RobotestExecutionContext.java</h1><pre class="source lang-java linenums">/********************************************************************************
+ * ROBOTEST
+ * Copyright (C) 2018 CAST-INFO, S.A. www.cast-info.es
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *******************************************************************************/
+package com.castinfo.devops.robotest;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.castinfo.devops.robotest.annot.RobotestCase;
+import com.castinfo.devops.robotest.annot.RobotestSuite;
+import com.castinfo.devops.robotest.config.DockerConfig;
+import com.castinfo.devops.robotest.docker.DockerFarmBuilder;
+import com.castinfo.devops.robotest.report.ValidationEntry;
+
+/**
+ * This class brings acces to execution context of ROBOTEST Suites and Cases, buildin and stoping all that objects
+ * needed and make posible to retrive this load objects internally throught Suite - Case - Steps execution.
+ *
+ * Another responsability is doclet validations of Suite an Case user test implementations.
+ *
+ * This class is Thread Safe.
+ *
+ */
+public final class RobotestExecutionContext {
+
+    /**
+     * Suite, Case and Step doclet tag attribute must acomplish this pattern.
+     */
+    public static final String TAG_PATTERN = &quot;[a-zA-Z_0-9]+&quot;;
+
+<span class="fc" id="L53">    private static final Logger LOG = LoggerFactory.getLogger(RobotestExecutionContext.class);</span>
+<span class="fc" id="L54">    private static final Map&lt;RobotestSuite, SuiteContext&gt; SUITES = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L55">    private static final Map&lt;String, Class&lt;?&gt;&gt; SUITES_TAG_CLASSES = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L56">    private static final Map&lt;String, String&gt; CASE_TAG_METHODS = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L57">    private static final Map&lt;RobotestSuite, List&lt;RobotestCase&gt;&gt; SUITE_CASES = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L58">    private static final Map&lt;RobotestSuite, Map&lt;RobotestCase, DockerConfig&gt;&gt; BROWSER_DOCKERS = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L59">    private static DockerFarmBuilder dockerFarmClient = null;</span>
+<span class="fc" id="L60">    private static Object endSuiteBlocker = new Object();</span>
+<span class="fc" id="L61">    private static final AtomicInteger SUITE_ORDER = new AtomicInteger(-1);</span>
+
+    /**
+     * Utility class avoid object creation.
+     */
+    private RobotestExecutionContext() {
+        super();
+    }
+
+    /**
+     * Get Suite througt his annotation.
+     *
+     * @param suiteAnnot
+     *            Suite annot.
+     * @return The suite ctx.
+     */
+    public static SuiteContext getSuite(final RobotestSuite suiteAnnot) {
+<span class="fc" id="L78">        return SUITES.get(suiteAnnot);</span>
+    }
+
+    /**
+     * Get map of all under execution suites.
+     *
+     * @return map of RobotestSuite annots of SuiteContext
+     */
+    protected static Map&lt;RobotestSuite, SuiteContext&gt; getSuites() {
+<span class="fc" id="L87">        return SUITES;</span>
+    }
+
+    /**
+     * Get map of all browsers under execution suites.
+     *
+     * @return map of RobotestSuite annots of Map of RobotestCase of DockerConfig
+     */
+    protected static Map&lt;RobotestSuite, Map&lt;RobotestCase, DockerConfig&gt;&gt; getBrowserDockers() {
+<span class="fc" id="L96">        return BROWSER_DOCKERS;</span>
+    }
+
+    /**
+     * Inits Docker farm.
+     *
+     * @param dockerConfig
+     *            config docker
+     * @throws RobotestException
+     *             connection docker errors.
+     */
+    protected static synchronized void initDockerFarmBuilder(final DockerConfig dockerConfig) throws RobotestException {
+<span class="nc bnc" id="L108" title="All 2 branches missed.">        if (null == dockerFarmClient) {</span>
+<span class="nc" id="L109">            dockerFarmClient = new DockerFarmBuilder(dockerConfig);</span>
+<span class="nc" id="L110">            dockerFarmClient.connectDockerClient();</span>
+        }
+<span class="nc" id="L112">    }</span>
+
+    /**
+     * Get Docker farm.
+     *
+     * @return Docker farm builder
+     * @throws RobotestException
+     *             if not initied.
+     */
+    protected static DockerFarmBuilder getDockerFarmBuilder() throws RobotestException {
+<span class="nc bnc" id="L122" title="All 2 branches missed.">        if (null == dockerFarmClient) {</span>
+<span class="nc" id="L123">            throw new RobotestException(&quot;NO DOCKER FARM INITIED, REVISE CONFIG OR CONNECTION TO DOCKER HOST&quot;);</span>
+        }
+<span class="nc" id="L125">        return dockerFarmClient;</span>
+    }
+
+    /**
+     * Is invoked by TestNG and JUnit execution testing lyfe cicle listeners at test start, to build internal resources
+     * with configuation, for example, reporting system and Selenium Web Driver in Docker. Applyed validations are: -
+     * Case tag must be unique. - Suite tag must be unique. - Tag patter must acomplish TAG_PATTERN.
+     *
+     * @param suiteClazz
+     *            Suite class.
+     * @param methodName
+     *            Case method name.
+     * @throws RobotestException
+     *             error in validations and initiatin resources.
+     */
+    public static void buildSuite(final Class&lt;?&gt; suiteClazz,
+                                  final String methodName) throws RobotestException {
+<span class="fc" id="L142">        RobotestSuite suiteAnnot = getSuiteAnnotation(suiteClazz);</span>
+<span class="fc" id="L143">        RobotestCase caseAnnot = getCaseAnnotationByMethod(suiteClazz,</span>
+                                                           methodName);
+<span class="fc" id="L145">        SuiteContext suite = null;</span>
+<span class="fc bfc" id="L146" title="All 2 branches covered.">        if (CASE_TAG_METHODS.containsKey(caseAnnot.tag())</span>
+<span class="fc bfc" id="L147" title="All 2 branches covered.">                &amp;&amp; !(suiteClazz.getName() + &quot;.&quot; + methodName).equals(CASE_TAG_METHODS.get(caseAnnot.tag()))) {</span>
+<span class="fc" id="L148">            throw new RobotestException(&quot;@RobotestCase TAG MUST BE UNIQUE: &quot; + suiteAnnot.tag() + &quot; IS DUPLICATED IN: &quot;</span>
+<span class="fc" id="L149">                    + suiteClazz.getName() + &quot;.&quot; + methodName + &quot; AND &quot; + CASE_TAG_METHODS.get(caseAnnot.tag()));</span>
+        }
+<span class="fc bfc" id="L151" title="All 2 branches covered.">        if (SUITES.containsKey(suiteAnnot)) {</span>
+<span class="pc bpc" id="L152" title="1 of 2 branches missed.">            if (!suiteClazz.equals(SUITES_TAG_CLASSES.get(suiteAnnot.tag()))) {</span>
+<span class="fc" id="L153">                throw new RobotestException(&quot;@RobotestSuite TAG MUST BE UNIQUE: &quot; + suiteAnnot.tag()</span>
+<span class="fc" id="L154">                        + &quot; IS DUPLICATED IN: &quot; + suiteClazz.getName() + &quot; AND &quot;</span>
+<span class="fc" id="L155">                        + SUITES_TAG_CLASSES.get(suiteAnnot.tag()));</span>
+            }
+<span class="nc" id="L157">            if (SUITE_CASES.get(suiteAnnot)</span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">                           .contains(caseAnnot)) {</span>
+<span class="nc" id="L159">                throw new RobotestException(&quot;SAME @RobotestCase TAG IN METHOD &quot; + methodName + &quot; ALLREADY BUILD: &quot;</span>
+<span class="nc" id="L160">                        + suiteAnnot.tag()</span>
+                        + &quot; parallel exectution context of same test is not posible in real robotest execution, &quot;
+                        + &quot;your unit test do end suite and case?&quot;);
+            }
+<span class="nc" id="L164">            SUITE_CASES.get(suiteAnnot)</span>
+<span class="nc" id="L165">                       .add(caseAnnot);</span>
+<span class="nc" id="L166">            LOG.info(&quot;REUSE SUITE: {} FOR {}&quot;,</span>
+<span class="nc" id="L167">                     suiteAnnot.tag(),</span>
+<span class="nc" id="L168">                     caseAnnot.tag());</span>
+        } else {
+<span class="fc" id="L170">            LOG.info(&quot;STARTING SUITE: {} FOR {}&quot;,</span>
+<span class="fc" id="L171">                     suiteAnnot.tag(),</span>
+<span class="fc" id="L172">                     caseAnnot.tag());</span>
+<span class="fc" id="L173">            suite = new SuiteContext();</span>
+<span class="fc" id="L174">            suite.setSuiteAnnotation(suiteAnnot);</span>
+<span class="pc bpc" id="L175" title="1 of 2 branches missed.">            if (SUITES.containsKey(suiteAnnot)) {</span>
+<span class="nc" id="L176">                throw new RobotestException(&quot;SAME @RobotestSuite TAG ALLREADY BUILD: &quot; + suiteAnnot.tag()</span>
+                        + &quot; parallel exectution context of same test is not posible in real robotest execution, &quot;
+                        + &quot;your unit test do end suite and case?&quot;);
+            }
+<span class="fc" id="L180">            SUITES.put(suiteAnnot,</span>
+                       suite);
+<span class="fc" id="L182">            SUITE_CASES.put(suiteAnnot,</span>
+                            new ArrayList&lt;RobotestCase&gt;());
+<span class="fc" id="L184">            SUITE_CASES.get(suiteAnnot)</span>
+<span class="fc" id="L185">                       .add(caseAnnot);</span>
+<span class="fc" id="L186">            SUITES_TAG_CLASSES.put(suiteAnnot.tag(),</span>
+                                   suiteClazz);
+<span class="fc" id="L188">            CASE_TAG_METHODS.put(caseAnnot.tag(),</span>
+<span class="fc" id="L189">                                 suiteClazz.getName() + &quot;.&quot; + methodName);</span>
+            try {
+<span class="fc" id="L191">                suite.initSuite(SUITE_ORDER.incrementAndGet());</span>
+<span class="nc" id="L192">            } catch (RobotestException e) {</span>
+<span class="nc" id="L193">                suite.putIntialitationSuiteError(ValidationEntry.buildCritical()</span>
+<span class="nc" id="L194">                                                                .withException(e));</span>
+<span class="nc" id="L195">                throw e;</span>
+<span class="fc" id="L196">            }</span>
+        }
+<span class="fc" id="L198">    }</span>
+
+    /**
+     * Stops all the docker containers associated to testCase annotation. Can only be called by JUnit/TestNG Listeners.
+     *
+     */
+    public static void forceStopLostResources() {
+<span class="pc bpc" id="L205" title="1 of 2 branches missed.">        for (Map&lt;RobotestCase, DockerConfig&gt; caseSet : BROWSER_DOCKERS.values()) {</span>
+<span class="nc bnc" id="L206" title="All 2 branches missed.">            for (DockerConfig docker : caseSet.values()) {</span>
+                try {
+<span class="nc" id="L208">                    LOG.info(&quot;TRY FORCE STOP LOST DOCKER CONTAINER {}&quot;,</span>
+<span class="nc" id="L209">                             docker.getIdContainer());</span>
+<span class="nc" id="L210">                    dockerFarmClient.stopNode(docker.getIdContainer());</span>
+<span class="nc" id="L211">                } catch (Exception e) {</span>
+<span class="nc" id="L212">                    LOG.error(&quot;ERROR FORCE STOP CONTAINER&quot;,</span>
+                              e);
+<span class="nc" id="L214">                }</span>
+<span class="nc" id="L215">            }</span>
+<span class="nc" id="L216">        }</span>
+        try {
+<span class="pc bpc" id="L218" title="1 of 2 branches missed.">            if (null != dockerFarmClient) {</span>
+<span class="nc" id="L219">                dockerFarmClient.destroyDockerClient();</span>
+            }
+<span class="nc" id="L221">        } catch (RobotestException e) {</span>
+<span class="nc" id="L222">            LOG.error(&quot;DOCKER CLIENT QUIT ERROR&quot;,</span>
+                      e);
+<span class="fc" id="L224">        }</span>
+<span class="pc bpc" id="L225" title="1 of 2 branches missed.">        for (SuiteContext sCtx : SUITES.values()) {</span>
+<span class="nc" id="L226">            sCtx.forzeSeleniumDriversDestroy();</span>
+<span class="nc" id="L227">        }</span>
+
+<span class="fc" id="L229">    }</span>
+
+    /**
+     * End resources of suite context, invoked by TestNG and JUnit testing lyfe cicle listeners.
+     *
+     * @param clazz
+     *            Suite class.
+     * @throws RobotestException
+     *             errors unloading resources.
+     */
+    public static void endSuite(final Class&lt;?&gt; clazz) throws RobotestException {
+<span class="fc" id="L240">        RobotestSuite suiteAnnot = getSuiteAnnotation(clazz);</span>
+<span class="fc" id="L241">        synchronized (endSuiteBlocker) {</span>
+<span class="pc bpc" id="L242" title="1 of 2 branches missed.">            if (SUITE_CASES.containsKey(suiteAnnot) &amp;&amp; SUITE_CASES.get(suiteAnnot)</span>
+<span class="pc bpc" id="L243" title="1 of 2 branches missed.">                                                                  .isEmpty()) {</span>
+<span class="fc" id="L244">                LOG.info(&quot;ENDING SUITE: {}&quot;,</span>
+<span class="fc" id="L245">                         suiteAnnot.tag());</span>
+                try {
+<span class="fc" id="L247">                    getSuite(suiteAnnot).endSuite();</span>
+                } finally {
+<span class="fc" id="L249">                    SUITES.remove(suiteAnnot);</span>
+<span class="fc" id="L250">                    SUITE_CASES.remove(suiteAnnot);</span>
+                }
+            }
+<span class="fc" id="L253">        }</span>
+<span class="fc" id="L254">    }</span>
+
+    /**
+     * Retrieve Suite Class RobotestSuite Doclet. Validate Doclet exists and tag attibute conform TAG_PATTERN.
+     *
+     * @param klass
+     *            the class.
+     * @return RobotestSuite doclet.
+     * @throws RobotestException
+     *             errors in annotation.
+     */
+    public static RobotestSuite getSuiteAnnotation(final Class&lt;?&gt; klass) throws RobotestException {
+<span class="fc" id="L266">        RobotestSuite suiteAnnot = klass.getAnnotation(RobotestSuite.class);</span>
+<span class="fc bfc" id="L267" title="All 2 branches covered.">        if (null == suiteAnnot) {</span>
+<span class="fc" id="L268">            throw new RobotestException(&quot;TEST CLASS MUST BE @RobotestSuite ANNOTATED!&quot;);</span>
+        }
+<span class="fc bfc" id="L270" title="All 2 branches covered.">        if (!Pattern.matches(TAG_PATTERN,</span>
+<span class="fc" id="L271">                             suiteAnnot.tag())) {</span>
+<span class="fc" id="L272">            throw new RobotestException(&quot;TAG OF SUITE: &quot; + klass.getName() + &quot; MUST ACOMPLISH &quot; + TAG_PATTERN</span>
+                    + &quot; REGEX PATTERN&quot;);
+        }
+<span class="fc" id="L275">        return suiteAnnot;</span>
+    }
+
+    /**
+     * Is invoked by TestNG and JUnit execution testing lyfe cicle listeners at test start, to build internal resources
+     * with configuation.
+     *
+     * @param clazz
+     *            Suite Class.
+     * @param methodName
+     *            Case method name.
+     * @throws RobotestException
+     *             error in inicialization.
+     */
+    public static void buildCaseByMethod(final Class&lt;?&gt; clazz,
+                                         final String methodName) throws RobotestException {
+<span class="fc" id="L291">        RobotestCase caseAnnot = getCaseAnnotationByMethod(clazz,</span>
+                                                           methodName);
+<span class="fc" id="L293">        RobotestSuite suiteAnnot = getSuiteAnnotation(clazz);</span>
+<span class="fc" id="L294">        LOG.info(&quot;STARTING CASE: {} OF {} FOR {}&quot;,</span>
+<span class="fc" id="L295">                 caseAnnot.tag(),</span>
+<span class="fc" id="L296">                 suiteAnnot.tag(),</span>
+<span class="fc" id="L297">                 clazz.getName() + &quot;.&quot; + methodName);</span>
+<span class="fc" id="L298">        SuiteContext suite = getSuite(suiteAnnot);</span>
+        try {
+<span class="fc" id="L300">            suite.initTestCase(suiteAnnot,</span>
+                               caseAnnot);
+<span class="nc" id="L302">        } catch (RobotestException e) {</span>
+<span class="nc" id="L303">            suite.putCaseError(caseAnnot,</span>
+<span class="nc" id="L304">                               ValidationEntry.buildCritical()</span>
+<span class="nc" id="L305">                                              .withException(e));</span>
+<span class="nc" id="L306">            throw e;</span>
+<span class="fc" id="L307">        }</span>
+<span class="fc" id="L308">    }</span>
+
+    /**
+     * Free case execution resources.
+     *
+     * @param clazz
+     *            Suite class.
+     * @param methodName
+     *            Case method name.
+     * @throws RobotestException
+     *             free case resource errors.
+     */
+    public static void endCaseByMethod(final Class&lt;?&gt; clazz,
+                                       final String methodName) throws RobotestException {
+<span class="fc" id="L322">        RobotestCase caseAnnot = getCaseAnnotationByMethod(clazz,</span>
+                                                           methodName);
+<span class="fc" id="L324">        RobotestSuite suiteAnnot = getSuiteAnnotation(clazz);</span>
+<span class="fc" id="L325">        LOG.info(&quot;ENDING CASE: {} OF {} FOR {}&quot;,</span>
+<span class="fc" id="L326">                 caseAnnot.tag(),</span>
+<span class="fc" id="L327">                 suiteAnnot.tag(),</span>
+<span class="fc" id="L328">                 clazz.getName() + &quot;.&quot; + methodName);</span>
+<span class="fc" id="L329">        SuiteContext suite = getSuite(suiteAnnot);</span>
+        try {
+<span class="fc" id="L331">            suite.endTestCase(caseAnnot);</span>
+        } finally {
+<span class="fc" id="L333">            SUITE_CASES.get(suiteAnnot)</span>
+<span class="fc" id="L334">                       .remove(caseAnnot);</span>
+        }
+<span class="fc" id="L336">    }</span>
+
+    /**
+     * Retrive case annotation information by case method name, validate doclet tag attribute acomplish TAG_PATTERN.
+     *
+     * @param klass
+     *            Suite class.
+     * @param methodName
+     *            case method name.
+     * @return RobotestCase annot.
+     * @throws RobotestException
+     *             errors in case retrive and validations.
+     */
+    public static RobotestCase getCaseAnnotationByMethod(final Class&lt;?&gt; klass,
+                                                         final String methodName) throws RobotestException {
+<span class="fc" id="L351">        RobotestCase annotCase = null;</span>
+        try {
+<span class="fc bfc" id="L353" title="All 2 branches covered.">            for (Method method : klass.getMethods()) {</span>
+<span class="fc" id="L354">                if (method.getName()</span>
+<span class="fc bfc" id="L355" title="All 2 branches covered.">                          .equals(methodName)) {</span>
+<span class="pc bpc" id="L356" title="1 of 2 branches missed.">                    if (null != annotCase) {</span>
+<span class="nc" id="L357">                        throw new RobotestException(&quot;TEST METHOD NAME MUST BE UNIQUE! &quot; + methodName);</span>
+                    }
+<span class="fc" id="L359">                    annotCase = method.getAnnotation(RobotestCase.class);</span>
+                }
+            }
+<span class="fc bfc" id="L362" title="All 2 branches covered.">            if (null == annotCase) {</span>
+<span class="fc" id="L363">                throw new RobotestException(&quot;TEST METHOD NOT EXIST, NOT ACCESIBLE AND NOT @RobotestCase ANNOTATED!&quot;);</span>
+            }
+<span class="fc" id="L365">            validateTag(klass,</span>
+                        methodName,
+                        annotCase);
+<span class="nc" id="L368">        } catch (SecurityException e) {</span>
+<span class="nc" id="L369">            throw new RobotestException(&quot;TEST METHOD NOT EXIST OR NOT ACCESIBLE: &quot; + methodName,</span>
+                                        e);
+<span class="fc" id="L371">        }</span>
+<span class="fc" id="L372">        return annotCase;</span>
+    }
+
+    /**
+     * Tag must acommplish [a-zA-Z_0-9]+ pattern.
+     *
+     * @param klass
+     *            suite.
+     * @param annotCase
+     *            case
+     * @throws RobotestException
+     *             errors in pattern.
+     */
+    private static void validateTag(final Class&lt;?&gt; klass,
+                                    final String methodName,
+                                    final RobotestCase annotCase) throws RobotestException {
+<span class="fc bfc" id="L388" title="All 2 branches covered.">        if (!Pattern.matches(TAG_PATTERN,</span>
+<span class="fc" id="L389">                             annotCase.tag())) {</span>
+<span class="fc" id="L390">            throw new RobotestException(&quot;TAG OF CASE: &quot; + methodName + &quot; OF CLASS &quot; + klass.getName()</span>
+                    + &quot; MUST ACOMPLISH &quot; + TAG_PATTERN + &quot; REGEX PATTERN&quot;);
+        }
+<span class="fc" id="L393">    }</span>
+
+    /**
+     * Retrive case annotation information by tag Name, validate doclet tag attribute acomplish TAG_PATTERN.
+     *
+     * @param klass
+     *            Suite class.
+     * @param tagName
+     *            case method name.
+     * @return RobotestCase annot.
+     * @throws RobotestException
+     *             errors in case retrive and validations.
+     */
+    public static RobotestCase getCaseAnnotationByAnnotationTag(final Class&lt;?&gt; klass,
+                                                                final String tagName) throws RobotestException {
+<span class="fc" id="L408">        RobotestCase annotCase = null;</span>
+        try {
+<span class="fc" id="L410">            RobotestCase annotCaseTmp = null;</span>
+<span class="fc bfc" id="L411" title="All 2 branches covered.">            for (Method method : klass.getMethods()) {</span>
+<span class="fc bfc" id="L412" title="All 2 branches covered.">                if (method.isAnnotationPresent(RobotestCase.class)) {</span>
+<span class="fc" id="L413">                    annotCaseTmp = method.getAnnotation(RobotestCase.class);</span>
+<span class="fc" id="L414">                    if (annotCaseTmp.tag()</span>
+<span class="fc bfc" id="L415" title="All 2 branches covered.">                                    .equals(tagName)) {</span>
+<span class="fc" id="L416">                        annotCase = annotCaseTmp;</span>
+<span class="fc" id="L417">                        validateTag(klass,</span>
+<span class="fc" id="L418">                                    method.getName(),</span>
+                                    annotCase);
+                    }
+                }
+            }
+<span class="fc bfc" id="L423" title="All 2 branches covered.">            if (null == annotCase) {</span>
+<span class="fc" id="L424">                throw new RobotestException(&quot;THERE ARE NO TEST METHOD WITH @RobotestCase TAG: &quot; + tagName);</span>
+            }
+<span class="nc" id="L426">        } catch (SecurityException e) {</span>
+<span class="nc" id="L427">            throw new RobotestException(&quot;TEST METHOD MUST BE DECLARED PUBLIC!&quot;,</span>
+                                        e);
+<span class="fc" id="L429">        }</span>
+<span class="fc" id="L430">        return annotCase;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

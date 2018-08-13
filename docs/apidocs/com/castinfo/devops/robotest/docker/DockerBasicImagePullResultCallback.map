@@ -1,8 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node1_0" href="./DockerBasicImagePullResultCallback.html" title="com.castinfo.devops.robotest.docker.DockerBasicImagePullResultCallback" alt="" coords="16,165,245,235"/>
-<area shape="rect" id="node1" href="./DockerBasicImagePullResultCallback.html" title="&lt;TABLE&gt;" alt="" coords="5,160,256,240"/>
-<area shape="rect" id="node5_1" href="https://java.sun.com/j2se/1.4.2/docs/api/com/github/dockerjava/api/model/PullResponseItem.html" title="com.github.dockerjava.api.model.PullResponseItem" alt="" coords="48,294,213,375"/>
-<area shape="rect" id="node5" href="https://java.sun.com/j2se/1.4.2/docs/api/com/github/dockerjava/api/model/PullResponseItem.html" title="&lt;TABLE&gt;" alt="" coords="37,289,224,381"/>
-<area shape="rect" id="node2_2" href="https://java.sun.com/j2se/1.4.2/docs/api/com/github/dockerjava/core/command/PullImageResultCallback.html" title="com.github.dockerjava.core.command.PullImageResultCallback" alt="" coords="41,11,220,107"/>
-<area shape="rect" id="node2" href="https://java.sun.com/j2se/1.4.2/docs/api/com/github/dockerjava/core/command/PullImageResultCallback.html" title="&lt;TABLE&gt;" alt="" coords="31,5,231,112"/>
-</map>

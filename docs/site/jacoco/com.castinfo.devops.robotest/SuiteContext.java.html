@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SuiteContext.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.cast-info.devops:robotest-core</a> &gt; <a href="index.source.html" class="el_package">com.castinfo.devops.robotest</a> &gt; <span class="el_source">SuiteContext.java</span></div><h1>SuiteContext.java</h1><pre class="source lang-java linenums">/********************************************************************************
+ * ROBOTEST
+ * Copyright (C) 2018 CAST-INFO, S.A. www.cast-info.es
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *******************************************************************************/
+package com.castinfo.devops.robotest;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.openqa.selenium.WebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.castinfo.devops.robotest.annot.RobotestCase;
+import com.castinfo.devops.robotest.annot.RobotestSuite;
+import com.castinfo.devops.robotest.config.DockerConfig;
+import com.castinfo.devops.robotest.config.IRobotestConfiguration;
+import com.castinfo.devops.robotest.config.RobotestBasicConfig;
+import com.castinfo.devops.robotest.config.RobotestConfiguration;
+import com.castinfo.devops.robotest.report.ConfigEntry;
+import com.castinfo.devops.robotest.report.SuiteReport;
+import com.castinfo.devops.robotest.report.ValidationEntry;
+import com.castinfo.devops.robotest.selenium.SeleniumDriverFactory;
+
+/**
+ * This class contains context object needed for Robotest Suite execution, for example, Report, Selenium Web Driver and
+ * Selenium associated Dockers.
+ *
+ */
+<span class="fc" id="L46">public class SuiteContext {</span>
+
+<span class="fc" id="L48">    private static final Logger LOG = LoggerFactory.getLogger(SuiteContext.class);</span>
+
+<span class="fc" id="L50">    private SuiteReport reporter = null;</span>
+<span class="fc" id="L51">    private IRobotestConfiguration cfg = new RobotestConfiguration();</span>
+<span class="fc" id="L52">    private RobotestSuite suiteAnnotation = null;</span>
+
+<span class="fc" id="L54">    private Map&lt;RobotestCase, WebDriver&gt; caseDrivers = new HashMap&lt;&gt;();</span>
+
+    /**
+     * Init configuration (basic and user), report and docker farm.
+     *
+     * @param order
+     *            Suite execution order.
+     *
+     * @throws RobotestException
+     *             errors in IO or timeout Docker Host.
+     */
+    public void initSuite(final int order) throws RobotestException {
+<span class="fc" id="L66">        RobotestExecutionContext.getBrowserDockers()</span>
+<span class="fc" id="L67">                                .put(suiteAnnotation,</span>
+                                     new HashMap&lt;&gt;());
+<span class="fc" id="L69">        cfg.loadBasic(suiteAnnotation);</span>
+<span class="fc" id="L70">        File reportFile = new File(cfg.getConfigBasic()</span>
+<span class="fc" id="L71">                                      .getReportFilePath()</span>
+                + &quot;/robotest-report-&quot; + order + &quot;.json&quot;);
+<span class="fc" id="L73">        reporter = new SuiteReport(order,</span>
+                                   reportFile);
+        try {
+<span class="fc" id="L76">            cfg.loadAnnotationScopeConfig(suiteAnnotation.configElements(),</span>
+                                          suiteAnnotation);
+<span class="fc" id="L78">            if (null != cfg.getConfigBasic()</span>
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">                           .getDocker()</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">                    &amp;&amp; StringUtils.isNotEmpty(cfg.getConfigBasic()</span>
+<span class="nc" id="L81">                                                 .getDocker()</span>
+<span class="nc" id="L82">                                                 .getHost())) {</span>
+<span class="nc" id="L83">                RobotestExecutionContext.initDockerFarmBuilder(cfg.getConfigBasic()</span>
+<span class="nc" id="L84">                                                                  .getDocker());</span>
+            }
+        } finally {
+<span class="fc" id="L87">            List&lt;ConfigEntry&gt; cfgs = cfg.toReportConfigEntries(suiteAnnotation);</span>
+<span class="fc" id="L88">            cfgs.add(new ConfigEntry(&quot;ROBOTEST_CONFIG_BASIC&quot;,</span>
+<span class="fc" id="L89">                                     cfg.getConfigBasic()));</span>
+<span class="fc" id="L90">            reporter.initSuite(suiteAnnotation.tag(),</span>
+<span class="fc" id="L91">                               suiteAnnotation.description(),</span>
+<span class="fc" id="L92">                               System.currentTimeMillis(),</span>
+                               cfgs);
+        }
+<span class="fc" id="L95">    }</span>
+
+    /**
+     * Finish report and free docker farm.
+     *
+     * @throws RobotestException
+     *             errors ending suite.
+     */
+    public void endSuite() throws RobotestException {
+        try {
+<span class="fc" id="L105">            reporter.endSuite(System.currentTimeMillis());</span>
+<span class="nc" id="L106">        } catch (RobotestException e) {</span>
+<span class="nc" id="L107">            throw new RobotestException(&quot;ROBOTEST END OF SUITE ERRORS&quot;,</span>
+                                        e);
+<span class="fc" id="L109">        }</span>
+<span class="fc" id="L110">    }</span>
+
+    /**
+     * Forze destroy all drivers when end robotest. Only can be called exectuion context to ensure free resources.
+     *
+     */
+    protected void forzeSeleniumDriversDestroy() {
+<span class="nc bnc" id="L117" title="All 2 branches missed.">        if (null != caseDrivers) {</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">            for (WebDriver driver : caseDrivers.values()) {</span>
+                try {
+<span class="nc" id="L120">                    driver.quit();</span>
+<span class="nc" id="L121">                } catch (Exception e) {</span>
+<span class="nc" id="L122">                    SuiteContext.LOG.error(&quot;ERROR STOPING SELENIUM DRIVER&quot;,</span>
+                                           e);
+<span class="nc" id="L124">                }</span>
+<span class="nc" id="L125">            }</span>
+        }
+<span class="nc" id="L127">    }</span>
+
+    /**
+     * All cases have loaded Selenium Web Driver accesible with this method.
+     *
+     * @param caseAnnot
+     *            case annotation.
+     * @return WebDriver.
+     */
+    protected WebDriver getDriverByCase(final RobotestCase caseAnnot) {
+<span class="fc" id="L137">        return caseDrivers.get(caseAnnot);</span>
+    }
+
+    /**
+     * Getter method for suite associated annotation.
+     *
+     * @return the suiteAnnotation
+     */
+    public RobotestSuite getSuiteAnnotation() {
+<span class="fc" id="L146">        return suiteAnnotation;</span>
+    }
+
+    /**
+     * Setter method for the suite annotation.
+     *
+     * @param suiteAnnotation
+     *            the suiteAnnotation to set
+     */
+    public void setSuiteAnnotation(final RobotestSuite suiteAnnotation) {
+<span class="fc" id="L156">        this.suiteAnnotation = suiteAnnotation;</span>
+<span class="fc" id="L157">    }</span>
+
+    /**
+     * Getter method for reporter.
+     *
+     * @return the reporter
+     */
+    public SuiteReport getReporter() {
+<span class="fc" id="L165">        return reporter;</span>
+    }
+
+    /**
+     * Setter method for the reporter.
+     *
+     * @param reporter
+     *            the reporter to set
+     */
+    public void setReporter(final SuiteReport reporter) {
+<span class="nc" id="L175">        this.reporter = reporter;</span>
+<span class="nc" id="L176">    }</span>
+
+    /**
+     * Get suite RobotestConfiguration objet. Returned object brings access to basic and custom user configurations.
+     *
+     * @return RobotestConfiguration.
+     */
+    public IRobotestConfiguration getConfig() {
+<span class="fc" id="L184">        return cfg;</span>
+    }
+
+    /**
+     * Inits Case test with annotation. Load new Selenium Docker if and connect WebDriver or direct creates local driver
+     * without Docker.
+     *
+     * @param testCaseAnnot
+     *            Case annot.
+     * @param suiteAnnot
+     *            Suite annot.
+     * @throws RobotestException
+     *             Errors probably IO or creating Docker browser.
+     */
+    public void initTestCase(final RobotestSuite suiteAnnot,
+                             final RobotestCase testCaseAnnot) throws RobotestException {
+<span class="fc" id="L200">        getConfig().loadAnnotationScopeConfig(testCaseAnnot.configElements(),</span>
+                                              testCaseAnnot);
+<span class="fc" id="L202">        List&lt;ConfigEntry&gt; lCfgs = cfg.toReportConfigEntries(testCaseAnnot);</span>
+<span class="fc" id="L203">        WebDriver wd = null;</span>
+<span class="fc" id="L204">        RobotestBasicConfig basicCfg = cfg.getConfigBasic();</span>
+        try {
+<span class="fc" id="L206">            SeleniumDriverFactory selFactory = new SeleniumDriverFactory(basicCfg);</span>
+
+<span class="pc bpc" id="L208" title="1 of 4 branches missed.">            if (null != basicCfg.getDocker() &amp;&amp; StringUtils.isNotEmpty(basicCfg.getDocker()</span>
+<span class="fc" id="L209">                                                                               .getHost())) {</span>
+<span class="nc" id="L210">                DockerConfig docker = RobotestExecutionContext.getDockerFarmBuilder()</span>
+<span class="nc" id="L211">                                                              .createBrowser(basicCfg.getBrowser()</span>
+<span class="nc" id="L212">                                                                                     .getBrowserName());</span>
+<span class="nc" id="L213">                RobotestExecutionContext.getBrowserDockers()</span>
+<span class="nc" id="L214">                                        .get(suiteAnnotation)</span>
+<span class="nc" id="L215">                                        .put(testCaseAnnot,</span>
+                                             docker);
+<span class="nc" id="L217">                ConfigEntry cEntry = new ConfigEntry(&quot;DOCKER_BROWSER_INSTANCE&quot;,</span>
+                                                     docker);
+<span class="nc" id="L219">                lCfgs.add(cEntry);</span>
+<span class="nc" id="L220">                wd = selFactory.buildDockerHubWebDriver(docker);</span>
+<span class="pc bpc" id="L221" title="1 of 2 branches missed.">            } else if (null != basicCfg.getBrowserStack()) {</span>
+<span class="nc" id="L222">                wd = selFactory.buildBrowserStackRealDeviceWebDriver(suiteAnnot.tag(),</span>
+<span class="nc" id="L223">                                                                     testCaseAnnot.tag(),</span>
+<span class="nc" id="L224">                                                                     basicCfg.getBrowserStack());</span>
+            } else {
+<span class="fc" id="L226">                wd = selFactory.buildLocalNativeWebDriver();</span>
+            }
+<span class="fc" id="L228">            caseDrivers.put(testCaseAnnot,</span>
+                            wd);
+        } finally {
+<span class="fc" id="L231">            reporter.initCase(testCaseAnnot.tag(),</span>
+<span class="fc" id="L232">                              testCaseAnnot.description(),</span>
+<span class="fc" id="L233">                              System.currentTimeMillis(),</span>
+                              lCfgs);
+        }
+<span class="fc" id="L236">    }</span>
+
+    /**
+     * Ends case report and stop Selenium Docker node if exist and loaded WebDriver.
+     *
+     * @param testCaseAnnot
+     *            Case annot.
+     * @throws RobotestException
+     *             Errors probably IO or ending Docker browser.
+     */
+    public void endTestCase(final RobotestCase testCaseAnnot) throws RobotestException {
+<span class="fc" id="L247">        StringBuilder errorResult = new StringBuilder();</span>
+        try {
+<span class="fc" id="L249">            reporter.endCase(testCaseAnnot.tag(),</span>
+<span class="fc" id="L250">                             System.currentTimeMillis());</span>
+<span class="nc" id="L251">        } catch (RobotestException e) {</span>
+<span class="nc" id="L252">            errorResult.append(&quot;IMPOSIBLE END CASE REPORT: &quot;);</span>
+<span class="nc" id="L253">            errorResult.append(ValidationEntry.throwableToString(e));</span>
+<span class="nc" id="L254">            errorResult.append(&quot; &quot;);</span>
+<span class="fc" id="L255">        }</span>
+<span class="fc" id="L256">        WebDriver driver = caseDrivers.remove(testCaseAnnot);</span>
+<span class="pc bpc" id="L257" title="1 of 2 branches missed.">        if (null != driver) {</span>
+            try {
+<span class="fc" id="L259">                driver.quit();</span>
+<span class="nc" id="L260">            } catch (Exception e) {</span>
+<span class="nc" id="L261">                errorResult.append(&quot;ERROR CLOSING SELENIUM BROWSER: &quot;);</span>
+<span class="nc" id="L262">                errorResult.append(ValidationEntry.throwableToString(e));</span>
+<span class="nc" id="L263">                errorResult.append(&quot; &quot;);</span>
+<span class="fc" id="L264">            }</span>
+        }
+<span class="fc" id="L266">        DockerConfig docker = RobotestExecutionContext.getBrowserDockers()</span>
+<span class="fc" id="L267">                                                      .get(suiteAnnotation)</span>
+<span class="fc" id="L268">                                                      .remove(testCaseAnnot);</span>
+<span class="pc bpc" id="L269" title="1 of 2 branches missed.">        if (null != docker) {</span>
+            try {
+<span class="nc" id="L271">                RobotestExecutionContext.getDockerFarmBuilder()</span>
+<span class="nc" id="L272">                                        .stopNode(docker.getIdContainer());</span>
+<span class="nc" id="L273">            } catch (Exception e) {</span>
+<span class="nc" id="L274">                errorResult.append(docker.getIdContainer());</span>
+<span class="nc" id="L275">                errorResult.append(&quot;: &quot;);</span>
+<span class="nc" id="L276">                errorResult.append(ValidationEntry.throwableToString(e));</span>
+<span class="nc" id="L277">                errorResult.append(&quot; &quot;);</span>
+<span class="nc" id="L278">                SuiteContext.LOG.error(&quot;ERROR STOPING DOCKER SELENIUM NODE CONTAINER ID={}&quot;,</span>
+                                       errorResult);
+<span class="nc" id="L280">            }</span>
+        }
+<span class="pc bpc" id="L282" title="1 of 2 branches missed.">        if (errorResult.length() &gt; 0) {</span>
+<span class="nc" id="L283">            throw new RobotestException(&quot;ERROR ENDING CASE: &quot; + errorResult.toString());</span>
+        }
+<span class="fc" id="L285">    }</span>
+
+    /**
+     * Init step config and report.
+     *
+     * @param pf
+     *            PageObject object.
+     * @param initMillis
+     *            initial step timemillis.
+     * @throws RobotestException
+     *             errors loading step
+     */
+    public void initStep(final PageObject pf,
+                         final long initMillis) throws RobotestException {
+<span class="fc" id="L299">        IRobotestConfiguration suiteCfg = RobotestExecutionContext.getSuite(pf.getSuiteAnnot())</span>
+<span class="fc" id="L300">                                                                  .getConfig();</span>
+<span class="fc" id="L301">        getConfig().loadAnnotationScopeConfig(pf.getStepAnnot()</span>
+<span class="fc" id="L302">                                                .configElements(),</span>
+<span class="fc" id="L303">                                              pf.getStepAnnot());</span>
+<span class="fc" id="L304">        getReporter().initStep(pf.getCaseAnnot()</span>
+<span class="fc" id="L305">                                 .tag(),</span>
+<span class="fc" id="L306">                               pf.getStepAnnot()</span>
+<span class="fc" id="L307">                                 .tag(),</span>
+<span class="fc" id="L308">                               pf.getStepAnnot()</span>
+<span class="fc" id="L309">                                 .description(),</span>
+<span class="fc" id="L310">                               suiteCfg.toReportConfigEntries(pf.getStepAnnot()),</span>
+                               initMillis);
+<span class="fc" id="L312">        SuiteContext.LOG.info(&quot;STARTING STEP: {} OF {} OF {}&quot;,</span>
+<span class="fc" id="L313">                              pf.getStepAnnot()</span>
+<span class="fc" id="L314">                                .tag(),</span>
+<span class="fc" id="L315">                              pf.getSuiteAnnot()</span>
+<span class="fc" id="L316">                                .tag(),</span>
+<span class="fc" id="L317">                              pf.getCaseAnnot()</span>
+<span class="fc" id="L318">                                .tag());</span>
+<span class="fc" id="L319">    }</span>
+
+    /**
+     * Adapter for legacy compatibilities.
+     *
+     * @param pf
+     *            page object
+     * @param idStep
+     *            custom step id
+     * @param stepDescription
+     *            custom step description.
+     * @param startMillis
+     *            step start milliseconds
+     * @param endMillis
+     *            step end milliseconds
+     * @param status
+     *            Final step status.
+     * @param listValidationEntries
+     *            Validation entries list
+     * @throws RobotestException
+     *             errors loading step
+     */
+    public void addCustomStepToReport(final PageObject pf,
+                                      final String idStep,
+                                      final String stepDescription,
+                                      final long startMillis,
+                                      final long endMillis,
+                                      final StepStatus status,
+                                      final List&lt;ValidationEntry&gt; listValidationEntries) throws RobotestException {
+<span class="nc" id="L348">        getReporter().initStep(pf.getCaseAnnot()</span>
+<span class="nc" id="L349">                                 .tag(),</span>
+                               idStep,
+                               stepDescription,
+<span class="nc" id="L352">                               pf.getSuiteContext()</span>
+<span class="nc" id="L353">                                 .getConfig()</span>
+<span class="nc" id="L354">                                 .toReportConfigEntries(pf.getStepAnnot()),</span>
+                               startMillis);
+<span class="nc bnc" id="L356" title="All 2 branches missed.">        for (ValidationEntry validationEntry : listValidationEntries) {</span>
+<span class="nc" id="L357">            getReporter().addStepValidationEntry(pf.getCaseAnnot()</span>
+<span class="nc" id="L358">                                                   .tag(),</span>
+                                                 idStep,
+                                                 validationEntry);
+<span class="nc" id="L361">        }</span>
+<span class="nc" id="L362">        getReporter().endStep(pf.getCaseAnnot()</span>
+<span class="nc" id="L363">                                .tag(),</span>
+                              idStep,
+                              status,
+                              endMillis);
+<span class="nc" id="L367">        SuiteContext.LOG.info(&quot;ADD CUSTOM STEP: {} OF {} OF {}&quot;,</span>
+                              idStep,
+<span class="nc" id="L369">                              pf.getCaseAnnot()</span>
+<span class="nc" id="L370">                                .tag(),</span>
+<span class="nc" id="L371">                              pf.getSuiteAnnot()</span>
+<span class="nc" id="L372">                                .tag());</span>
+<span class="nc" id="L373">    }</span>
+
+    /**
+     * Ends step report.
+     *
+     * @param pf
+     *            PageObject
+     * @param resultadoStatusStep
+     *            Step result status.
+     * @param endMillis
+     *            end time.
+     */
+    public void endStep(final PageObject pf,
+                        final StepStatus resultadoStatusStep,
+                        final long endMillis) {
+<span class="fc" id="L388">        getReporter().endStep(pf.getCaseAnnot()</span>
+<span class="fc" id="L389">                                .tag(),</span>
+<span class="fc" id="L390">                              pf.getStepAnnot()</span>
+<span class="fc" id="L391">                                .tag(),</span>
+                              resultadoStatusStep,
+                              endMillis);
+<span class="fc" id="L394">        SuiteContext.LOG.info(&quot;ENDING STEP: {} OF {} OF {}&quot;,</span>
+<span class="fc" id="L395">                              pf.getStepAnnot()</span>
+<span class="fc" id="L396">                                .tag(),</span>
+<span class="fc" id="L397">                              pf.getCaseAnnot()</span>
+<span class="fc" id="L398">                                .tag(),</span>
+<span class="fc" id="L399">                              pf.getSuiteAnnot()</span>
+<span class="fc" id="L400">                                .tag());</span>
+<span class="fc" id="L401">    }</span>
+
+    /**
+     * Add aditional step validation entry.
+     *
+     * @param pf
+     *            PageObject
+     * @param additionalEntry
+     *            additional entry.
+     */
+    public void addAdditionalStepEntry(final PageObject pf,
+                                       final ValidationEntry additionalEntry) {
+<span class="nc" id="L413">        getReporter().addStepValidationEntry(pf.getCaseAnnot()</span>
+<span class="nc" id="L414">                                               .tag(),</span>
+<span class="nc" id="L415">                                             pf.getStepAnnot()</span>
+<span class="nc" id="L416">                                               .tag(),</span>
+                                             additionalEntry);
+<span class="nc" id="L418">    }</span>
+
+    /**
+     * Put Report Suite out case initialitation errors. If no reporter available, validation entry is redirected to
+     * CONSOLE.
+     *
+     * @param validationEntry
+     *            validation entry.
+     */
+    protected void putIntialitationSuiteError(final ValidationEntry validationEntry) {
+        try {
+<span class="nc" id="L429">            getReporter().addSuiteValidationEntry(validationEntry);</span>
+<span class="nc" id="L430">        } catch (Exception e) {</span>
+<span class="nc" id="L431">            SuiteContext.LOG.info(&quot;ERROR WRITING SUITE OUT CASE ERROR: {} CAUSE: {}&quot;,</span>
+<span class="nc" id="L432">                                  validationEntry.getResource(),</span>
+<span class="nc" id="L433">                                  e.getMessage());</span>
+<span class="nc" id="L434">        }</span>
+<span class="nc" id="L435">    }</span>
+
+    /**
+     * Put Report Case out step initialitation errors.
+     *
+     * @param caseAnnot
+     *            case annotation.
+     * @param validationEntry
+     *            validation entry.
+     */
+    protected void putCaseError(final RobotestCase caseAnnot,
+                                final ValidationEntry validationEntry) {
+<span class="nc" id="L447">        getReporter().addCaseValidationEntry(caseAnnot.tag(),</span>
+                                             validationEntry);
+
+<span class="nc" id="L450">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

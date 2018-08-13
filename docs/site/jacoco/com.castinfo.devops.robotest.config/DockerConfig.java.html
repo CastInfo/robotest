@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DockerConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.cast-info.devops:robotest-core</a> &gt; <a href="index.source.html" class="el_package">com.castinfo.devops.robotest.config</a> &gt; <span class="el_source">DockerConfig.java</span></div><h1>DockerConfig.java</h1><pre class="source lang-java linenums">/********************************************************************************
+ * ROBOTEST
+ * Copyright (C) 2018 CAST-INFO, S.A. www.cast-info.es
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *******************************************************************************/
+package com.castinfo.devops.robotest.config;
+
+import java.util.Map;
+
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+/**
+ * Jackson DTO for Docker config included in base config.
+ *
+ */
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({ &quot;host&quot;,
+                     &quot;image&quot;,
+                     &quot;idContainer&quot;,
+                     &quot;containerName&quot;,
+                     &quot;networkMode&quot;,
+                     &quot;inspectRealPort&quot;,
+                     &quot;hub&quot;,
+                     &quot;expose_port&quot;,
+                     &quot;expose_debug_port&quot;,
+                     &quot;chromeImageTag&quot;,
+                     &quot;chromeDebugImageTag&quot;,
+                     &quot;firefoxImageTag&quot;,
+                     &quot;firefoxDebugImageTag&quot;,
+                     &quot;dockerRegistryUrl&quot;,
+                     &quot;dockerRegistryUser&quot;,
+                     &quot;dockerRegistryEmail&quot; })
+<span class="fc" id="L51">public class DockerConfig {</span>
+
+    /**
+     * The Host .
+     */
+<span class="fc" id="L56">    @JsonProperty(&quot;host&quot;)</span>
+    private String host = null;
+    /**
+     * The chromeImageTag .
+     */
+<span class="fc" id="L61">    @JsonProperty(&quot;chromeImageTag&quot;)</span>
+    private String chromeImageTag = null;
+    /**
+     * The chrome_debug_image_tag .
+     */
+<span class="fc" id="L66">    @JsonProperty(&quot;chromeDebugImageTag&quot;)</span>
+    private String chromeDebugImageTag = null;
+    /**
+     * The firefoxImageTag .
+     */
+<span class="fc" id="L71">    @JsonProperty(&quot;firefoxImageTag&quot;)</span>
+    private String firefoxImageTag = null;
+    /**
+     * The firefoxDebugImageTag .
+     */
+<span class="fc" id="L76">    @JsonProperty(&quot;firefoxDebugImageTag&quot;)</span>
+    private String firefoxDebugImageTag = null;
+    /**
+     * The Image.
+     */
+<span class="fc" id="L81">    @JsonProperty(&quot;image&quot;)</span>
+    private String image = null;
+    /**
+     * The idContainer .
+     */
+<span class="fc" id="L86">    @JsonProperty(&quot;idContainer&quot;)</span>
+    private String idContainer = null;
+    /**
+     * The Hub .
+     */
+<span class="fc" id="L91">    @JsonProperty(&quot;hub&quot;)</span>
+    private String hub = null;
+    /**
+     * The Expose_port .
+     */
+<span class="fc" id="L96">    @JsonProperty(&quot;expose_port&quot;)</span>
+    private String exposePort = null;
+    /**
+     * The Expose_debug_port .
+     */
+<span class="fc" id="L101">    @JsonProperty(&quot;expose_debug_port&quot;)</span>
+    private String exposeDebugPort = null;
+    /**
+     * The certs path.
+     */
+<span class="fc" id="L106">    @JsonProperty(&quot;certsPath&quot;)</span>
+    private String certsPath = null;
+    /**
+     * The containerName.
+     */
+<span class="fc" id="L111">    @JsonProperty(&quot;containerName&quot;)</span>
+    private String containerName = null;
+
+    /**
+     * The network mode.
+     */
+<span class="fc" id="L117">    @JsonProperty(&quot;networkMode&quot;)</span>
+    private String networkMode = null;
+
+<span class="fc" id="L120">    @JsonProperty(&quot;inspectRealPort&quot;)</span>
+    private String inspectRealPort = null;
+
+<span class="fc" id="L123">    @JsonProperty(&quot;dockerRegistryUrl&quot;)</span>
+    private String dockerRegistryUrl = null;
+<span class="fc" id="L125">    @JsonProperty(&quot;dockerRegistryUser&quot;)</span>
+    private String dockerRegistryUser = null;
+<span class="fc" id="L127">    private String dockerRegistrySecret = null;</span>
+<span class="fc" id="L128">    @JsonProperty(&quot;dockerRegistryEmail&quot;)</span>
+    private String dockerRegistryEmail = null;
+
+<span class="fc" id="L131">    private Map&lt;String, String&gt; labels = null;</span>
+
+    /**
+     * The Host .
+     *
+     * @return host
+     */
+    @JsonProperty(&quot;host&quot;)
+    public String getHost() {
+<span class="fc" id="L140">        return host;</span>
+    }
+
+    /**
+     * The Host .
+     *
+     * @param host
+     *            host
+     */
+    @JsonProperty(&quot;host&quot;)
+    public void setHost(final String host) {
+<span class="fc" id="L151">        this.host = host;</span>
+<span class="fc" id="L152">    }</span>
+
+    /**
+     * The Image .
+     *
+     * @return image
+     */
+    @JsonProperty(&quot;image&quot;)
+    public String getImage() {
+<span class="fc" id="L161">        return image;</span>
+    }
+
+    /**
+     * The Image .
+     *
+     * @param image
+     *            image
+     *
+     */
+    @JsonProperty(&quot;image&quot;)
+    public void setImage(final String image) {
+<span class="nc" id="L173">        this.image = image;</span>
+<span class="nc" id="L174">    }</span>
+
+    /**
+     * The idContainer .
+     *
+     * @return idContainer
+     */
+    @JsonProperty(&quot;idContainer&quot;)
+    public String getIdContainer() {
+<span class="fc" id="L183">        return idContainer;</span>
+    }
+
+    /**
+     * The idContainer .
+     *
+     * @param idContainer
+     *            idContainer
+     */
+    @JsonProperty(&quot;idContainer&quot;)
+    public void setIdContainer(final String idContainer) {
+<span class="fc" id="L194">        this.idContainer = idContainer;</span>
+<span class="fc" id="L195">    }</span>
+
+    /**
+     * The containerName getter.
+     *
+     * @return continerName value.
+     */
+    @JsonProperty(&quot;containerName&quot;)
+    public String getContainerName() {
+<span class="fc" id="L204">        return containerName;</span>
+    }
+
+    /**
+     * The containerName setter.
+     *
+     * @param containerName
+     *            value.
+     */
+    @JsonProperty(&quot;containerName&quot;)
+    public void setContainerName(final String containerName) {
+<span class="fc" id="L215">        this.containerName = containerName;</span>
+<span class="fc" id="L216">    }</span>
+
+    /**
+     * The networkMode getter.
+     *
+     * @return the networkMode value.
+     */
+    public String getNetworkMode() {
+<span class="fc" id="L224">        return networkMode;</span>
+    }
+
+    /**
+     * The networkMode setter.
+     *
+     * @param networkMode
+     *            the networkMode to set
+     */
+    public void setNetworkMode(final String networkMode) {
+<span class="fc" id="L234">        this.networkMode = networkMode;</span>
+<span class="fc" id="L235">    }</span>
+
+    /**
+     * Getter method for inspectRealPort.
+     *
+     * @return the inspectRealPort
+     */
+    @JsonProperty(&quot;inspectRealPort&quot;)
+    public String getInspectRealPort() {
+<span class="fc" id="L244">        return inspectRealPort;</span>
+    }
+
+    /**
+     * Setter method for the inspectRealPort.
+     *
+     * @param inspectRealPort
+     *            the inspectRealPort to set
+     */
+    @JsonProperty(&quot;inspectRealPort&quot;)
+    public void setInspectRealPort(final String inspectRealPort) {
+<span class="fc" id="L255">        this.inspectRealPort = inspectRealPort;</span>
+<span class="fc" id="L256">    }</span>
+
+    /**
+     * Getter method for dockerRegistryUrl.
+     *
+     * @return the dockerRegistryUrl
+     */
+    @JsonProperty(&quot;dockerRegistryUrl&quot;)
+    public String getDockerRegistryUrl() {
+<span class="fc" id="L265">        return dockerRegistryUrl;</span>
+    }
+
+    /**
+     * Setter method for the dockerRegistryUrl.
+     *
+     * @param dockerRegistryUrl
+     *            the dockerRegistryUrl to set
+     */
+    @JsonProperty(&quot;dockerRegistryUrl&quot;)
+    public void setDockerRegistryUrl(final String dockerRegistryUrl) {
+<span class="fc" id="L276">        this.dockerRegistryUrl = dockerRegistryUrl;</span>
+<span class="fc" id="L277">    }</span>
+
+    /**
+     * Getter method for dockerRegistryUser.
+     *
+     * @return the dockerRegistryUser
+     */
+    @JsonProperty(&quot;dockerRegistryUser&quot;)
+    public String getDockerRegistryUser() {
+<span class="fc" id="L286">        return dockerRegistryUser;</span>
+    }
+
+    /**
+     * Setter method for the dockerRegistryUser.
+     *
+     * @param dockerRegistryUser
+     *            the dockerRegistryUser to set
+     */
+    @JsonProperty(&quot;dockerRegistryUser&quot;)
+    public void setDockerRegistryUser(final String dockerRegistryUser) {
+<span class="fc" id="L297">        this.dockerRegistryUser = dockerRegistryUser;</span>
+<span class="fc" id="L298">    }</span>
+
+    /**
+     * Getter method for dockerRegistrySecret.
+     *
+     * @return the dockerRegistrySecret
+     */
+    public String getDockerRegistrySecret() {
+<span class="fc" id="L306">        return dockerRegistrySecret;</span>
+    }
+
+    /**
+     * Setter method for the dockerRegistrySecret.
+     *
+     * @param dockerRegistrySecret
+     *            the dockerRegistrySecret to set
+     */
+    public void setDockerRegistrySecret(final String dockerRegistrySecret) {
+<span class="fc" id="L316">        this.dockerRegistrySecret = dockerRegistrySecret;</span>
+<span class="fc" id="L317">    }</span>
+
+    /**
+     * Getter method for dockerRegistryEmail.
+     *
+     * @return the dockerRegistryEmail
+     */
+    @JsonProperty(&quot;dockerRegistryEmail&quot;)
+    public String getDockerRegistryEmail() {
+<span class="fc" id="L326">        return dockerRegistryEmail;</span>
+    }
+
+    /**
+     * Setter method for the dockerRegistryEmail.
+     *
+     * @param dockerRegistryEmail
+     *            the dockerRegistryEmail to set
+     */
+    @JsonProperty(&quot;dockerRegistryEmail&quot;)
+    public void setDockerRegistryEmail(final String dockerRegistryEmail) {
+<span class="fc" id="L337">        this.dockerRegistryEmail = dockerRegistryEmail;</span>
+<span class="fc" id="L338">    }</span>
+
+    /**
+     * The labels getter.
+     *
+     * @return the labels value.
+     */
+    public Map&lt;String, String&gt; getLabels() {
+<span class="fc" id="L346">        return labels;</span>
+    }
+
+    /**
+     * The labels setter.
+     *
+     * @param labels
+     *            the labels to set
+     */
+    public void setLabels(final Map&lt;String, String&gt; labels) {
+<span class="fc" id="L356">        this.labels = labels;</span>
+<span class="fc" id="L357">    }</span>
+
+    /**
+     * The Hub .
+     *
+     * @return hub
+     */
+    @JsonProperty(&quot;hub&quot;)
+    public String getHub() {
+<span class="fc" id="L366">        return hub;</span>
+    }
+
+    /**
+     * The Hub .
+     *
+     * @param hub
+     *            hub
+     *
+     */
+    @JsonProperty(&quot;hub&quot;)
+    public void setHub(final String hub) {
+<span class="fc" id="L378">        this.hub = hub;</span>
+<span class="fc" id="L379">    }</span>
+
+    /**
+     * The Expose_port .
+     *
+     * @return exposePort
+     */
+    @JsonProperty(&quot;expose_port&quot;)
+    public String getExposePort() {
+<span class="fc" id="L388">        return exposePort;</span>
+    }
+
+    /**
+     * The Expose_port .
+     *
+     * @param exposePort
+     *            exposePort
+     */
+    @JsonProperty(&quot;expose_port&quot;)
+    public void setExposePort(final String exposePort) {
+<span class="fc" id="L399">        this.exposePort = exposePort;</span>
+<span class="fc" id="L400">    }</span>
+
+    /**
+     * The Expose_debug_port .
+     *
+     * @return exposeDebugPort
+     */
+    @JsonProperty(&quot;expose_debug_port&quot;)
+    public String getExposeDebugPort() {
+<span class="fc" id="L409">        return exposeDebugPort;</span>
+    }
+
+    /**
+     * The Expose_debug_port .
+     *
+     * @param exposeDebugPort
+     *            exposeDebugPort
+     */
+    @JsonProperty(&quot;expose_debug_port&quot;)
+    public void setExposeDebugPort(final String exposeDebugPort) {
+<span class="fc" id="L420">        this.exposeDebugPort = exposeDebugPort;</span>
+<span class="fc" id="L421">    }</span>
+
+    /**
+     * The certsPath .
+     *
+     * @return certsPath
+     */
+    @JsonProperty(&quot;certsPath&quot;)
+    public String getCertsPath() {
+<span class="fc" id="L430">        return certsPath;</span>
+    }
+
+    /**
+     * The certsPath .
+     *
+     * @param certsPath
+     *            certsPath
+     */
+    @JsonProperty(&quot;certsPath&quot;)
+    public void setCertsPath(final String certsPath) {
+<span class="fc" id="L441">        this.certsPath = certsPath;</span>
+<span class="fc" id="L442">    }</span>
+
+    /**
+     * Getter method for chromeImageTag.
+     *
+     * @return the chromeImageTag
+     */
+    @JsonProperty(&quot;chromeImageTag&quot;)
+    public String getChromeImageTag() {
+<span class="fc" id="L451">        return chromeImageTag;</span>
+    }
+
+    /**
+     * Setter method for the chromeImageTag.
+     *
+     * @param chromeImageTag
+     *            the chromeImageTag to set
+     */
+    @JsonProperty(&quot;chromeImageTag&quot;)
+    public void setChromeImageTag(final String chromeImageTag) {
+<span class="fc" id="L462">        this.chromeImageTag = chromeImageTag;</span>
+<span class="fc" id="L463">    }</span>
+
+    /**
+     * Getter method for chrome_debug_image_tag.
+     *
+     * @return the chrome_debug_image_tag
+     */
+    @JsonProperty(&quot;chromeDebugImageTag&quot;)
+    public String getChromeDebugImageTag() {
+<span class="fc" id="L472">        return chromeDebugImageTag;</span>
+    }
+
+    /**
+     * Setter method for the chrome_debug_image_tag.
+     *
+     * @param chromeDebugImageTag
+     *            the chromeDebugImageTag to set
+     */
+    @JsonProperty(&quot;chromeDebugImageTag&quot;)
+    public void setChromeDebugImageTag(final String chromeDebugImageTag) {
+<span class="fc" id="L483">        this.chromeDebugImageTag = chromeDebugImageTag;</span>
+<span class="fc" id="L484">    }</span>
+
+    /**
+     * Getter method for firefoxImageTag.
+     *
+     * @return the firefoxImageTag
+     */
+    @JsonProperty(&quot;firefoxImageTag&quot;)
+    public String getFirefoxImageTag() {
+<span class="fc" id="L493">        return firefoxImageTag;</span>
+    }
+
+    /**
+     * Setter method for the firefoxImageTag.
+     *
+     * @param firefoxImageTag
+     *            the firefoxImageTag to set
+     */
+    @JsonProperty(&quot;firefoxImageTag&quot;)
+    public void setFirefoxImageTag(final String firefoxImageTag) {
+<span class="fc" id="L504">        this.firefoxImageTag = firefoxImageTag;</span>
+<span class="fc" id="L505">    }</span>
+
+    /**
+     * Getter method for firefoxDebugImageTag.
+     *
+     * @return the firefoxDebugImageTag
+     */
+    @JsonProperty(&quot;firefoxDebugImageTag&quot;)
+    public String getFirefoxDebugImageTag() {
+<span class="fc" id="L514">        return firefoxDebugImageTag;</span>
+    }
+
+    /**
+     * Setter method for the firefoxDebugImageTag.
+     *
+     * @param firefoxDebugImageTag
+     *            the firefoxDebugImageTag to set
+     */
+    @JsonProperty(&quot;firefoxDebugImageTag&quot;)
+    public void setFirefoxDebugImageTag(final String firefoxDebugImageTag) {
+<span class="fc" id="L525">        this.firefoxDebugImageTag = firefoxDebugImageTag;</span>
+<span class="fc" id="L526">    }</span>
+
+    @Override
+    public String toString() {
+<span class="fc" id="L530">        return ToStringBuilder.reflectionToString(this);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="fc" id="L535">        return new HashCodeBuilder().append(host)</span>
+<span class="fc" id="L536">                                    .append(image)</span>
+<span class="fc" id="L537">                                    .append(idContainer)</span>
+<span class="fc" id="L538">                                    .append(containerName)</span>
+<span class="fc" id="L539">                                    .append(networkMode)</span>
+<span class="fc" id="L540">                                    .append(inspectRealPort)</span>
+<span class="fc" id="L541">                                    .append(hub)</span>
+<span class="fc" id="L542">                                    .append(exposePort)</span>
+<span class="fc" id="L543">                                    .append(exposeDebugPort)</span>
+<span class="fc" id="L544">                                    .append(certsPath)</span>
+<span class="fc" id="L545">                                    .append(dockerRegistryUrl)</span>
+<span class="fc" id="L546">                                    .append(dockerRegistryUser)</span>
+<span class="fc" id="L547">                                    .append(dockerRegistrySecret)</span>
+<span class="fc" id="L548">                                    .append(dockerRegistryEmail)</span>
+<span class="fc" id="L549">                                    .append(chromeImageTag)</span>
+<span class="fc" id="L550">                                    .append(chromeDebugImageTag)</span>
+<span class="fc" id="L551">                                    .append(firefoxImageTag)</span>
+<span class="fc" id="L552">                                    .append(firefoxDebugImageTag)</span>
+<span class="fc" id="L553">                                    .toHashCode();</span>
+    }
+
+    @Override
+    public boolean equals(final Object other) {
+<span class="fc bfc" id="L558" title="All 2 branches covered.">        if (other == this) {</span>
+<span class="fc" id="L559">            return true;</span>
+        }
+<span class="fc bfc" id="L561" title="All 2 branches covered.">        if (!(other instanceof DockerConfig)) {</span>
+<span class="fc" id="L562">            return false;</span>
+        }
+<span class="fc" id="L564">        DockerConfig rhs = (DockerConfig) other;</span>
+<span class="fc" id="L565">        return new EqualsBuilder().append(host,</span>
+                                          rhs.host)
+<span class="fc" id="L567">                                  .append(image,</span>
+                                          rhs.image)
+<span class="fc" id="L569">                                  .append(idContainer,</span>
+                                          rhs.idContainer)
+<span class="fc" id="L571">                                  .append(containerName,</span>
+                                          rhs.containerName)
+<span class="fc" id="L573">                                  .append(networkMode,</span>
+                                          rhs.networkMode)
+<span class="fc" id="L575">                                  .append(inspectRealPort,</span>
+                                          rhs.inspectRealPort)
+<span class="fc" id="L577">                                  .append(hub,</span>
+                                          rhs.hub)
+<span class="fc" id="L579">                                  .append(exposePort,</span>
+                                          rhs.exposePort)
+<span class="fc" id="L581">                                  .append(exposeDebugPort,</span>
+                                          rhs.exposeDebugPort)
+<span class="fc" id="L583">                                  .append(certsPath,</span>
+                                          rhs.certsPath)
+<span class="fc" id="L585">                                  .append(chromeImageTag,</span>
+                                          rhs.chromeImageTag)
+<span class="fc" id="L587">                                  .append(dockerRegistryUrl,</span>
+                                          rhs.dockerRegistryUrl)
+<span class="fc" id="L589">                                  .append(dockerRegistryUser,</span>
+                                          rhs.dockerRegistryUser)
+<span class="fc" id="L591">                                  .append(dockerRegistrySecret,</span>
+                                          rhs.dockerRegistrySecret)
+<span class="fc" id="L593">                                  .append(dockerRegistryEmail,</span>
+                                          rhs.dockerRegistryEmail)
+<span class="fc" id="L595">                                  .append(chromeDebugImageTag,</span>
+                                          rhs.chromeDebugImageTag)
+<span class="fc" id="L597">                                  .append(firefoxImageTag,</span>
+                                          rhs.firefoxImageTag)
+<span class="fc" id="L599">                                  .append(firefoxDebugImageTag,</span>
+                                          rhs.firefoxDebugImageTag)
+<span class="fc" id="L601">                                  .isEquals();</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

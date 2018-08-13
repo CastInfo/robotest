@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConfigReport.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.cast-info.devops:robotest-core</a> &gt; <a href="index.source.html" class="el_package">com.castinfo.devops.robotest.report</a> &gt; <span class="el_source">ConfigReport.java</span></div><h1>ConfigReport.java</h1><pre class="source lang-java linenums">/********************************************************************************
+ * ROBOTEST
+ * Copyright (C) 2018 CAST-INFO, S.A. www.cast-info.es
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *******************************************************************************/
+package com.castinfo.devops.robotest.report;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Properties;
+
+import com.castinfo.devops.robotest.RobotestException;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
+
+/**
+ * Robotest Step JSON report writer implementation.
+ */
+public class ConfigReport {
+
+    private List&lt;ConfigEntry&gt; configs;
+    private ObjectMapper mapper;
+
+    /**
+     * Constructor.
+     *
+     * @param cfg
+     *            config list.
+     *
+     */
+<span class="fc" id="L44">    public ConfigReport(final List&lt;ConfigEntry&gt; cfg) {</span>
+<span class="fc" id="L45">        configs = cfg;</span>
+<span class="fc" id="L46">        mapper = new ObjectMapper();</span>
+<span class="fc" id="L47">        mapper.registerModule(new JaxbAnnotationModule());</span>
+<span class="fc" id="L48">    }</span>
+
+    /**
+     * Getter method for configs.
+     *
+     * @return the configs
+     */
+    public List&lt;ConfigEntry&gt; getConfigs() {
+<span class="nc" id="L56">        return configs;</span>
+    }
+
+    /**
+     * Setter method for the configs.
+     *
+     * @param configs
+     *            the configs to set
+     */
+    public void setConfigs(final List&lt;ConfigEntry&gt; configs) {
+<span class="nc" id="L66">        this.configs = configs;</span>
+<span class="nc" id="L67">    }</span>
+
+    /**
+     * Getter method for mapper.
+     *
+     * @return the mapper
+     */
+    public ObjectMapper getMapper() {
+<span class="nc" id="L75">        return mapper;</span>
+    }
+
+    /**
+     * Setter method for the mapper.
+     *
+     * @param mapper
+     *            the mapper to set
+     */
+    public void setMapper(final ObjectMapper mapper) {
+<span class="nc" id="L85">        this.mapper = mapper;</span>
+<span class="nc" id="L86">    }</span>
+
+    /**
+     * Config writer in Suite JSON report generator.
+     *
+     * @param jGenerator
+     *            writer
+     * @param cfgName
+     *            config name.
+     * @throws RobotestException
+     *             Errors, provably IO.
+     */
+    public void writeConfig(final JsonGenerator jGenerator,
+                            final String cfgName) throws RobotestException {
+        try {
+<span class="fc" id="L101">            jGenerator.writeFieldName(cfgName);</span>
+<span class="fc" id="L102">            jGenerator.writeStartArray();</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">            for (ConfigEntry cfg : configs) {</span>
+<span class="fc" id="L104">                writeConfigTraverse(jGenerator,</span>
+                                    cfg);
+<span class="fc" id="L106">            }</span>
+<span class="fc" id="L107">            jGenerator.writeEndArray();</span>
+<span class="fc" id="L108">        } catch (IOException e) {</span>
+<span class="fc" id="L109">            throw new RobotestException(&quot;ROBOTEST REPORTER CONFIG WRITE ERROR&quot;,</span>
+                                        e);
+<span class="fc" id="L111">        }</span>
+<span class="fc" id="L112">    }</span>
+
+    /**
+     * Traverse in configuration to addapt uniform JSON format.
+     *
+     * @param jGenerator
+     *            writer
+     * @param cfg
+     *            cfg
+     * @throws IOException
+     *             IO errors.
+     */
+    private void writeConfigTraverse(final JsonGenerator jGenerator,
+                                     final ConfigEntry cfg) throws IOException {
+<span class="fc bfc" id="L126" title="All 2 branches covered.">        if (cfg.getValue() instanceof String) {</span>
+<span class="fc" id="L127">            jGenerator.writeStartObject();</span>
+<span class="fc" id="L128">            jGenerator.writeStringField(cfg.getId(),</span>
+<span class="fc" id="L129">                                        cfg.getValue()</span>
+<span class="fc" id="L130">                                           .toString());</span>
+<span class="fc" id="L131">            jGenerator.writeEndObject();</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">        } else if (cfg.getValue() instanceof Properties) {</span>
+<span class="fc" id="L133">            jGenerator.writeStartObject();</span>
+<span class="fc" id="L134">            jGenerator.writeFieldName(cfg.getId());</span>
+<span class="fc" id="L135">            jGenerator.writeStartObject();</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">            for (Object key : ((Properties) cfg.getValue()).keySet()) {</span>
+<span class="fc" id="L137">                jGenerator.writeStringField(key.toString(),</span>
+<span class="fc" id="L138">                                            ((Properties) cfg.getValue()).get(key)</span>
+<span class="fc" id="L139">                                                                         .toString());</span>
+<span class="fc" id="L140">            }</span>
+<span class="fc" id="L141">            jGenerator.writeEndObject();</span>
+<span class="fc" id="L142">            jGenerator.writeEndObject();</span>
+        } else {
+<span class="fc" id="L144">            jGenerator.writeStartObject();</span>
+<span class="fc" id="L145">            jGenerator.writeFieldName(cfg.getId());</span>
+<span class="fc" id="L146">            mapper.writeValue(jGenerator,</span>
+<span class="fc" id="L147">                              cfg.getValue());</span>
+<span class="fc" id="L148">            jGenerator.writeEndObject();</span>
+        }
+<span class="fc" id="L150">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

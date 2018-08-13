@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CaseReport.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.cast-info.devops:robotest-core</a> &gt; <a href="index.source.html" class="el_package">com.castinfo.devops.robotest.report</a> &gt; <span class="el_source">CaseReport.java</span></div><h1>CaseReport.java</h1><pre class="source lang-java linenums">/********************************************************************************
+ * ROBOTEST
+ * Copyright (C) 2018 CAST-INFO, S.A. www.cast-info.es
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *******************************************************************************/
+package com.castinfo.devops.robotest.report;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.castinfo.devops.robotest.RobotestException;
+import com.castinfo.devops.robotest.StepStatus;
+import com.fasterxml.jackson.core.JsonGenerator;
+
+/**
+ * Robotest Case JSON report writer implementation.
+ */
+public class CaseReport {
+
+    private String id;
+    private String description;
+    private ConfigReport caseConfig;
+    private long initMillis;
+    private long endMillis;
+    private int caseOrder;
+<span class="fc" id="L39">    private List&lt;StepReport&gt; stepReports = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L40">    private List&lt;ValidationEntry&gt; outStepErrors = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * Constructor.
+     *
+     * @param caseOrder
+     *            case exec. order.
+     * @param id
+     *            case annot tag or custom id.
+     * @param description
+     *            description
+     * @param initMillis
+     *            init case timemillis.
+     * @param caseConfig
+     *            list of case config.
+     */
+    public CaseReport(final int caseOrder,
+                      final String id,
+                      final String description,
+                      final long initMillis,
+<span class="fc" id="L60">                      final List&lt;ConfigEntry&gt; caseConfig) {</span>
+<span class="fc" id="L61">        this.caseOrder = caseOrder;</span>
+<span class="fc" id="L62">        this.id = id;</span>
+<span class="fc" id="L63">        this.description = description;</span>
+<span class="fc" id="L64">        this.initMillis = initMillis;</span>
+<span class="fc" id="L65">        this.caseConfig = new ConfigReport(caseConfig);</span>
+<span class="fc" id="L66">    }</span>
+
+    /**
+     * Getter method for id.
+     *
+     * @return the id
+     */
+    public String getId() {
+<span class="fc" id="L74">        return id;</span>
+    }
+
+    /**
+     * Setter method for the id.
+     *
+     * @param id
+     *            the id to set
+     */
+    public void setId(final String id) {
+<span class="nc" id="L84">        this.id = id;</span>
+<span class="nc" id="L85">    }</span>
+
+    /**
+     * Getter method for description.
+     *
+     * @return the description
+     */
+    public String getDescription() {
+<span class="nc" id="L93">        return description;</span>
+    }
+
+    /**
+     * Setter method for the description.
+     *
+     * @param description
+     *            the description to set
+     */
+    public void setDescription(final String description) {
+<span class="nc" id="L103">        this.description = description;</span>
+<span class="nc" id="L104">    }</span>
+
+    /**
+     * Getter method for caseConfig.
+     *
+     * @return the caseConfig
+     */
+    public ConfigReport getCaseConfig() {
+<span class="nc" id="L112">        return caseConfig;</span>
+    }
+
+    /**
+     * Setter method for the caseConfig.
+     *
+     * @param caseConfig
+     *            the caseConfig to set
+     */
+    public void setCaseConfig(final ConfigReport caseConfig) {
+<span class="nc" id="L122">        this.caseConfig = caseConfig;</span>
+<span class="nc" id="L123">    }</span>
+
+    /**
+     * Getter method for initMillis.
+     *
+     * @return the initMillis
+     */
+    public long getInitMillis() {
+<span class="nc" id="L131">        return initMillis;</span>
+    }
+
+    /**
+     * Setter method for the initMillis.
+     *
+     * @param initMillis
+     *            the initMillis to set
+     */
+    public void setInitMillis(final long initMillis) {
+<span class="nc" id="L141">        this.initMillis = initMillis;</span>
+<span class="nc" id="L142">    }</span>
+
+    /**
+     * Getter method for endMillis.
+     *
+     * @return the endMillis
+     */
+    public long getEndMillis() {
+<span class="nc" id="L150">        return endMillis;</span>
+    }
+
+    /**
+     * Setter method for the endMillis.
+     *
+     * @param endMillis
+     *            the endMillis to set
+     */
+    public void setEndMillis(final long endMillis) {
+<span class="nc" id="L160">        this.endMillis = endMillis;</span>
+<span class="nc" id="L161">    }</span>
+
+    /**
+     * Getter method for caseOrder.
+     *
+     * @return the caseOrder
+     */
+    public int getCaseOrder() {
+<span class="nc" id="L169">        return caseOrder;</span>
+    }
+
+    /**
+     * Setter method for the caseOrder.
+     *
+     * @param caseOrder
+     *            the caseOrder to set
+     */
+    public void setCaseOrder(final int caseOrder) {
+<span class="nc" id="L179">        this.caseOrder = caseOrder;</span>
+<span class="nc" id="L180">    }</span>
+
+    /**
+     * Getter method for stepReports.
+     *
+     * @return the stepReports
+     */
+    public List&lt;StepReport&gt; getStepReports() {
+<span class="fc" id="L188">        return stepReports;</span>
+    }
+
+    /**
+     * Setter method for the stepReports.
+     *
+     * @param stepReports
+     *            the stepReports to set
+     */
+    public void setStepReports(final List&lt;StepReport&gt; stepReports) {
+<span class="nc" id="L198">        this.stepReports = stepReports;</span>
+<span class="nc" id="L199">    }</span>
+
+    /**
+     * Getter method for outStepErrors.
+     *
+     * @return the outStepErrors
+     */
+    public List&lt;ValidationEntry&gt; getOutStepErrors() {
+<span class="fc" id="L207">        return outStepErrors;</span>
+    }
+
+    /**
+     * Setter method for the outStepErrors.
+     *
+     * @param outStepErrors
+     *            the outStepErrors to set
+     */
+    public void setOutStepErrors(final List&lt;ValidationEntry&gt; outStepErrors) {
+<span class="nc" id="L217">        this.outStepErrors = outStepErrors;</span>
+<span class="nc" id="L218">    }</span>
+
+    /**
+     * End case.
+     *
+     * @param millis
+     *            end case timemillis.
+     */
+    public void endCase(final long millis) {
+<span class="fc" id="L227">        endMillis = millis;</span>
+<span class="fc" id="L228">    }</span>
+
+    /**
+     * Add step to case.
+     *
+     * @param stepReport
+     *            step report.
+     */
+    public void addStep(final StepReport stepReport) {
+<span class="fc" id="L237">        stepReports.add(stepReport);</span>
+<span class="fc" id="L238">    }</span>
+
+    /**
+     * Write the case in the suite JSON writer.
+     *
+     * @param jGenerator
+     *            json writer.
+     * @throws RobotestException
+     *             errors, probably IO.
+     */
+    public void writeCase(final JsonGenerator jGenerator) throws RobotestException {
+        try {
+<span class="fc" id="L250">            jGenerator.writeStartObject();</span>
+<span class="fc" id="L251">            jGenerator.writeNumberField(&quot;order&quot;,</span>
+                                        caseOrder);
+<span class="fc" id="L253">            jGenerator.writeStringField(&quot;case&quot;,</span>
+                                        id);
+<span class="fc" id="L255">            jGenerator.writeStringField(&quot;description&quot;,</span>
+                                        description);
+<span class="fc" id="L257">            jGenerator.writeNumberField(&quot;initMillis&quot;,</span>
+                                        initMillis);
+
+<span class="fc" id="L260">            caseConfig.writeConfig(jGenerator,</span>
+                                   &quot;config&quot;);
+
+<span class="fc" id="L263">            jGenerator.writeFieldName(&quot;caseOutStepErrors&quot;);</span>
+<span class="fc" id="L264">            jGenerator.writeStartArray();</span>
+<span class="fc bfc" id="L265" title="All 2 branches covered.">            for (ValidationEntry toadd : outStepErrors) {</span>
+<span class="fc" id="L266">                jGenerator.writeStartObject();</span>
+<span class="fc" id="L267">                jGenerator.writeStringField(&quot;status&quot;,</span>
+<span class="fc" id="L268">                                            toadd.getStatus()</span>
+<span class="fc" id="L269">                                                 .name());</span>
+<span class="pc bpc" id="L270" title="1 of 2 branches missed.">                if (null != toadd.getResource()) {</span>
+<span class="fc" id="L271">                    jGenerator.writeArrayFieldStart(&quot;resource&quot;);</span>
+<span class="fc bfc" id="L272" title="All 2 branches covered.">                    for (String res : toadd.getResource()) {</span>
+<span class="fc" id="L273">                        jGenerator.writeObject(res);</span>
+<span class="fc" id="L274">                    }</span>
+<span class="fc" id="L275">                    jGenerator.writeEndArray();</span>
+                }
+<span class="fc" id="L277">                jGenerator.writeEndObject();</span>
+<span class="fc" id="L278">            }</span>
+<span class="fc" id="L279">            jGenerator.writeEndArray();</span>
+
+<span class="fc" id="L281">            jGenerator.writeFieldName(&quot;steps&quot;);</span>
+<span class="fc" id="L282">            jGenerator.writeStartArray();</span>
+<span class="fc bfc" id="L283" title="All 2 branches covered.">            for (StepReport step : stepReports) {</span>
+<span class="fc" id="L284">                step.writeStep(jGenerator);</span>
+<span class="fc" id="L285">            }</span>
+<span class="fc" id="L286">            jGenerator.writeEndArray();</span>
+<span class="fc" id="L287">            jGenerator.writeNumberField(&quot;endMillis&quot;,</span>
+                                        endMillis);
+<span class="fc" id="L289">            jGenerator.writeEndObject();</span>
+<span class="fc" id="L290">        } catch (IOException e) {</span>
+<span class="fc" id="L291">            throw new RobotestException(&quot;ROBOTEST REPORTER ERROR CASE&quot;,</span>
+                                        e);
+<span class="fc" id="L293">        }</span>
+<span class="fc" id="L294">    }</span>
+
+    /**
+     * Put informatin status and endMillis to step object.
+     *
+     * @param caseId
+     *            annotation step or custom id
+     * @param endMs
+     *            end millisecons
+     * @param status
+     *            final status of step.
+     */
+    public void endStep(final String caseId,
+                        final long endMs,
+                        final StepStatus status) {
+<span class="nc bnc" id="L309" title="All 2 branches missed.">        for (StepReport stepReport : stepReports) {</span>
+<span class="nc" id="L310">            if (stepReport.getId()</span>
+<span class="nc bnc" id="L311" title="All 2 branches missed.">                          .equals(caseId)) {</span>
+<span class="nc" id="L312">                stepReport.endStep(status,</span>
+                                   endMs);
+            }
+<span class="nc" id="L315">        }</span>
+
+<span class="nc" id="L317">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

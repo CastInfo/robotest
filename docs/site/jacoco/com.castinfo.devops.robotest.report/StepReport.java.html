@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StepReport.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.cast-info.devops:robotest-core</a> &gt; <a href="index.source.html" class="el_package">com.castinfo.devops.robotest.report</a> &gt; <span class="el_source">StepReport.java</span></div><h1>StepReport.java</h1><pre class="source lang-java linenums">/********************************************************************************
+ * ROBOTEST
+ * Copyright (C) 2018 CAST-INFO, S.A. www.cast-info.es
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *******************************************************************************/
+package com.castinfo.devops.robotest.report;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import com.castinfo.devops.robotest.RobotestException;
+import com.castinfo.devops.robotest.StepStatus;
+import com.fasterxml.jackson.core.JsonGenerator;
+
+/**
+ * Robotest Step JSON report writer implementation.
+ */
+public class StepReport {
+
+<span class="fc" id="L34">    private List&lt;ValidationEntry&gt; additional = new ArrayList&lt;&gt;();</span>
+    private String id;
+    private String description;
+    private StepStatus stepStatus;
+    private ConfigReport stepConfig;
+    private long initMillis;
+    private long endMillis;
+    private int stepOrder;
+    private AtomicInteger validationOrder;
+
+    /**
+     * Constructor.
+     *
+     * @param stepOrder
+     *            step order.
+     * @param id
+     *            step annot tag or custom id
+     * @param description
+     *            step annot description or custom message
+     * @param stepConfig
+     *            step config.
+     * @param initMillis
+     *            initial exec millis.
+     */
+    public StepReport(final int stepOrder,
+                      final String id,
+                      final String description,
+                      final List&lt;ConfigEntry&gt; stepConfig,
+<span class="fc" id="L62">                      final long initMillis) {</span>
+<span class="fc" id="L63">        this.stepOrder = stepOrder;</span>
+<span class="fc" id="L64">        validationOrder = new AtomicInteger(0);</span>
+<span class="fc" id="L65">        this.id = id;</span>
+<span class="fc" id="L66">        this.description = description;</span>
+<span class="fc" id="L67">        this.stepConfig = new ConfigReport(stepConfig);</span>
+<span class="fc" id="L68">        this.initMillis = initMillis;</span>
+<span class="fc" id="L69">    }</span>
+
+    /**
+     * Getter method for id.
+     *
+     * @return the id
+     */
+    public String getId() {
+<span class="fc" id="L77">        return id;</span>
+    }
+
+    /**
+     * Setter method for the id.
+     *
+     * @param id
+     *            the id to set
+     */
+    public void setId(final String id) {
+<span class="nc" id="L87">        this.id = id;</span>
+<span class="nc" id="L88">    }</span>
+
+    /**
+     * Getter method for description.
+     *
+     * @return the description
+     */
+    public String getDescription() {
+<span class="nc" id="L96">        return description;</span>
+    }
+
+    /**
+     * Setter method for the description.
+     *
+     * @param description
+     *            the description to set
+     */
+    public void setDescription(final String description) {
+<span class="nc" id="L106">        this.description = description;</span>
+<span class="nc" id="L107">    }</span>
+
+    /**
+     * Getter method for additional.
+     *
+     * @return the additional
+     */
+    public List&lt;ValidationEntry&gt; getAdditional() {
+<span class="fc" id="L115">        return additional;</span>
+    }
+
+    /**
+     * Setter method for the additional.
+     *
+     * @param additional
+     *            the additional to set
+     */
+    public void setAdditional(final List&lt;ValidationEntry&gt; additional) {
+<span class="nc" id="L125">        this.additional = additional;</span>
+<span class="nc" id="L126">    }</span>
+
+    /**
+     * Getter method for stepStatus.
+     *
+     * @return the stepStatus
+     */
+    public StepStatus getStepStatus() {
+<span class="nc" id="L134">        return stepStatus;</span>
+    }
+
+    /**
+     * Setter method for the stepStatus.
+     *
+     * @param stepStatus
+     *            the stepStatus to set
+     */
+    public void setStepStatus(final StepStatus stepStatus) {
+<span class="fc" id="L144">        this.stepStatus = stepStatus;</span>
+<span class="fc" id="L145">    }</span>
+
+    /**
+     * Getter method for stepConfig.
+     *
+     * @return the stepConfig
+     */
+    public ConfigReport getStepConfig() {
+<span class="nc" id="L153">        return stepConfig;</span>
+    }
+
+    /**
+     * Setter method for the stepConfig.
+     *
+     * @param stepConfig
+     *            the stepConfig to set
+     */
+    public void setStepConfig(final ConfigReport stepConfig) {
+<span class="nc" id="L163">        this.stepConfig = stepConfig;</span>
+<span class="nc" id="L164">    }</span>
+
+    /**
+     * Getter method for initMillis.
+     *
+     * @return the initMillis
+     */
+    public long getInitMillis() {
+<span class="nc" id="L172">        return initMillis;</span>
+    }
+
+    /**
+     * Setter method for the initMillis.
+     *
+     * @param initMillis
+     *            the initMillis to set
+     */
+    public void setInitMillis(final long initMillis) {
+<span class="nc" id="L182">        this.initMillis = initMillis;</span>
+<span class="nc" id="L183">    }</span>
+
+    /**
+     * Getter method for endMillis.
+     *
+     * @return the endMillis
+     */
+    public long getEndMillis() {
+<span class="nc" id="L191">        return endMillis;</span>
+    }
+
+    /**
+     * Setter method for the endMillis.
+     *
+     * @param endMillis
+     *            the endMillis to set
+     */
+    public void setEndMillis(final long endMillis) {
+<span class="fc" id="L201">        this.endMillis = endMillis;</span>
+<span class="fc" id="L202">    }</span>
+
+    /**
+     * Getter method for stepOrder.
+     *
+     * @return the stepOrder
+     */
+    public int getStepOrder() {
+<span class="nc" id="L210">        return stepOrder;</span>
+    }
+
+    /**
+     * Setter method for the stepOrder.
+     *
+     * @param stepOrder
+     *            the stepOrder to set
+     */
+    public void setStepOrder(final int stepOrder) {
+<span class="nc" id="L220">        this.stepOrder = stepOrder;</span>
+<span class="nc" id="L221">    }</span>
+
+    /**
+     * Getter method for validationOrder.
+     *
+     * @return the validationOrder
+     */
+    public AtomicInteger getValidationOrder() {
+<span class="fc" id="L229">        return validationOrder;</span>
+    }
+
+    /**
+     * Setter method for the validationOrder.
+     *
+     * @param validationOrder
+     *            the validationOrder to set
+     */
+    public void setValidationOrder(final AtomicInteger validationOrder) {
+<span class="nc" id="L239">        this.validationOrder = validationOrder;</span>
+<span class="nc" id="L240">    }</span>
+
+    /**
+     * End step.
+     *
+     * @param status
+     *            status level.
+     * @param millis
+     *            end step timemillis.
+     */
+    public void endStep(final StepStatus status,
+                        final long millis) {
+<span class="fc" id="L252">        stepStatus = status;</span>
+<span class="fc" id="L253">        endMillis = millis;</span>
+<span class="fc" id="L254">    }</span>
+
+    /**
+     * Write step in Suite JSON generator writer.
+     *
+     * @param jGenerator
+     *            writer.
+     * @throws RobotestException
+     *             Errors, probably IO.
+     */
+    public void writeStep(final JsonGenerator jGenerator) throws RobotestException {
+        try {
+<span class="fc" id="L266">            jGenerator.writeStartObject();</span>
+<span class="fc" id="L267">            jGenerator.writeNumberField(&quot;order&quot;,</span>
+                                        stepOrder);
+<span class="fc" id="L269">            jGenerator.writeStringField(&quot;step&quot;,</span>
+                                        id);
+<span class="fc" id="L271">            jGenerator.writeStringField(&quot;description&quot;,</span>
+                                        description);
+<span class="fc" id="L273">            jGenerator.writeNumberField(&quot;initMillis&quot;,</span>
+                                        initMillis);
+<span class="fc" id="L275">            jGenerator.writeNumberField(&quot;endMillis&quot;,</span>
+                                        endMillis);
+<span class="fc" id="L277">            jGenerator.writeStringField(&quot;status&quot;,</span>
+<span class="fc" id="L278">                                        stepStatus.name());</span>
+
+<span class="fc" id="L280">            stepConfig.writeConfig(jGenerator,</span>
+                                   &quot;config&quot;);
+
+<span class="fc" id="L283">            jGenerator.writeFieldName(&quot;validations&quot;);</span>
+<span class="fc" id="L284">            jGenerator.writeStartArray();</span>
+<span class="fc bfc" id="L285" title="All 2 branches covered.">            for (ValidationEntry toadd : additional) {</span>
+<span class="fc" id="L286">                toadd.writeValidation(jGenerator);</span>
+<span class="fc" id="L287">            }</span>
+<span class="fc" id="L288">            jGenerator.writeEndArray();</span>
+<span class="fc" id="L289">            jGenerator.writeEndObject();</span>
+<span class="fc" id="L290">        } catch (IOException e) {</span>
+<span class="fc" id="L291">            throw new RobotestException(&quot;ROBOTEST STEP REPORTER ERROR&quot;,</span>
+                                        e);
+<span class="fc" id="L293">        }</span>
+<span class="fc" id="L294">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

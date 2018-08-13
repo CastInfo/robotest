@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RobotestConfiguration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.cast-info.devops:robotest-core</a> &gt; <a href="index.source.html" class="el_package">com.castinfo.devops.robotest.config</a> &gt; <span class="el_source">RobotestConfiguration.java</span></div><h1>RobotestConfiguration.java</h1><pre class="source lang-java linenums">/********************************************************************************
+ * ROBOTEST
+ * Copyright (C) 2018 CAST-INFO, S.A. www.cast-info.es
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *******************************************************************************/
+package com.castinfo.devops.robotest.config;
+
+import static io.restassured.RestAssured.when;
+
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+
+import org.apache.commons.lang.text.StrSubstitutor;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.castinfo.devops.robotest.RobotestException;
+import com.castinfo.devops.robotest.annot.RobotestConfig;
+import com.castinfo.devops.robotest.annot.RobotestSuite;
+import com.castinfo.devops.robotest.report.ConfigEntry;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+/**
+ * This class load configuration resources for Suites, Cases and Steps. The resource protocol must be, classpath, file
+ * or valid URL. Resource path may have word substituion with ${SYSTEM_PROPERTY} wildcards. The type of resource, must
+ * be properties, xml or json. For readable test code purposes, ROBOTEST separates Basic configuration (to internal tool
+ * configuration) to custom configurations (user needs), with two different doclets (RobotestBaseConfig and
+ * RobotestConfig)
+ */
+<span class="fc" id="L57">public class RobotestConfiguration implements IRobotestConfiguration {</span>
+
+<span class="fc" id="L59">    private static final Logger LOG = LoggerFactory.getLogger(RobotestConfiguration.class);</span>
+    private RobotestBasicConfig basicCfg;
+<span class="fc" id="L61">    private Map&lt;Annotation, Map&lt;String, ConfigurationEntry&lt;?&gt;&gt;&gt; testConfigEntries = new HashMap&lt;&gt;();</span>
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.castinfo.devops.robotest.config.IRobotestConfiguration#loadBasic(com.castinfo.devops.robotest.annot.
+     * RobotestSuite)
+     */
+    @Override
+    public void loadBasic(final RobotestSuite suiteAnnot) {
+<span class="fc" id="L71">        basicCfg = new RobotestBasicConfig();</span>
+<span class="fc" id="L72">        System.setProperty(RobotestConfigKeys.ROBOTEST_REPORT_BASE,</span>
+<span class="fc" id="L73">                           getProperty(RobotestConfigKeys.ROBOTEST_REPORT_BASE,</span>
+<span class="fc" id="L74">                                       System.getProperty(&quot;java.io.tmpdir&quot;)));</span>
+<span class="fc" id="L75">        basicCfg.setReportFilePath(System.getProperty(RobotestConfigKeys.ROBOTEST_REPORT_BASE));</span>
+<span class="fc" id="L76">        RobotestConfiguration.LOG.info(&quot;ROBOTEST_REPORT_BASE: {}&quot;,</span>
+<span class="fc" id="L77">                                       basicCfg.getReportFilePath());</span>
+
+<span class="fc" id="L79">        System.setProperty(RobotestConfigKeys.ROBOTEST_ENV,</span>
+<span class="fc" id="L80">                           getProperty(RobotestConfigKeys.ROBOTEST_ENV,</span>
+                                       &quot;local&quot;));
+<span class="fc" id="L82">        basicCfg.setEnv(System.getProperty(RobotestConfigKeys.ROBOTEST_ENV));</span>
+<span class="fc" id="L83">        RobotestConfiguration.LOG.info(&quot;ROBOTEST ENV: {}&quot;,</span>
+<span class="fc" id="L84">                                       basicCfg.getEnv());</span>
+
+<span class="fc" id="L86">        configHttp();</span>
+<span class="fc" id="L87">        configBrowser();</span>
+<span class="fc" id="L88">        configDocker();</span>
+<span class="fc" id="L89">        configBrowserStack();</span>
+<span class="fc" id="L90">    }</span>
+
+    /**
+     * Utility to assure no null values in configuration system properties.
+     *
+     * @param key
+     *            key of system property
+     * @param defaultValue
+     *            default value
+     * @return the final value.
+     */
+    private String getProperty(final String key,
+                               final String defaultValue) {
+<span class="fc" id="L103">        String value = System.getProperty(key);</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">        if (StringUtils.isEmpty(value)) {</span>
+<span class="fc" id="L105">            value = defaultValue;</span>
+        }
+<span class="fc" id="L107">        return value;</span>
+    }
+
+    /**
+     * Do http configuration.
+     */
+    public void configHttp() {
+<span class="fc" id="L114">        RobotestHttpConnConfig httpConfig = new RobotestHttpConnConfig();</span>
+<span class="fc" id="L115">        basicCfg.setHttp(httpConfig);</span>
+
+<span class="fc" id="L117">        System.setProperty(RobotestConfigKeys.ROBOTEST_GENERAL_TIMEOUT_MILLIS,</span>
+<span class="fc" id="L118">                           getProperty(RobotestConfigKeys.ROBOTEST_GENERAL_TIMEOUT_MILLIS,</span>
+                                       &quot;10000&quot;));
+<span class="fc" id="L120">        httpConfig.setGeneralTimeout(System.getProperty(RobotestConfigKeys.ROBOTEST_GENERAL_TIMEOUT_MILLIS));</span>
+<span class="fc" id="L121">        RobotestConfiguration.LOG.info(&quot;ROBOTEST_GENERAL_TIMEOUT: {}&quot;,</span>
+<span class="fc" id="L122">                                       httpConfig.getGeneralTimeout());</span>
+
+<span class="fc" id="L124">        httpConfig.setProxyHost(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_PROXY_HOST,</span>
+                                                   &quot;&quot;));
+<span class="fc" id="L126">        RobotestConfiguration.LOG.info(&quot;ROBOTEST_BROWSER_PROXY_HOST: {}&quot;,</span>
+<span class="fc" id="L127">                                       httpConfig.getProxyHost());</span>
+
+<span class="fc" id="L129">        httpConfig.setProxyPort(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_PROXY_PORT,</span>
+                                                   &quot;&quot;));
+<span class="fc" id="L131">        RobotestConfiguration.LOG.info(&quot;ROBOTEST_BROWSER_PROXY_PORT: {}&quot;,</span>
+<span class="fc" id="L132">                                       httpConfig.getProxyPort());</span>
+
+<span class="fc" id="L134">        httpConfig.setNoproxyfor(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_NOPROXYFOR,</span>
+                                                    &quot;&quot;));
+<span class="fc" id="L136">        RobotestConfiguration.LOG.info(&quot;ROBOTEST_BROWSER_NOPROXYFOR: {}&quot;,</span>
+<span class="fc" id="L137">                                       httpConfig.getNoproxyfor());</span>
+
+<span class="fc" id="L139">        httpConfig.setProxyUser(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_PROXY_AUTH_USER,</span>
+                                                   &quot;&quot;));
+<span class="fc" id="L141">        RobotestConfiguration.LOG.info(&quot;ROBOTEST_BROWSER_PROXY_AUTH_USER: {}&quot;,</span>
+<span class="fc" id="L142">                                       httpConfig.getProxyUser());</span>
+
+<span class="fc" id="L144">        httpConfig.setProxySecret(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_PROXY_AUTH_SECRET,</span>
+                                                     &quot;&quot;));
+<span class="fc" id="L146">        RobotestConfiguration.LOG.info(&quot;ROBOTEST_BROWSER_PROXY_AUTH_SECRET: {}&quot;,</span>
+<span class="fc" id="L147">                                       httpConfig.getProxySecret());</span>
+<span class="fc" id="L148">    }</span>
+
+    /**
+     * Do browser configuration.
+     */
+    public void configBrowser() {
+<span class="fc" id="L154">        RobotestBrowserConfig browserConfig = new RobotestBrowserConfig();</span>
+<span class="fc" id="L155">        basicCfg.setBrowser(browserConfig);</span>
+
+<span class="fc" id="L157">        System.setProperty(RobotestConfigKeys.ROBOTEST_BROWSER_CONSOLE_LOG_LEVEL,</span>
+<span class="fc" id="L158">                           getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_CONSOLE_LOG_LEVEL,</span>
+                                       &quot;WARNING&quot;));
+<span class="fc" id="L160">        browserConfig.setConsoleLogLevel(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_CONSOLE_LOG_LEVEL));</span>
+<span class="fc" id="L161">        RobotestConfiguration.LOG.info(&quot;ROBOTEST_BROWSER_CONSOLE_LOG_LEVEL: {}&quot;,</span>
+<span class="fc" id="L162">                                       browserConfig.getConsoleLogLevel());</span>
+
+<span class="fc" id="L164">        System.setProperty(RobotestConfigKeys.ROBOTEST_BROWSER,</span>
+<span class="fc" id="L165">                           getProperty(RobotestConfigKeys.ROBOTEST_BROWSER,</span>
+                                       &quot;CHROME&quot;));
+<span class="fc" id="L167">        browserConfig.setBrowserName(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER));</span>
+<span class="fc" id="L168">        RobotestConfiguration.LOG.info(&quot;ROBOTEST_BROWSER: {}&quot;,</span>
+<span class="fc" id="L169">                                       basicCfg.getBrowser()</span>
+<span class="fc" id="L170">                                               .getBrowserName());</span>
+
+<span class="fc" id="L172">        System.setProperty(RobotestConfigKeys.ROBOTEST_BROWSER_HEADLESS,</span>
+<span class="fc" id="L173">                           getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_HEADLESS,</span>
+                                       &quot;false&quot;));
+<span class="fc" id="L175">        browserConfig.setHeadLess(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_HEADLESS));</span>
+<span class="fc" id="L176">        RobotestConfiguration.LOG.info(&quot;ROBOTEST_BROWSER_HEADLESS: {}&quot;,</span>
+<span class="fc" id="L177">                                       basicCfg.getBrowser()</span>
+<span class="fc" id="L178">                                               .getHeadLess());</span>
+
+<span class="fc" id="L180">        System.setProperty(RobotestConfigKeys.ROBOTEST_BROWSER_WIDTH,</span>
+<span class="fc" id="L181">                           getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_WIDTH,</span>
+                                       &quot;1024&quot;));
+<span class="fc" id="L183">        browserConfig.setWindowWidth(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_WIDTH));</span>
+<span class="fc" id="L184">        RobotestConfiguration.LOG.info(&quot;ROBOTEST_BROWSER_WIDTH: {}&quot;,</span>
+<span class="fc" id="L185">                                       basicCfg.getBrowser()</span>
+<span class="fc" id="L186">                                               .getWindowWidth());</span>
+
+<span class="fc" id="L188">        System.setProperty(RobotestConfigKeys.ROBOTEST_BROWSER_HEIGHT,</span>
+<span class="fc" id="L189">                           getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_HEIGHT,</span>
+                                       &quot;768&quot;));
+<span class="fc" id="L191">        browserConfig.setWindowHeight(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_HEIGHT));</span>
+<span class="fc" id="L192">        RobotestConfiguration.LOG.info(&quot;ROBOTEST_BROWSER_HEIGHT: {}&quot;,</span>
+<span class="fc" id="L193">                                       basicCfg.getBrowser()</span>
+<span class="fc" id="L194">                                               .getWindowHeight());</span>
+
+<span class="fc" id="L196">        System.setProperty(RobotestConfigKeys.ROBOTEST_BROWSER_MAXIMIZED,</span>
+<span class="fc" id="L197">                           getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_MAXIMIZED,</span>
+                                       &quot;false&quot;));
+<span class="fc" id="L199">        browserConfig.setMaximized(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSER_MAXIMIZED));</span>
+<span class="fc" id="L200">        RobotestConfiguration.LOG.info(&quot;ROBOTEST_BROWSER_MAXIMIZED: {}&quot;,</span>
+<span class="fc" id="L201">                                       basicCfg.getBrowser()</span>
+<span class="fc" id="L202">                                               .getMaximized());</span>
+
+<span class="fc" id="L204">    }</span>
+
+    /**
+     * Do Docker load config.
+     */
+    public void configDocker() {
+<span class="fc bfc" id="L210" title="All 2 branches covered.">        if (StringUtils.isNotEmpty(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_CONN))) {</span>
+<span class="fc" id="L211">            DockerConfig dockerConfig = new DockerConfig();</span>
+
+<span class="fc" id="L213">            dockerConfig.setHost(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_CONN));</span>
+<span class="fc" id="L214">            RobotestConfiguration.LOG.info(&quot;ROBOTEST_DOCKER_HOST: {}&quot;,</span>
+<span class="fc" id="L215">                                           dockerConfig.getHost());</span>
+
+<span class="pc bpc" id="L217" title="1 of 2 branches missed.">            if (&quot;true&quot;.equalsIgnoreCase(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_TLS))) {</span>
+<span class="fc" id="L218">                System.setProperty(RobotestConfigKeys.ROBOTEST_DOCKER_CERTS,</span>
+<span class="fc" id="L219">                                   getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_CERTS,</span>
+<span class="fc" id="L220">                                               System.getProperty(&quot;user.home&quot;) + &quot;/.docker/machine/certs&quot;));</span>
+<span class="fc" id="L221">                dockerConfig.setCertsPath(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_CERTS));</span>
+<span class="fc" id="L222">                RobotestConfiguration.LOG.info(&quot;ROBOTEST_DOCKER_CERTS: {}&quot;,</span>
+<span class="fc" id="L223">                                               dockerConfig.getCertsPath());</span>
+            }
+
+<span class="fc" id="L226">            dockerConfig.setHub(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_PUBLIC_HOST));</span>
+<span class="fc" id="L227">            RobotestConfiguration.LOG.info(&quot;ROBOTEST_DOCKER_PUBLIC_HOST: {}&quot;,</span>
+<span class="fc" id="L228">                                           dockerConfig.getHub());</span>
+
+<span class="fc" id="L230">            dockerConfig.setExposeDebugPort(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_DEBUG));</span>
+<span class="fc" id="L231">            RobotestConfiguration.LOG.info(&quot;ROBOTEST_DOCKER_DEBUG: {}&quot;,</span>
+<span class="fc" id="L232">                                           dockerConfig.getExposeDebugPort());</span>
+
+<span class="fc" id="L234">            dockerConfig.setNetworkMode(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_NETWORK));</span>
+<span class="fc" id="L235">            RobotestConfiguration.LOG.info(&quot;ROBOTEST_DOCKER_NETWORK: {}&quot;,</span>
+<span class="fc" id="L236">                                           dockerConfig.getNetworkMode());</span>
+
+<span class="fc" id="L238">            dockerConfig.setInspectRealPort(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_INSPECTREALPORT,</span>
+                                                               &quot;false&quot;));
+<span class="fc" id="L240">            RobotestConfiguration.LOG.info(&quot;ROBOTEST_DOCKER_INSPECTREALPORT: {}&quot;,</span>
+<span class="fc" id="L241">                                           dockerConfig.getInspectRealPort());</span>
+
+<span class="fc" id="L243">            dockerConfig.setContainerName(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_CONTAINER_EXEC_TAG));</span>
+<span class="fc" id="L244">            RobotestConfiguration.LOG.info(&quot;ROBOTEST_DOCKER_CONTAINER_EXEC_TAG: {}&quot;,</span>
+<span class="fc" id="L245">                                           dockerConfig.getContainerName());</span>
+
+<span class="fc" id="L247">            Map&lt;String, String&gt; labels = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L248">            String labelsText = System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_LABELS);</span>
+<span class="pc bpc" id="L249" title="1 of 2 branches missed.">            if (StringUtils.isNotEmpty(labelsText)) {</span>
+<span class="nc" id="L250">                String[] label = null;</span>
+<span class="nc" id="L251">                String key = null;</span>
+<span class="nc" id="L252">                String value = null;</span>
+<span class="nc bnc" id="L253" title="All 2 branches missed.">                for (String labelText : labelsText.trim()</span>
+<span class="nc" id="L254">                                                  .split(&quot;,&quot;)) {</span>
+<span class="nc" id="L255">                    label = labelText.trim()</span>
+<span class="nc" id="L256">                                     .split(&quot;:&quot;);</span>
+<span class="nc" id="L257">                    key = label[0];</span>
+<span class="nc bnc" id="L258" title="All 2 branches missed.">                    if (label.length == 1) {</span>
+<span class="nc" id="L259">                        value = &quot;&quot;;</span>
+                    } else {
+<span class="nc" id="L261">                        value = label[1];</span>
+                    }
+<span class="nc" id="L263">                    labels.put(key,</span>
+                               value);
+                }
+            }
+<span class="fc" id="L267">            dockerConfig.setLabels(labels);</span>
+<span class="fc" id="L268">            RobotestConfiguration.LOG.info(&quot;ROBOTEST_DOCKER_LABELS: {}&quot;,</span>
+                                           labelsText);
+
+<span class="fc" id="L271">            dockerConfig.setDockerRegistryUrl(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_REGISTRY_URL));</span>
+<span class="fc" id="L272">            RobotestConfiguration.LOG.info(&quot;ROBOTEST_DOCKER_REGISTRY: {}&quot;,</span>
+<span class="fc" id="L273">                                           dockerConfig.getDockerRegistryUrl());</span>
+
+<span class="fc" id="L275">            dockerConfig.setDockerRegistryUser(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_REGISTRY_USER));</span>
+<span class="fc" id="L276">            RobotestConfiguration.LOG.info(&quot;ROBOTEST_DOCKER_REGISTRY: {}&quot;,</span>
+<span class="fc" id="L277">                                           dockerConfig.getDockerRegistryUser());</span>
+
+<span class="fc" id="L279">            dockerConfig.setDockerRegistrySecret(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_REGISTRY_SECRET));</span>
+<span class="fc" id="L280">            RobotestConfiguration.LOG.info(&quot;ROBOTEST_DOCKER_REGISTRY_SECRET *****&quot;);</span>
+
+<span class="fc" id="L282">            dockerConfig.setDockerRegistryEmail(System.getProperty(RobotestConfigKeys.ROBOTEST_DOCKER_REGISTRY_EMAIL));</span>
+<span class="fc" id="L283">            RobotestConfiguration.LOG.info(&quot;ROBOTEST_DOCKER_REGISTRY_EMAIL: {}&quot;,</span>
+<span class="fc" id="L284">                                           dockerConfig.getDockerRegistryEmail());</span>
+
+<span class="fc" id="L286">            System.setProperty(RobotestConfigKeys.ROBOTEST_CHROME_DOCKER_IMG_TAG,</span>
+<span class="fc" id="L287">                               getProperty(RobotestConfigKeys.ROBOTEST_CHROME_DOCKER_IMG_TAG,</span>
+                                           &quot;selenium/standalone-chrome:3.12.0-boron&quot;));
+<span class="fc" id="L289">            dockerConfig.setChromeImageTag(System.getProperty(RobotestConfigKeys.ROBOTEST_CHROME_DOCKER_IMG_TAG));</span>
+<span class="fc" id="L290">            RobotestConfiguration.LOG.info(&quot;ROBOTEST_CHROME_DOCKER_IMG_TAG: {}&quot;,</span>
+<span class="fc" id="L291">                                           dockerConfig.getChromeImageTag());</span>
+
+<span class="fc" id="L293">            System.setProperty(RobotestConfigKeys.ROBOTEST_CHROME_DEBUG_DOCKER_IMG_TAG,</span>
+<span class="fc" id="L294">                               getProperty(RobotestConfigKeys.ROBOTEST_CHROME_DEBUG_DOCKER_IMG_TAG,</span>
+                                           &quot;selenium/standalone-chrome-debug:3.12.0-boron&quot;));
+<span class="fc" id="L296">            dockerConfig.setChromeDebugImageTag(System.getProperty(RobotestConfigKeys.ROBOTEST_CHROME_DEBUG_DOCKER_IMG_TAG));</span>
+<span class="fc" id="L297">            RobotestConfiguration.LOG.info(&quot;ROBOTEST_CHROME_DEBUG_DOCKER_IMG_TAG: {}&quot;,</span>
+<span class="fc" id="L298">                                           dockerConfig.getChromeDebugImageTag());</span>
+
+<span class="fc" id="L300">            System.setProperty(RobotestConfigKeys.ROBOTEST_FIREFOX_DOCKER_IMG_TAG,</span>
+<span class="fc" id="L301">                               getProperty(RobotestConfigKeys.ROBOTEST_FIREFOX_DOCKER_IMG_TAG,</span>
+                                           &quot;selenium/standalone-firefox:3.12.0-boron&quot;));
+<span class="fc" id="L303">            dockerConfig.setFirefoxImageTag(System.getProperty(RobotestConfigKeys.ROBOTEST_FIREFOX_DOCKER_IMG_TAG));</span>
+<span class="fc" id="L304">            RobotestConfiguration.LOG.info(&quot;ROBOTEST_FIREFOX_DOCKER_IMG_TAG: {}&quot;,</span>
+<span class="fc" id="L305">                                           dockerConfig.getFirefoxImageTag());</span>
+
+<span class="fc" id="L307">            System.setProperty(RobotestConfigKeys.ROBOTEST_FIREFOX_DEBUG_DOCKER_IMG_TAG,</span>
+<span class="fc" id="L308">                               getProperty(RobotestConfigKeys.ROBOTEST_FIREFOX_DEBUG_DOCKER_IMG_TAG,</span>
+                                           &quot;selenium/standalone-firefox-debug:3.12.0-boron&quot;));
+<span class="fc" id="L310">            dockerConfig.setFirefoxDebugImageTag(System.getProperty(RobotestConfigKeys.ROBOTEST_FIREFOX_DEBUG_DOCKER_IMG_TAG));</span>
+<span class="fc" id="L311">            RobotestConfiguration.LOG.info(&quot;ROBOTEST_FIREFOX_DEBUG_DOCKER_IMG_TAG: {}&quot;,</span>
+<span class="fc" id="L312">                                           dockerConfig.getFirefoxDebugImageTag());</span>
+
+<span class="fc" id="L314">            basicCfg.setDocker(dockerConfig);</span>
+        }
+<span class="fc" id="L316">    }</span>
+
+    /**
+     * Do browser stack config loading.
+     */
+    public void configBrowserStack() {
+<span class="fc bfc" id="L322" title="All 2 branches covered.">        if (StringUtils.isNotEmpty(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSERSTACK_DEVICE))) {</span>
+<span class="fc" id="L323">            BrowserStackConfig bsCfg = new BrowserStackConfig();</span>
+<span class="fc" id="L324">            bsCfg.setDevice(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSERSTACK_DEVICE));</span>
+<span class="fc" id="L325">            RobotestConfiguration.LOG.info(&quot;ROBOTEST_BROWSERSTACK_DEVICE: {}&quot;,</span>
+<span class="fc" id="L326">                                           bsCfg.getDevice());</span>
+<span class="fc" id="L327">            bsCfg.setPlatform(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSERSTACK_PLATFORM));</span>
+<span class="fc" id="L328">            RobotestConfiguration.LOG.info(&quot;ROBOTEST_BROWSERSTACK_PLATFORM: {}&quot;,</span>
+<span class="fc" id="L329">                                           bsCfg.getPlatform());</span>
+<span class="fc" id="L330">            bsCfg.setLogin(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSERSTACK_USER_NAME));</span>
+<span class="fc" id="L331">            RobotestConfiguration.LOG.info(&quot;ROBOTEST_BROWSERSTACK_USER_NAME: {}&quot;,</span>
+<span class="fc" id="L332">                                           bsCfg.getLogin());</span>
+<span class="fc" id="L333">            bsCfg.setAccessKey(System.getProperty(RobotestConfigKeys.ROBOTEST_BROWSERSTACK_ACCESS_KEY));</span>
+<span class="fc" id="L334">            RobotestConfiguration.LOG.info(&quot;ROBOTEST_BROWSERSTACK_ACCESS_KEY *****&quot;);</span>
+<span class="fc" id="L335">            basicCfg.setBrowserStack(bsCfg);</span>
+        }
+<span class="fc" id="L337">    }</span>
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * com.castinfo.devops.robotest.config.IRobotestConfiguration#loadAnnotationScopeConfig(com.castinfo.devops.robotest
+     * .annot.RobotestConfig[], java.lang.annotation.Annotation)
+     */
+    @Override
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public void loadAnnotationScopeConfig(final RobotestConfig[] cfgAnnot,
+                                          final Annotation scope) throws RobotestException {
+<span class="fc bfc" id="L350" title="All 2 branches covered.">        if (null != cfgAnnot) {</span>
+<span class="fc bfc" id="L351" title="All 2 branches covered.">            for (RobotestConfig cfg : cfgAnnot) {</span>
+                @SuppressWarnings(&quot;rawtypes&quot;)
+<span class="fc" id="L353">                ConfigurationEntry configEntry = new ConfigurationEntry();</span>
+<span class="fc" id="L354">                if (cfg.resource()</span>
+<span class="pc bpc" id="L355" title="1 of 2 branches missed.">                       .startsWith(&quot;system://&quot;)) {</span>
+<span class="nc" id="L356">                    String[] envKeys = cfg.resource()</span>
+<span class="nc" id="L357">                                          .substring(&quot;system://&quot;.length())</span>
+<span class="nc" id="L358">                                          .split(&quot;,&quot;);</span>
+<span class="nc" id="L359">                    Properties envValues = new Properties();</span>
+<span class="nc bnc" id="L360" title="All 2 branches missed.">                    for (String key : envKeys) {</span>
+<span class="nc" id="L361">                        envValues.setProperty(key,</span>
+<span class="nc" id="L362">                                              System.getProperty(key));</span>
+                    }
+<span class="nc" id="L364">                    configEntry.setValue(envValues);</span>
+<span class="nc" id="L365">                } else {</span>
+<span class="fc" id="L366">                    String resourceUri = expandUri(cfg.resource());</span>
+<span class="fc" id="L367">                    try (InputStream resource = loadResourceStream(resourceUri)) {</span>
+<span class="fc" id="L368">                        configEntry.setValue(this.mapObjectResources(resource,</span>
+<span class="fc" id="L369">                                                                     cfg.type()));</span>
+<span class="nc" id="L370">                    } catch (IOException | NullPointerException e) {</span>
+<span class="nc" id="L371">                        throw new RobotestException(&quot;ERROR READING USER CONFIG: &quot; + resourceUri,</span>
+                                                    e);
+<span class="fc" id="L373">                    }</span>
+                }
+<span class="fc" id="L375">                testConfigEntries.computeIfAbsent(scope,</span>
+<span class="fc" id="L376">                                                  k -&gt; new HashMap&lt;&gt;())</span>
+<span class="fc" id="L377">                                 .put(cfg.key(),</span>
+                                      configEntry);
+            }
+        }
+<span class="fc" id="L381">    }</span>
+
+    /**
+     * Makes the configuration loading and bean mapping (Properties, Jaxb, Jackson).
+     *
+     * @param resource
+     *            iostream
+     * @param clazzType
+     *            Binding type.
+     * @throws RobotestException
+     *             Marshal exceptions.
+     */
+    @SuppressWarnings(&quot;unchecked&quot;)
+    private &lt;T&gt; T mapObjectResources(final InputStream resource,
+                                     final Class&lt;T&gt; clazzType) throws RobotestException {
+<span class="fc" id="L396">        Object mapped = null;</span>
+<span class="fc bfc" id="L397" title="All 2 branches covered.">        if (clazzType.equals(Properties.class)) {</span>
+<span class="fc" id="L398">            Properties props = new Properties();</span>
+            try {
+<span class="fc" id="L400">                props.load(resource);</span>
+<span class="fc" id="L401">                mapped = props;</span>
+<span class="nc" id="L402">            } catch (IOException e) {</span>
+<span class="nc" id="L403">                throw new RobotestException(&quot;CONFIG RESOURCE PROPERTIES READ ERROR&quot;,</span>
+                                            e);
+<span class="fc" id="L405">            }</span>
+<span class="fc bfc" id="L406" title="All 2 branches covered.">        } else if (isJackson(clazzType)) {</span>
+            try {
+<span class="fc" id="L408">                mapped = new ObjectMapper().readValue(resource,</span>
+                                                      clazzType);
+<span class="nc" id="L410">            } catch (IOException e) {</span>
+<span class="nc" id="L411">                throw new RobotestException(&quot;CONFIG RESOURCE JSON READ ERROR&quot;,</span>
+                                            e);
+<span class="fc" id="L413">            }</span>
+<span class="pc bpc" id="L414" title="1 of 2 branches missed.">        } else if (isJaxb(clazzType)) {</span>
+            try {
+<span class="fc" id="L416">                JAXBContext jaxbContext = JAXBContext.newInstance(clazzType);</span>
+<span class="fc" id="L417">                Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();</span>
+<span class="fc" id="L418">                mapped = unmarshaller.unmarshal(resource);</span>
+<span class="nc" id="L419">            } catch (JAXBException e) {</span>
+<span class="nc" id="L420">                throw new RobotestException(&quot;CONFIG RESOURCE JAXB READ ERROR&quot;,</span>
+                                            e);
+<span class="fc" id="L422">            }</span>
+        } else {
+<span class="nc" id="L424">            throw new RobotestException(&quot;CONFIG RESOURCE TYPE NOT SUPPORTED: &quot; + clazzType.getName());</span>
+        }
+<span class="fc" id="L426">        return (T) mapped;</span>
+    }
+
+    /**
+     * Load the input stream of resource.
+     *
+     * @param resourceUri
+     *            puede ser classpath, file o http/s
+     * @return el input stream del resourceUri
+     * @throws RobotestException
+     *             errores en la carga del iostream
+     */
+    private InputStream loadResourceStream(final String resourceUri) throws RobotestException {
+<span class="fc" id="L439">        InputStream resource = null;</span>
+<span class="pc bpc" id="L440" title="1 of 2 branches missed.">        if (resourceUri.startsWith(&quot;classpath://&quot;)) {</span>
+<span class="fc" id="L441">            resource = this.getClass()</span>
+<span class="fc" id="L442">                           .getClassLoader()</span>
+<span class="fc" id="L443">                           .getResourceAsStream(resourceUri.replaceFirst(&quot;classpath://&quot;,</span>
+                                                                         &quot;&quot;));
+<span class="nc bnc" id="L445" title="All 2 branches missed.">        } else if (resourceUri.startsWith(&quot;file://&quot;)) {</span>
+            try {
+<span class="nc" id="L447">                resource = new FileInputStream(resourceUri);</span>
+<span class="nc" id="L448">            } catch (FileNotFoundException e) {</span>
+<span class="nc" id="L449">                throw new RobotestException(&quot;CONFIG RESOURCE FILE NOT EXIST&quot;,</span>
+                                            e);
+<span class="nc" id="L451">            }</span>
+<span class="nc bnc" id="L452" title="All 4 branches missed.">        } else if (resourceUri.startsWith(&quot;http://&quot;) || resourceUri.startsWith(&quot;https://&quot;)) {</span>
+<span class="nc" id="L453">            resource = new ByteArrayInputStream(when().get(resourceUri)</span>
+<span class="nc" id="L454">                                                      .getBody()</span>
+<span class="nc" id="L455">                                                      .asByteArray());</span>
+        } else {
+<span class="nc" id="L457">            throw new RobotestException(&quot;CONFIG RESOURCE NOT SUPORTED&quot;);</span>
+        }
+<span class="fc" id="L459">        return resource;</span>
+    }
+
+    /**
+     * Provides system properties wildcard substitiution.
+     *
+     * @param cfg
+     *            cfg annotation
+     * @return Expanded URI.
+     */
+    private String expandUri(final String resource) {
+<span class="fc" id="L470">        Map&lt;String, String&gt; systemMap = new HashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L471" title="All 2 branches covered.">        for (String key : System.getProperties()</span>
+<span class="fc" id="L472">                                .stringPropertyNames()) {</span>
+<span class="fc" id="L473">            systemMap.put(key,</span>
+<span class="fc" id="L474">                          System.getProperties()</span>
+<span class="fc" id="L475">                                .getProperty(key));</span>
+<span class="fc" id="L476">        }</span>
+<span class="fc" id="L477">        StrSubstitutor sub = new StrSubstitutor(systemMap);</span>
+<span class="fc" id="L478">        return sub.replace(resource);</span>
+    }
+
+    /**
+     * Identifies Jackson mapping classes.
+     *
+     * @param type
+     *            object
+     * @return true if jackson
+     */
+    private static boolean isJackson(final Class&lt;?&gt; type) {
+<span class="fc" id="L489">        boolean resultado = false;</span>
+<span class="fc bfc" id="L490" title="All 2 branches covered.">        for (Annotation annot : type.getAnnotations()) {</span>
+<span class="fc" id="L491">            if (annot.annotationType()</span>
+<span class="fc" id="L492">                     .getName()</span>
+<span class="fc bfc" id="L493" title="All 2 branches covered.">                     .contains(&quot;com.fasterxml.jackson.annotation&quot;)) {</span>
+<span class="fc" id="L494">                resultado = true;</span>
+            }
+        }
+<span class="fc" id="L497">        return resultado;</span>
+    }
+
+    /**
+     * Identifies Jaxb mapping classes.
+     *
+     * @param type
+     *            object
+     * @return true if jaxb
+     */
+    private static boolean isJaxb(final Class&lt;?&gt; type) {
+<span class="fc" id="L508">        boolean resultado = false;</span>
+<span class="fc bfc" id="L509" title="All 2 branches covered.">        for (Annotation annot : type.getAnnotations()) {</span>
+<span class="fc" id="L510">            if (annot.annotationType()</span>
+<span class="fc" id="L511">                     .getName()</span>
+<span class="pc bpc" id="L512" title="1 of 2 branches missed.">                     .contains(&quot;javax.xml.bind.annotation&quot;)) {</span>
+<span class="fc" id="L513">                resultado = true;</span>
+            }
+        }
+<span class="pc bpc" id="L516" title="1 of 2 branches missed.">        if (!resultado &amp;&amp; type.getSuperclass()</span>
+<span class="nc bnc" id="L517" title="All 2 branches missed.">                              .equals(JAXBElement.class)) {</span>
+<span class="nc" id="L518">            resultado = true;</span>
+        }
+<span class="fc" id="L520">        return resultado;</span>
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.castinfo.devops.robotest.config.IRobotestConfiguration#getConfigBasic()
+     */
+    @Override
+    public RobotestBasicConfig getConfigBasic() {
+<span class="fc" id="L530">        return basicCfg;</span>
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * com.castinfo.devops.robotest.config.IRobotestConfiguration#getAnnotationScopeCfg(java.lang.annotation.Annotation,
+     * java.lang.String)
+     */
+    @Override
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public &lt;T&gt; T getAnnotationScopeCfg(final Annotation scope,
+                                       final String key) {
+<span class="nc" id="L544">        T resultado = null;</span>
+<span class="nc" id="L545">        Map&lt;String, ConfigurationEntry&lt;?&gt;&gt; configEntries = testConfigEntries.get(scope);</span>
+<span class="nc bnc" id="L546" title="All 2 branches missed.">        if (null != configEntries) {</span>
+<span class="nc" id="L547">            ConfigurationEntry&lt;T&gt; config = (ConfigurationEntry&lt;T&gt;) configEntries.get(key);</span>
+<span class="nc bnc" id="L548" title="All 2 branches missed.">            if (null != config) {</span>
+<span class="nc" id="L549">                resultado = config.getValue();</span>
+            }
+        }
+<span class="nc" id="L552">        return resultado;</span>
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * com.castinfo.devops.robotest.config.IRobotestConfiguration#toReportConfigEntries(java.lang.annotation.Annotation)
+     */
+    @Override
+    public List&lt;ConfigEntry&gt; toReportConfigEntries(final Annotation scope) {
+<span class="fc" id="L563">        List&lt;ConfigEntry&gt; entries = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L564" title="All 2 branches covered.">        if (testConfigEntries.containsKey(scope)) {</span>
+<span class="fc bfc" id="L565" title="All 2 branches covered.">            for (String key : testConfigEntries.get(scope)</span>
+<span class="fc" id="L566">                                               .keySet()) {</span>
+<span class="fc" id="L567">                entries.add(new ConfigEntry(key,</span>
+<span class="fc" id="L568">                                            testConfigEntries.get(scope)</span>
+<span class="fc" id="L569">                                                             .get(key)</span>
+<span class="fc" id="L570">                                                             .getValue()));</span>
+<span class="fc" id="L571">            }</span>
+        }
+<span class="fc" id="L573">        return entries;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

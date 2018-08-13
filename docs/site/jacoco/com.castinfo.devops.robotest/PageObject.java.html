@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PageObject.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.cast-info.devops:robotest-core</a> &gt; <a href="index.source.html" class="el_package">com.castinfo.devops.robotest</a> &gt; <span class="el_source">PageObject.java</span></div><h1>PageObject.java</h1><pre class="source lang-java linenums">/********************************************************************************
+ * ROBOTEST
+ * Copyright (C) 2018 CAST-INFO, S.A. www.cast-info.es
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *******************************************************************************/
+package com.castinfo.devops.robotest;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.WebDriver;
+
+import com.castinfo.devops.robotest.report.SuiteReport;
+import com.castinfo.devops.robotest.report.ValidationEntry;
+import com.castinfo.devops.robotest.restassured.RestAssuredWrapper;
+import com.castinfo.devops.robotest.selenium.SeleniumElementsWrapper;
+
+/**
+ * This class is used to PageObject/PageObject test orienting.
+ *
+ * Classes that extends this object will have available access to the ROBOTEST Test Tooling utilities: Selenium Driver
+ * and Reporting.
+ *
+ * Implements Selenium most used test utilities, to simplify tests, but it is not mandatory, feel free to see source and
+ * improve your own utilites. If you you may be wan't enrich this utilities, please pull request ROBOTEST with you
+ * proposes.
+ *
+ */
+<span class="fc" id="L45">public class PageObject extends SeleniumElementsWrapper {</span>
+
+<span class="fc" id="L47">    private static final AtomicInteger AVOID_REPORT_FILE_NAME_CONFLICT_COUNTER = new AtomicInteger();</span>
+
+    /**
+     * This method is for assure that report fileNames not enter in conflict.
+     *
+     * @return String
+     */
+    private static String getNextNonConflictFileName(final String fileName) {
+<span class="fc" id="L55">        return fileName + &quot;_&quot; + PageObject.AVOID_REPORT_FILE_NAME_CONFLICT_COUNTER.incrementAndGet();</span>
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.castinfo.devops.robotest.config.ConfigurationAccess#getTestCfg(java.lang.String)
+     */
+    @Override
+    public &lt;T&gt; T getTestCfg(final String configKey) throws RobotestException {
+<span class="nc" id="L65">        T scopedConfig = this.getTestCfgInScope(getSuiteContext(),</span>
+<span class="nc" id="L66">                                                getStepAnnot(),</span>
+                                                configKey);
+<span class="nc bnc" id="L68" title="All 2 branches missed.">        if (null == scopedConfig) {</span>
+<span class="nc" id="L69">            scopedConfig = this.getTestCfgInScope(getSuiteContext(),</span>
+<span class="nc" id="L70">                                                  getCaseAnnot(),</span>
+                                                  configKey);
+<span class="nc bnc" id="L72" title="All 2 branches missed.">            if (null == scopedConfig) {</span>
+<span class="nc" id="L73">                scopedConfig = this.getTestCfgInScope(getSuiteContext(),</span>
+<span class="nc" id="L74">                                                      getSuiteAnnot(),</span>
+                                                      configKey);
+            }
+        }
+<span class="nc" id="L78">        return scopedConfig;</span>
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.castinfo.devops.robotest.selenium.SeleniumElementsWrapper#getDriver()
+     */
+    @Override
+    public WebDriver getDriver() throws RobotestException {
+<span class="fc" id="L88">        SuiteContext sCtx = getSuiteContext();</span>
+<span class="fc" id="L89">        WebDriver wD = sCtx.getDriverByCase(getCaseAnnot());</span>
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">        if (null == wD) {</span>
+<span class="nc" id="L91">            throw new RobotestException(&quot;WEBDRIVER NOT FOUND, REVISE CONFIGURATION PARAMS&quot;);</span>
+        }
+<span class="fc" id="L93">        return wD;</span>
+    }
+
+    /**
+     * Internal getter of reporter.
+     *
+     * @return SuiteReporter
+     * @throws RobotestException
+     *             If suite initialitation problems happens.
+     */
+    protected SuiteReport getReporter() throws RobotestException {
+<span class="fc" id="L104">        SuiteContext sCtx = getSuiteContext();</span>
+<span class="fc" id="L105">        SuiteReport sR = sCtx.getReporter();</span>
+<span class="pc bpc" id="L106" title="1 of 2 branches missed.">        if (null == sR) {</span>
+<span class="nc" id="L107">            throw new RobotestException(&quot;REPORTER NOT FOUND, REVISE CONFIGURATION PARAMS&quot;);</span>
+        }
+<span class="fc" id="L109">        return sR;</span>
+    }
+
+    /**
+     * Add step validation entry to the report.
+     *
+     * @param validation
+     *            validation.
+     * @return ValidationEntry
+     * @throws RobotestException
+     *             if Reporter unavailable
+     */
+    private ValidationEntry addValidationToReport(final ValidationEntry validation) throws RobotestException {
+        ValidationEntry resultado;
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">        if (null == getStepAnnot()) {</span>
+<span class="nc" id="L124">            resultado = getReporter().addCaseValidationEntry(getCaseAnnot().tag(),</span>
+                                                             validation);
+        } else {
+<span class="fc" id="L127">            resultado = getReporter().addStepValidationEntry(getCaseAnnot().tag(),</span>
+<span class="fc" id="L128">                                                             getStepAnnot().tag(),</span>
+                                                             validation);
+        }
+<span class="fc" id="L131">        return resultado;</span>
+    }
+
+    /**
+     * Add Debug entry to report.
+     *
+     * @return the fluent api object
+     * @throws RobotestException
+     *             Problems to add to report.
+     */
+    public ValidationEntry addDebugToReport() throws RobotestException {
+<span class="fc" id="L142">        ValidationEntry v = ValidationEntry.buildDebug();</span>
+<span class="fc" id="L143">        return addValidationToReport(v);</span>
+    }
+
+    /**
+     * Add Info entry to report.
+     *
+     * @return the fluent api object
+     * @throws RobotestException
+     *             Problems to add to report.
+     */
+    public ValidationEntry addInfoToReport() throws RobotestException {
+<span class="fc" id="L154">        ValidationEntry v = ValidationEntry.buildInfo();</span>
+<span class="fc" id="L155">        return addValidationToReport(v);</span>
+    }
+
+    /**
+     * Add Warning entry to report.
+     *
+     * @return the fluent api object
+     * @throws RobotestException
+     *             Problems to add to report.
+     */
+    public ValidationEntry addWarningToReport() throws RobotestException {
+<span class="fc" id="L166">        ValidationEntry v = ValidationEntry.buildWarning();</span>
+<span class="fc" id="L167">        return addValidationToReport(v);</span>
+    }
+
+    /**
+     * Add Error entry to report.
+     *
+     * @return the fluent api object
+     * @throws RobotestException
+     *             Problems to add to report.
+     */
+    public ValidationEntry addErrorToReport() throws RobotestException {
+<span class="fc" id="L178">        ValidationEntry v = ValidationEntry.buildError();</span>
+<span class="fc" id="L179">        return addValidationToReport(v);</span>
+    }
+
+    /**
+     * Add Critical entry to report.
+     *
+     * @return the fluent api object
+     * @throws RobotestException
+     *             Problems to add to report.
+     */
+    public ValidationEntry addDefectToReport() throws RobotestException {
+<span class="fc" id="L190">        ValidationEntry v = ValidationEntry.buildDefect();</span>
+<span class="fc" id="L191">        return addValidationToReport(v);</span>
+    }
+
+    /**
+     * Add Defect entry to report.
+     *
+     * @return the fluent api object
+     * @throws RobotestException
+     *             Problems to add to report.
+     */
+    public ValidationEntry addCriticalToReport() throws RobotestException {
+<span class="fc" id="L202">        ValidationEntry v = ValidationEntry.buildCritical();</span>
+<span class="fc" id="L203">        return addValidationToReport(v);</span>
+    }
+
+    /**
+     * Add a screen shot to report.
+     *
+     * @param status
+     *            Step status.
+     * @param customName
+     *            Name of capture.
+     * @throws RobotestException
+     *             IO errors.
+     */
+    public void addScreenShotToReport(final StepStatus status,
+                                      final String customName) throws RobotestException {
+<span class="fc" id="L218">        ValidationEntry validation = new ValidationEntry(status);</span>
+<span class="fc" id="L219">        validation.withCapture(this.takeScreenShoot(customName));</span>
+<span class="pc bpc" id="L220" title="1 of 2 branches missed.">        if (null == getStepAnnot()) {</span>
+<span class="nc" id="L221">            throw new RobotestException(&quot;Can't add screen shot to report out of step context&quot;);</span>
+        }
+<span class="fc" id="L223">        getReporter().addStepValidationEntry(getCaseAnnot().tag(),</span>
+<span class="fc" id="L224">                                             getStepAnnot().tag(),</span>
+                                             validation);
+<span class="fc" id="L226">    }</span>
+
+    /**
+     * Add a HTML page source to report.
+     *
+     * @param status
+     *            Step status.
+     * @param customName
+     *            Name of HTML.
+     * @throws RobotestException
+     *             IO errors.
+     */
+    public void addPageSourceToReport(final StepStatus status,
+                                      final String customName) throws RobotestException {
+<span class="fc" id="L240">        ValidationEntry validation = new ValidationEntry(status);</span>
+<span class="fc" id="L241">        validation.withHtmlSource(this.takePageSource(customName));</span>
+<span class="pc bpc" id="L242" title="1 of 2 branches missed.">        if (null == getStepAnnot()) {</span>
+<span class="nc" id="L243">            throw new RobotestException(&quot;Can't add page source to report out of step context&quot;);</span>
+        }
+<span class="fc" id="L245">        getReporter().addStepValidationEntry(getCaseAnnot().tag(),</span>
+<span class="fc" id="L246">                                             getStepAnnot().tag(),</span>
+                                             validation);
+<span class="fc" id="L248">    }</span>
+
+    /**
+     * Get millis general wait timeout.
+     *
+     * @return millis general wait timeout
+     * @throws RobotestException
+     *             If suite initialization problems happens.
+     */
+    public long getGeneralWaitTimoutMillis() throws RobotestException {
+<span class="fc" id="L258">        long results = -1;</span>
+        try {
+<span class="fc" id="L260">            results = Long.parseLong(this.getBasicCfg()</span>
+<span class="fc" id="L261">                                         .getHttp()</span>
+<span class="fc" id="L262">                                         .getGeneralTimeout());</span>
+<span class="nc" id="L263">        } catch (NumberFormatException e) {</span>
+<span class="nc" id="L264">            throw new RobotestException(&quot;INCORRECT GENERAL TIMEOUT FOUND&quot;,</span>
+                                        e);
+<span class="fc" id="L266">        }</span>
+<span class="fc" id="L267">        return results;</span>
+    }
+
+    /**
+     * Get millis general wait timeout.
+     *
+     * @return millis general wait timeout
+     * @throws RobotestException
+     *             If suite initialization problems happens.
+     */
+    public long getGeneralWaitTimoutSeconds() throws RobotestException {
+<span class="fc" id="L278">        long results = -1;</span>
+        try {
+<span class="fc" id="L280">            results = this.getBasicCfg()</span>
+<span class="fc" id="L281">                          .getHttp()</span>
+<span class="fc" id="L282">                          .obtainGeneralTimeoutInSeconds();</span>
+<span class="nc" id="L283">        } catch (NumberFormatException e) {</span>
+<span class="nc" id="L284">            throw new RobotestException(&quot;INCORRECT GENERAL TIMEOUT FOUND&quot;,</span>
+                                        e);
+<span class="fc" id="L286">        }</span>
+<span class="fc" id="L287">        return results;</span>
+    }
+
+    /**
+     * Builds a integrated wrapper for RestAssured REST API client tester
+     *
+     * @return The wrapper of RestAssured.
+     */
+    public RestAssuredWrapper givenRestAssured() {
+<span class="nc" id="L296">        RestAssuredWrapper restClient = new RestAssuredWrapper();</span>
+<span class="nc" id="L297">        return restClient;</span>
+    }
+
+    /**
+     * Builds a integrated wrapper for RestAssured REST API client tester.
+     *
+     * We add proxy and timeout ROBOTEST configured settings.
+     *
+     * @return The wrapper of RestAssured.
+     * @throws RobotestException
+     *             If suite initialization problems happens.
+     */
+    public RestAssuredWrapper givenRestAssuredWithHttpSettings() throws RobotestException {
+<span class="nc" id="L310">        return new RestAssuredWrapper(this.getBasicCfg()</span>
+<span class="nc" id="L311">                                          .getHttp());</span>
+    }
+
+    /**
+     *
+     * Uses @see com.castinfo.devops.robotest.selenium.SeleniumElementsWrapper#takeScreenShoot() to return File results:
+     * - The path of the image will be relative to the System Property ROBOTEST_REPORT_BASE.
+     *
+     * - Robotest keep you from worrying with repetible names adding a secure counter to this name.
+     *
+     * @param fileName
+     *            name of file without extension
+     * @return File file of SCREENSHOT
+     * @throws RobotestException
+     *             WebDriver or IOExceptions.
+     */
+    public File takeScreenShoot(final String fileName) throws RobotestException {
+        try {
+<span class="fc" id="L329">            return this.takeEvidence(getSuiteContext().getConfig()</span>
+<span class="fc" id="L330">                                                      .getConfigBasic()</span>
+<span class="fc" id="L331">                                                      .getReportFilePath(),</span>
+                                     fileName,
+                                     &quot;.png&quot;,
+<span class="fc" id="L334">                                     this.takeScreenShoot());</span>
+<span class="nc" id="L335">        } catch (IOException e) {</span>
+<span class="nc" id="L336">            throw new RobotestException(&quot;TAKE SCREENSHOT PAGE SOURCE ERROR&quot;,</span>
+                                        e);
+        }
+    }
+
+    /**
+     * Save browser present HTML page source with user passed file name. The path of saved HTML will be relative to the
+     * System Property ROBOTEST_REPORT_BASE. ROBOTEST keep you from worrying with repetible names adding a secure
+     * counter to this name.
+     *
+     * @param fileName
+     *            name of file without extension.
+     * @return HTML file captured
+     * @throws RobotestException
+     *             Error de captura.
+     */
+    public File takePageSource(final String fileName) throws RobotestException {
+<span class="fc" id="L353">        File resultado = null;</span>
+        try {
+<span class="fc" id="L355">            resultado = this.takeEvidence(getSuiteContext().getConfig()</span>
+<span class="fc" id="L356">                                                           .getConfigBasic()</span>
+<span class="fc" id="L357">                                                           .getReportFilePath(),</span>
+                                          fileName,
+                                          &quot;.html&quot;,
+<span class="fc" id="L360">                                          this.takePageSource()</span>
+<span class="fc" id="L361">                                              .getBytes(&quot;UTF-8&quot;));</span>
+<span class="nc" id="L362">        } catch (IOException e) {</span>
+<span class="nc" id="L363">            throw new RobotestException(&quot;TAKE PAGE SOURCE ERROR&quot;,</span>
+                                        e);
+<span class="fc" id="L365">        }</span>
+<span class="fc" id="L366">        return resultado;</span>
+    }
+
+    /**
+     * Utility method for developer own evidence reporting. The path of saved HTML will be relative to the System
+     * Property ROBOTEST_REPORT_BASE. ROBOTEST keep you from worrying with repetible names adding a secure counter to
+     * this name.
+     *
+     * @param fileName
+     *            Name of file without extension.
+     * @param extension
+     *            Extension
+     * @param content
+     *            The content to save in byte array.
+     * @return File saved.
+     * @throws RobotestException
+     *             Problems with file capturing.
+     */
+    public File takeEvidence(final String fileName,
+                             final String extension,
+                             final byte[] content) throws RobotestException {
+<span class="nc" id="L387">        File resultado = null;</span>
+        try {
+<span class="nc" id="L389">            resultado = this.takeEvidence(getSuiteContext().getConfig()</span>
+<span class="nc" id="L390">                                                           .getConfigBasic()</span>
+<span class="nc" id="L391">                                                           .getReportFilePath(),</span>
+                                          fileName,
+                                          extension,
+                                          content);
+<span class="nc" id="L395">        } catch (IOException e) {</span>
+<span class="nc" id="L396">            throw new RobotestException(&quot;TAKE PAGE SOURCE ERROR&quot;,</span>
+                                        e);
+<span class="nc" id="L398">        }</span>
+<span class="nc" id="L399">        return resultado;</span>
+    }
+
+    /**
+     * Utility method for developer own evidence reporting. ROBOTEST keep you from worrying with repetible names adding
+     * a secure counter to this name.
+     *
+     * @param reportPath
+     *            Path to save method.
+     * @param fileName
+     *            Name of file without extension.
+     * @param extension
+     *            Extension
+     * @param content
+     *            The content to save in byte array.
+     * @return File saved.
+     * @throws IOException
+     *             Problems with file capturing.
+     */
+    private File takeEvidence(final String reportPath,
+                              final String fileName,
+                              final String extension,
+                              final byte[] content) throws IOException {
+<span class="fc" id="L422">        StringBuilder absoluteFileName = new StringBuilder();</span>
+<span class="fc" id="L423">        absoluteFileName.append(reportPath);</span>
+<span class="fc" id="L424">        absoluteFileName.append(File.separator);</span>
+<span class="fc" id="L425">        absoluteFileName.append(PageObject.getNextNonConflictFileName(fileName));</span>
+<span class="fc" id="L426">        absoluteFileName.append(extension);</span>
+<span class="fc" id="L427">        File resultado = new File(absoluteFileName.toString());</span>
+<span class="fc" id="L428">        FileUtils.writeByteArrayToFile(resultado,</span>
+                                       content);
+<span class="fc" id="L430">        return resultado;</span>
+    }
+
+    /**
+     * Returns a limited list of ValidationEntrys of WebDriver visible log from browser CONSOLE of any kind (JavaScript,
+     * CSS, network, etc), with the log level defined in basic configuration robotest parameters. The retrived Level
+     * status equivalence is WARNING for WARNING, ERROR for &amp;gt; WARNING &amp;amp; INFO for &amp;lt; WARNING.
+     *
+     * @return The retrived browser CONSOLE log list.
+     * @throws RobotestException
+     *             Errors in the retriving.
+     */
+    public List&lt;ValidationEntry&gt; takeBrowserConsoleLogs() throws RobotestException {
+<span class="fc" id="L443">        return this.takeBrowserConsoleLogs(Level.parse(this.getBasicCfg()</span>
+<span class="fc" id="L444">                                                           .getBrowser()</span>
+<span class="fc" id="L445">                                                           .getConsoleLogLevel()));</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

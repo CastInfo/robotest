@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ValidationEntry.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.cast-info.devops:robotest-core</a> &gt; <a href="index.source.html" class="el_package">com.castinfo.devops.robotest.report</a> &gt; <span class="el_source">ValidationEntry.java</span></div><h1>ValidationEntry.java</h1><pre class="source lang-java linenums">/********************************************************************************
+ * ROBOTEST
+ * Copyright (C) 2018 CAST-INFO, S.A. www.cast-info.es
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *******************************************************************************/
+package com.castinfo.devops.robotest.report;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
+import com.castinfo.devops.robotest.RobotestException;
+import com.castinfo.devops.robotest.StepStatus;
+import com.fasterxml.jackson.core.JsonGenerator;
+
+/**
+ * Validation info under steps.
+ */
+public class ValidationEntry {
+
+    private static final int MAX_STACK_TRACE_CAUSE_LIMIT = 5;
+    private int validationOrder;
+    private StepStatus status;
+    private ValidationType type;
+    private List&lt;String&gt; resource;
+
+    /**
+     * Constructor.
+     *
+     * @param status
+     *            status level
+     */
+<span class="fc" id="L48">    public ValidationEntry(final StepStatus status) {</span>
+<span class="fc" id="L49">        this.status = status;</span>
+<span class="fc" id="L50">        resource = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L51">    }</span>
+
+    /**
+     * Setter method for the type.
+     *
+     * @param type
+     *            the type to set
+     */
+    public void setType(final ValidationType type) {
+<span class="nc" id="L60">        this.type = type;</span>
+<span class="nc" id="L61">    }</span>
+
+    /**
+     * Setter method for the resource.
+     *
+     * @param resource
+     *            the resource to set
+     */
+    public void setResource(final List&lt;String&gt; resource) {
+<span class="nc" id="L70">        this.resource = resource;</span>
+<span class="nc" id="L71">    }</span>
+
+    /**
+     * Getter method for status.
+     *
+     * @return the status
+     */
+    public StepStatus getStatus() {
+<span class="fc" id="L79">        return status;</span>
+    }
+
+    /**
+     * Setter method for the status.
+     *
+     * @param status
+     *            the status to set
+     */
+    public void setStatus(final StepStatus status) {
+<span class="fc" id="L89">        this.status = status;</span>
+<span class="fc" id="L90">    }</span>
+
+    /**
+     * Getter method for resource.
+     *
+     * @return the resource
+     */
+    public List&lt;String&gt; getResource() {
+<span class="fc" id="L98">        return resource;</span>
+    }
+
+    /**
+     * Getter method for validationOrder.
+     *
+     * @return the validationOrder
+     */
+    public int getValidationOrder() {
+<span class="fc" id="L107">        return validationOrder;</span>
+    }
+
+    /**
+     * Setter method for the validationOrder.
+     *
+     * @param validationOrder
+     *            the validationOrder to set
+     */
+    public void setValidationOrder(final int validationOrder) {
+<span class="fc" id="L117">        this.validationOrder = validationOrder;</span>
+<span class="fc" id="L118">    }</span>
+
+    /**
+     * Getter method for type.
+     *
+     * @return the type
+     */
+    public ValidationType getType() {
+<span class="fc" id="L126">        return type;</span>
+    }
+
+    /**
+     * Sets CONSOLE in fluent api mode.
+     *
+     * @param vt
+     *            Type of validation
+     * @return the fluent api object
+     */
+    public ValidationEntry withType(final ValidationType vt) {
+<span class="fc" id="L137">        type = vt;</span>
+<span class="fc" id="L138">        return this;</span>
+    }
+
+    /**
+     * Debug and message fluent api builder.
+     *
+     * @return the fluent api object
+     */
+    public static ValidationEntry buildDebug() {
+<span class="fc" id="L147">        return new ValidationEntry(StepStatus.DEBUG);</span>
+    }
+
+    /**
+     * Info and message fluent api builder.
+     *
+     * @return the fluent api object
+     */
+    public static ValidationEntry buildInfo() {
+<span class="fc" id="L156">        return new ValidationEntry(StepStatus.INFO);</span>
+    }
+
+    /**
+     * Warning and message fluent api builder.
+     *
+     * @return the fluent api object
+     */
+    public static ValidationEntry buildWarning() {
+<span class="fc" id="L165">        return new ValidationEntry(StepStatus.WARNING);</span>
+    }
+
+    /**
+     * Error and message fluent api builder.
+     *
+     * @return the fluent api object
+     */
+    public static ValidationEntry buildError() {
+<span class="fc" id="L174">        return new ValidationEntry(StepStatus.ERROR);</span>
+    }
+
+    /**
+     * Defect and message fluent api builder.
+     *
+     * @return the fluent api object
+     */
+    public static ValidationEntry buildDefect() {
+<span class="fc" id="L183">        return new ValidationEntry(StepStatus.DEFECT);</span>
+    }
+
+    /**
+     * Critical and message fluent api builder.
+     *
+     * @return the fluent api object
+     */
+    public static ValidationEntry buildCritical() {
+<span class="fc" id="L192">        return new ValidationEntry(StepStatus.CRITICAL);</span>
+    }
+
+    /**
+     * Set capture image in fluent api builder. If set, only one resource be set and previous resources lost.
+     *
+     * @param cptr
+     *            capture
+     * @return the fluent api object
+     * @throws RobotestException
+     *             If previous other type of resource is set.
+     */
+    public ValidationEntry withCapture(final File cptr) throws RobotestException {
+<span class="pc bpc" id="L205" title="1 of 4 branches missed.">        if (null != type &amp;&amp; !ValidationType.SCREENSHOT.equals(type)) {</span>
+<span class="fc" id="L206">            throw new RobotestException(&quot;PREVIOUS TYPE VALIDATION WAS FOUND SETTING CAPTURE RESORCE: &quot; + type);</span>
+        }
+<span class="fc" id="L208">        resource.clear();</span>
+<span class="fc" id="L209">        resource.add(cptr.getName());</span>
+<span class="fc" id="L210">        type = ValidationType.SCREENSHOT;</span>
+<span class="fc" id="L211">        return this;</span>
+    }
+
+    /**
+     * Set source HTML in fluent api builder. If set, only one resource be set and previous resources lost.
+     *
+     * @param htmlSrc
+     *            source.
+     * @return the fluent api object
+     * @throws RobotestException
+     *             If previous other type of resource is set.
+     */
+    public ValidationEntry withHtmlSource(final File htmlSrc) throws RobotestException {
+<span class="pc bpc" id="L224" title="1 of 4 branches missed.">        if (null != type &amp;&amp; !ValidationType.HTML.equals(type)) {</span>
+<span class="fc" id="L225">            throw new RobotestException(&quot;PREVIOUS TYPE VALIDATION WAS FOUND SETTING HTML RESOURCE: &quot; + type);</span>
+        }
+<span class="fc" id="L227">        resource.clear();</span>
+<span class="fc" id="L228">        resource.add(htmlSrc.getName());</span>
+<span class="fc" id="L229">        type = ValidationType.HTML;</span>
+<span class="fc" id="L230">        return this;</span>
+    }
+
+    /**
+     * Set TEXT message in fluent api builder.
+     *
+     * @param msg
+     *            message.
+     * @return the fluent api object
+     * @throws RobotestException
+     *             If previous other type of resource is set.
+     */
+    public ValidationEntry withMessage(final String msg) throws RobotestException {
+<span class="fc bfc" id="L243" title="All 4 branches covered.">        if (null != type &amp;&amp; !ValidationType.TEXT.equals(type)) {</span>
+<span class="fc" id="L244">            throw new RobotestException(&quot;PREVIOUS TYPE VALIDATION WAS FOUND SETTING TEXT RESOURCE: &quot; + type);</span>
+        }
+<span class="fc" id="L246">        resource.add(msg);</span>
+<span class="fc" id="L247">        type = ValidationType.TEXT;</span>
+<span class="fc" id="L248">        return this;</span>
+    }
+
+    /**
+     * Adapt Throawble to TEXT message in fluent api builder.
+     *
+     * @param e
+     *            Throwable.
+     * @return the fluent api object
+     * @throws RobotestException
+     *             If previous other type of resource is set.
+     */
+    public ValidationEntry withException(final Throwable e) throws RobotestException {
+<span class="pc bpc" id="L261" title="1 of 2 branches missed.">        if (null == e) {</span>
+<span class="nc" id="L262">            withMessage(&quot;NO STACKTRACE PROVIDED&quot;);</span>
+        }
+<span class="fc" id="L264">        List&lt;Throwable&gt; exList = ExceptionUtils.getThrowableList(e);</span>
+<span class="pc bpc" id="L265" title="2 of 4 branches missed.">        if (null == exList || exList.isEmpty()) {</span>
+<span class="nc" id="L266">            withMessage(&quot;NO STACKTRACE PROVIDED&quot;);</span>
+        } else {
+<span class="fc bfc" id="L268" title="All 2 branches covered.">            for (Throwable ex : exList) {</span>
+<span class="fc" id="L269">                withMessage(ValidationEntry.throwableToString(ex));</span>
+<span class="fc" id="L270">            }</span>
+        }
+<span class="fc" id="L272">        return this;</span>
+
+    }
+
+    /**
+     * Utlity to report exception trace.
+     *
+     * @param ex
+     *            something trhowable
+     * @return Text to show
+     */
+    public static String throwableToString(final Throwable ex) {
+<span class="fc" id="L284">        StringBuilder errorMsg = new StringBuilder();</span>
+<span class="fc" id="L285">        StackTraceElement st = null;</span>
+<span class="pc bpc" id="L286" title="1 of 4 branches missed.">        if (null == ex.getStackTrace() || ex.getStackTrace().length == 0) {</span>
+<span class="fc" id="L287">            st = new Exception().getStackTrace()[1];</span>
+        } else {
+<span class="fc" id="L289">            st = ex.getStackTrace()[0];</span>
+        }
+<span class="fc" id="L291">        errorMsg.append(ex.getClass()</span>
+<span class="fc" id="L292">                          .getName());</span>
+<span class="fc bfc" id="L293" title="All 2 branches covered.">        if (null == ex.getMessage()) {</span>
+<span class="fc" id="L294">            errorMsg.append(&quot; No message: &quot;);</span>
+<span class="fc" id="L295">            errorMsg.append(ex.getClass()</span>
+<span class="fc" id="L296">                              .getName());</span>
+        } else {
+<span class="fc" id="L298">            errorMsg.append(&quot; with message: &quot;);</span>
+<span class="fc" id="L299">            errorMsg.append(ex.getMessage());</span>
+        }
+<span class="fc" id="L301">        errorMsg.append(&quot; in &quot;);</span>
+<span class="fc" id="L302">        errorMsg.append(st.getClassName());</span>
+<span class="fc" id="L303">        errorMsg.append(&quot;.&quot;);</span>
+<span class="fc" id="L304">        errorMsg.append(st.getMethodName());</span>
+<span class="pc bpc" id="L305" title="1 of 2 branches missed.">        if (st.getLineNumber() &gt; 0) {</span>
+<span class="fc" id="L306">            errorMsg.append(&quot; (line: &quot;);</span>
+<span class="fc" id="L307">            errorMsg.append(st.getLineNumber());</span>
+<span class="fc" id="L308">            errorMsg.append(&quot;)&quot;);</span>
+        }
+<span class="fc" id="L310">        Throwable cause = ex.getCause();</span>
+<span class="fc" id="L311">        int causeLimit = MAX_STACK_TRACE_CAUSE_LIMIT;</span>
+<span class="pc bpc" id="L312" title="3 of 4 branches missed.">        while (null != cause &amp;&amp; causeLimit &gt; 0) {</span>
+<span class="nc bnc" id="L313" title="All 2 branches missed.">            if (null != cause.getMessage()) {</span>
+<span class="nc" id="L314">                errorMsg.append(&quot; with message: &quot;);</span>
+<span class="nc" id="L315">                errorMsg.append(cause.getMessage());</span>
+            }
+<span class="nc" id="L317">            errorMsg.append(&quot; (&quot;);</span>
+<span class="nc" id="L318">            errorMsg.append(cause.getClass()</span>
+<span class="nc" id="L319">                                 .getName());</span>
+<span class="nc" id="L320">            errorMsg.append(&quot;)&quot;);</span>
+<span class="nc" id="L321">            cause = cause.getCause();</span>
+<span class="nc" id="L322">            causeLimit--;</span>
+        }
+<span class="fc" id="L324">        return errorMsg.toString();</span>
+    }
+
+    /**
+     * Set CONSOLE log in fluent api builder.
+     *
+     * @param log
+     *            CONSOLE log.
+     * @return the fluent api object
+     * @throws RobotestException
+     *             If previous other type of resource is set.
+     */
+    public ValidationEntry withConsole(final String log) throws RobotestException {
+<span class="pc bpc" id="L337" title="1 of 4 branches missed.">        if (null != type &amp;&amp; !ValidationType.CONSOLE.equals(type)) {</span>
+<span class="fc" id="L338">            throw new RobotestException(&quot;PREVIOUS TYPE OF VALIDATION: &quot; + type + &quot; WAS FOUND SETTING CONSOLE RESOURCE&quot;);</span>
+        }
+<span class="fc" id="L340">        resource.add(log);</span>
+<span class="fc" id="L341">        type = ValidationType.CONSOLE;</span>
+<span class="fc" id="L342">        return this;</span>
+    }
+
+    /**
+     * Write validation entry JSON generator writer.
+     *
+     * @param jGenerator
+     *            writer.
+     * @throws RobotestException
+     *             Errors, probably IO.
+     */
+    public void writeValidation(final JsonGenerator jGenerator) throws RobotestException {
+        try {
+<span class="fc" id="L355">            jGenerator.writeStartObject();</span>
+<span class="fc" id="L356">            jGenerator.writeNumberField(&quot;order&quot;,</span>
+<span class="fc" id="L357">                                        getValidationOrder());</span>
+<span class="fc" id="L358">            jGenerator.writeStringField(&quot;status&quot;,</span>
+<span class="fc" id="L359">                                        getStatus().name());</span>
+<span class="fc" id="L360">            jGenerator.writeStringField(&quot;type&quot;,</span>
+<span class="fc" id="L361">                                        getType().name());</span>
+<span class="pc bpc" id="L362" title="1 of 2 branches missed.">            if (null != getResource()) {</span>
+<span class="fc" id="L363">                jGenerator.writeArrayFieldStart(&quot;resource&quot;);</span>
+<span class="fc bfc" id="L364" title="All 2 branches covered.">                for (String res : resource) {</span>
+<span class="fc" id="L365">                    jGenerator.writeObject(res);</span>
+<span class="fc" id="L366">                }</span>
+<span class="fc" id="L367">                jGenerator.writeEndArray();</span>
+            }
+<span class="fc" id="L369">            jGenerator.writeEndObject();</span>
+<span class="fc" id="L370">        } catch (IOException e) {</span>
+<span class="fc" id="L371">            throw new RobotestException(&quot;ROBOTEST VALIDATION REPORTER ERROR&quot;,</span>
+                                        e);
+<span class="fc" id="L373">        }</span>
+<span class="fc" id="L374">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

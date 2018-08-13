@@ -1,0 +1,693 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SeleniumDriverFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.cast-info.devops:robotest-core</a> &gt; <a href="index.source.html" class="el_package">com.castinfo.devops.robotest.selenium</a> &gt; <span class="el_source">SeleniumDriverFactory.java</span></div><h1>SeleniumDriverFactory.java</h1><pre class="source lang-java linenums">/********************************************************************************
+ * ROBOTEST
+ * Copyright (C) 2018 CAST-INFO, S.A. www.cast-info.es
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *******************************************************************************/
+package com.castinfo.devops.robotest.selenium;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.http.ssl.SSLInitializationException;
+import org.openqa.selenium.Proxy;
+import org.openqa.selenium.Proxy.ProxyType;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.ie.InternetExplorerOptions;
+import org.openqa.selenium.logging.LogType;
+import org.openqa.selenium.logging.LoggingPreferences;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.UnreachableBrowserException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.castinfo.devops.robotest.RobotestException;
+import com.castinfo.devops.robotest.config.BrowserStackConfig;
+import com.castinfo.devops.robotest.config.DockerConfig;
+import com.castinfo.devops.robotest.config.RobotestBasicConfig;
+import com.castinfo.devops.robotest.config.RobotestBrowserConfig;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.WebDriverManagerException;
+
+/**
+ * Selenium Web Driver factory.
+ */
+public class SeleniumDriverFactory {
+
+<span class="fc" id="L66">    private static final Logger LOG = LoggerFactory.getLogger(SeleniumDriverFactory.class);</span>
+
+    /**
+     * Flag if DriverManager load native CHROME browserCfg for avoid repetitive driver manager downloads
+     */
+<span class="fc" id="L71">    private static boolean nativeChromeInitied = false;</span>
+    /**
+     * Flag if DriverManager load native FIREFOX browserCfg for avoid repetitive driver mananger downloads
+     */
+<span class="fc" id="L75">    private static boolean nativeFirefoxInitied = false;</span>
+    /**
+     * Flag if DriverManager load native internet explorer browserCfg for avoid repetitive driver mananger downloads
+     */
+<span class="fc" id="L79">    private static boolean nativeInternetExplorerInitied = false;</span>
+
+    /**
+     * Robotest config
+     */
+<span class="fc" id="L84">    private RobotestBasicConfig basicCfg = null;</span>
+
+    /**
+     * Constructor with basic params.
+     *
+     * @param browserCfg
+     *            robotest config of browserCfg
+     */
+<span class="fc" id="L92">    public SeleniumDriverFactory(final RobotestBasicConfig browserCfg) {</span>
+<span class="fc" id="L93">        basicCfg = browserCfg;</span>
+<span class="fc" id="L94">    }</span>
+
+    private RobotestBasicConfig getBasicCfg() {
+<span class="fc" id="L97">        return basicCfg;</span>
+    }
+
+    private RobotestBrowserConfig getBrowserConfig() {
+<span class="fc" id="L101">        return basicCfg.getBrowser();</span>
+    }
+
+    /**
+     * Getter method for nativeChromeInitied.
+     *
+     * @return the nativeChromeInitied
+     */
+    public static boolean isNativeChromeInitied() {
+<span class="fc" id="L110">        return SeleniumDriverFactory.nativeChromeInitied;</span>
+    }
+
+    /**
+     * Setter method for the nativeChromeInitied.
+     *
+     * @param nativeChromeInitied
+     *            the nativeChromeInitied to set
+     */
+    public static void setNativeChromeInitied(final boolean nativeChromeInitied) {
+<span class="fc" id="L120">        SeleniumDriverFactory.nativeChromeInitied = nativeChromeInitied;</span>
+<span class="fc" id="L121">    }</span>
+
+    /**
+     * Getter method for nativeFirefoxInitied.
+     *
+     * @return the nativeFirefoxInitied
+     */
+    public static boolean isNativeFirefoxInitied() {
+<span class="fc" id="L129">        return SeleniumDriverFactory.nativeFirefoxInitied;</span>
+    }
+
+    /**
+     * Setter method for the nativeFirefoxInitied.
+     *
+     * @param nativeFirefoxInitied
+     *            the nativeFirefoxInitied to set
+     */
+    public static void setNativeFirefoxInitied(final boolean nativeFirefoxInitied) {
+<span class="fc" id="L139">        SeleniumDriverFactory.nativeFirefoxInitied = nativeFirefoxInitied;</span>
+<span class="fc" id="L140">    }</span>
+
+    /**
+     * Getter method for nativeInternetExplorerInitied.
+     *
+     * @return the nativeInternetExplorerInitied
+     */
+    public static boolean isNativeInternetExplorerInitied() {
+<span class="nc" id="L148">        return nativeInternetExplorerInitied;</span>
+    }
+
+    /**
+     * Setter method for the nativeInternetExplorerInitied.
+     *
+     * @param nativeInternetExplorerInitied
+     *            the nativeInternetExplorerInitied to set
+     */
+    public static void setNativeInternetExplorerInitied(final boolean nativeInternetExplorerInitied) {
+<span class="nc" id="L158">        SeleniumDriverFactory.nativeInternetExplorerInitied = nativeInternetExplorerInitied;</span>
+<span class="nc" id="L159">    }</span>
+
+    /**
+     * Build a Selenium WebDriver of a browserCfg type to associated by Robotest Docker Selenium HUB. Docker CHROME
+     * &amp;amp; FIREFOX are supported
+     *
+     * @param dockerCfg
+     *            docker config with hub info.
+     * @return WebDriver the build driver.
+     * @throws RobotestException
+     *             Errors creating driver.
+     */
+    public WebDriver buildDockerHubWebDriver(final DockerConfig dockerCfg) throws RobotestException {
+<span class="fc" id="L172">        WebDriver webdriver = null;</span>
+<span class="fc" id="L173">        DesiredCapabilities capabilities = null;</span>
+        try {
+<span class="fc" id="L175">            if (SeleniumBrowser.FIREFOX.name()</span>
+<span class="fc bfc" id="L176" title="All 2 branches covered.">                                       .equalsIgnoreCase(getBrowserConfig().getBrowserName())) {</span>
+<span class="fc" id="L177">                capabilities = DesiredCapabilities.firefox();</span>
+<span class="fc" id="L178">            } else if (SeleniumBrowser.CHROME.name()</span>
+<span class="fc bfc" id="L179" title="All 2 branches covered.">                                             .equalsIgnoreCase(getBrowserConfig().getBrowserName())) {</span>
+<span class="fc" id="L180">                capabilities = DesiredCapabilities.chrome();</span>
+            } else {
+<span class="fc" id="L182">                throw new RobotestException(&quot;NOT DOCKER AVAILABLE FOR THIS BROWSER. REVISE ROBOTEST_BROWSER CONFIG: &quot;</span>
+<span class="fc" id="L183">                        + getBrowserConfig().getBrowserName());</span>
+            }
+<span class="pc bpc" id="L185" title="1 of 4 branches missed.">            if (null == dockerCfg || StringUtils.isEmpty(dockerCfg.getHub())) {</span>
+<span class="fc" id="L186">                throw new RobotestException(&quot;SELENIUM DRIVER DOCKER HUB CONFIG NOT FOUND.&quot;);</span>
+            }
+
+<span class="fc" id="L189">            preCreationDriverCapabilities(capabilities);</span>
+
+<span class="nc" id="L191">            webdriver = new RemoteWebDriver(new URL(dockerCfg.getHub()),</span>
+                                            capabilities);
+
+<span class="nc" id="L194">            postCreationDriverCapabilities(webdriver,</span>
+                                           capabilities,
+                                           false);
+
+<span class="fc" id="L198">        } catch (IOException | UnreachableBrowserException e) {</span>
+<span class="fc" id="L199">            throw new RobotestException(&quot;DOCKER HUB SELENIUM DRIVER CREATION ERROR&quot;,</span>
+                                        e);
+<span class="nc" id="L201">        }</span>
+<span class="nc" id="L202">        return webdriver;</span>
+    }
+
+    /**
+     * BrowserStack build remote WebDriver for real Android &amp;amp; iOs.
+     *
+     * @param suiteName
+     *            suite or category identifier.
+     * @param caseName
+     *            case name identifier.
+     * @param browserStackCfg
+     *            BrowserStack configuration params (platform, divice, browserCfg, username, accesskey...)
+     * @return WebDriver
+     * @throws RobotestException
+     *             error in WebDriver creation.
+     */
+    public WebDriver buildBrowserStackRealDeviceWebDriver(final String suiteName,
+                                                          final String caseName,
+                                                          final BrowserStackConfig browserStackCfg) throws RobotestException {
+<span class="fc bfc" id="L221" title="All 2 branches covered.">        if (null == browserStackCfg) {</span>
+<span class="fc" id="L222">            throw new RobotestException(&quot;BROWSERSTACK CONFIG IS MANDATORY! REVISE BASIC CONFIG.&quot;);</span>
+        }
+<span class="fc" id="L224">        browserStackCfgValidations(suiteName,</span>
+                                   caseName,
+                                   browserStackCfg);
+<span class="fc" id="L227">        WebDriver webdriver = null;</span>
+<span class="fc" id="L228">        DesiredCapabilities capabilities = browserStackCapabilities(suiteName,</span>
+                                                                    caseName,
+                                                                    browserStackCfg);
+        try {
+<span class="fc" id="L232">            webdriver = new RemoteWebDriver(new URL(&quot;http://&quot; + browserStackCfg.getLogin() + &quot;:&quot;</span>
+<span class="nc" id="L233">                    + browserStackCfg.getAccessKey() + &quot;@hub-cloud.browserstack.com/wd/hub&quot;),</span>
+                                            capabilities);
+<span class="fc" id="L235">        } catch (WebDriverException | IOException | SSLInitializationException e) {</span>
+<span class="fc" id="L236">            throw new RobotestException(&quot;BROWSER STACK SELENIUM DRIVER CRETION ERROR&quot;,</span>
+                                        e);
+<span class="nc" id="L238">        }</span>
+<span class="nc" id="L239">        return webdriver;</span>
+    }
+
+    /**
+     * Browser stack config validations.
+     *
+     * @param suiteName
+     *            suite
+     * @param caseName
+     *            case
+     * @param browserStackCfg
+     *            cfg
+     * @throws RobotestException
+     *             validations errors
+     */
+    protected void browserStackCfgValidations(final String suiteName,
+                                              final String caseName,
+                                              final BrowserStackConfig browserStackCfg) throws RobotestException {
+<span class="fc bfc" id="L257" title="All 4 branches covered.">        if (!&quot;IPHONE&quot;.equals(getBrowserConfig().getBrowserName()) &amp;&amp; !&quot;IPAD&quot;.equals(getBrowserConfig().getBrowserName())</span>
+<span class="fc bfc" id="L258" title="All 2 branches covered.">                &amp;&amp; !&quot;ANDROID&quot;.equals(getBrowserConfig().getBrowserName())) {</span>
+<span class="fc" id="L259">            throw new RobotestException(&quot;BROWSERSTACK BROWSER NOT SUPORTED: &quot; + getBrowserConfig().getBrowserName()</span>
+                    + &quot; [ONLY IPAD,IPHONE,ANDROID] REVISE BASIC CONFIG.&quot;);
+        }
+<span class="fc bfc" id="L262" title="All 2 branches covered.">        if (StringUtils.isEmpty(browserStackCfg.getDevice())) {</span>
+<span class="fc" id="L263">            throw new RobotestException(&quot;BROWSERSTACK DEVICE IS MANDATORY! REVISE BASIC CONFIG.&quot;);</span>
+        }
+<span class="fc bfc" id="L265" title="All 2 branches covered.">        if (StringUtils.isEmpty(browserStackCfg.getPlatform())) {</span>
+<span class="fc" id="L266">            throw new RobotestException(&quot;BROWSERSTACK PLATFORM IS MANDATORY! REVISE BASIC CONFIG.&quot;);</span>
+        }
+<span class="fc bfc" id="L268" title="All 2 branches covered.">        if (StringUtils.isEmpty(browserStackCfg.getLogin())) {</span>
+<span class="fc" id="L269">            throw new RobotestException(&quot;BROWSERSTACK USERNAME IS MANDATORY! REVISE BASIC CONFIG.&quot;);</span>
+        }
+<span class="fc bfc" id="L271" title="All 2 branches covered.">        if (StringUtils.isEmpty(browserStackCfg.getAccessKey())) {</span>
+<span class="fc" id="L272">            throw new RobotestException(&quot;BROWSERSTACK ACCESSKEY IS MANDATORY! REVISE BASIC CONFIG.&quot;);</span>
+        }
+<span class="fc" id="L274">        browserStackCfgValidationsNames(suiteName,</span>
+                                        caseName);
+<span class="fc" id="L276">    }</span>
+
+    private void browserStackCfgValidationsNames(final String suiteName,
+                                                 final String caseName) throws RobotestException {
+<span class="fc bfc" id="L280" title="All 2 branches covered.">        if (StringUtils.isEmpty(suiteName)) {</span>
+<span class="fc" id="L281">            throw new RobotestException(&quot;BROWSERSTACK SUITE NAME IS MANDATORY.&quot;);</span>
+        }
+<span class="fc bfc" id="L283" title="All 2 branches covered.">        if (StringUtils.isEmpty(caseName)) {</span>
+<span class="fc" id="L284">            throw new RobotestException(&quot;BROWSERSTACK CASE NAME IS MANDATORY.&quot;);</span>
+        }
+<span class="fc" id="L286">    }</span>
+
+    /**
+     * Construct BS capabilities.
+     *
+     * @param suiteName
+     *            suite
+     * @param caseName
+     *            case
+     * @param browserStackCfg
+     *            bs cfg
+     * @return Capabilities
+     */
+    protected DesiredCapabilities browserStackCapabilities(final String suiteName,
+                                                           final String caseName,
+                                                           final BrowserStackConfig browserStackCfg) {
+<span class="fc" id="L302">        DesiredCapabilities capabilities = new DesiredCapabilities();</span>
+        String bsAdaptedBroserName;
+<span class="pc bpc" id="L304" title="1 of 2 branches missed.">        if (&quot;IPHONE&quot;.equals(getBrowserConfig().getBrowserName())) {</span>
+<span class="fc" id="L305">            bsAdaptedBroserName = &quot;iPhone&quot;;</span>
+<span class="nc bnc" id="L306" title="All 2 branches missed.">        } else if (&quot;IPAD&quot;.equals(getBrowserConfig().getBrowserName())) {</span>
+<span class="nc" id="L307">            bsAdaptedBroserName = &quot;iPad&quot;;</span>
+        } else {
+<span class="nc" id="L309">            bsAdaptedBroserName = &quot;android&quot;;</span>
+        }
+<span class="fc" id="L311">        capabilities.setCapability(&quot;browserName&quot;,</span>
+                                   bsAdaptedBroserName);
+<span class="fc" id="L313">        capabilities.setCapability(&quot;device&quot;,</span>
+<span class="fc" id="L314">                                   browserStackCfg.getDevice());</span>
+<span class="fc" id="L315">        capabilities.setCapability(&quot;os_version&quot;,</span>
+<span class="fc" id="L316">                                   browserStackCfg.getPlatform());</span>
+<span class="fc" id="L317">        capabilities.setCapability(&quot;build&quot;,</span>
+                                   suiteName);
+<span class="fc" id="L319">        capabilities.setCapability(&quot;project&quot;,</span>
+                                   caseName);
+<span class="fc" id="L321">        capabilities.setCapability(&quot;realMobile&quot;,</span>
+<span class="fc" id="L322">                                   Boolean.TRUE.toString());</span>
+<span class="fc" id="L323">        capabilities.setCapability(&quot;browserstack.console&quot;,</span>
+                                   &quot;disable&quot;);
+<span class="fc" id="L325">        capabilities.setCapability(&quot;browserstack.networkLogs&quot;,</span>
+<span class="fc" id="L326">                                   Boolean.FALSE.toString());</span>
+<span class="fc" id="L327">        capabilities.setCapability(&quot;browserstack.debug&quot;,</span>
+<span class="fc" id="L328">                                   Boolean.FALSE.toString());</span>
+<span class="fc" id="L329">        capabilities.setCapability(&quot;browserstack.local&quot;,</span>
+<span class="fc" id="L330">                                   Boolean.FALSE.toString());</span>
+<span class="fc" id="L331">        capabilities.setCapability(&quot;browserstack.video&quot;,</span>
+<span class="fc" id="L332">                                   Boolean.FALSE.toString());</span>
+<span class="fc" id="L333">        capabilities.setCapability(&quot;acceptSslCerts&quot;,</span>
+<span class="fc" id="L334">                                   Boolean.FALSE.toString());</span>
+<span class="fc" id="L335">        return capabilities;</span>
+    }
+
+    /**
+     * Build a local browserCfg instance with https://github.com/bonigarcia/webdrivermanager facilities for development.
+     *
+     * IMPORTANT NOTES! CI *nix systems not suport native browsers without X systems. Native browserCfg version have is
+     * correspondent native driver managed
+     *
+     * @return WebDriver
+     * @throws RobotestException
+     *             error in driver creation.
+     */
+    public WebDriver buildLocalNativeWebDriver() throws RobotestException {
+        Pair&lt;WebDriver, DesiredCapabilities&gt; localDriver;
+<span class="fc" id="L350">        LOG.info(&quot;TRY TO UP NATIVE DRIVER: {}&quot;,</span>
+<span class="fc" id="L351">                 getBrowserConfig());</span>
+        try {
+<span class="fc" id="L353">            if (SeleniumBrowser.CHROME.name()</span>
+<span class="fc bfc" id="L354" title="All 2 branches covered.">                                      .equalsIgnoreCase(getBrowserConfig().getBrowserName())) {</span>
+<span class="fc bfc" id="L355" title="All 2 branches covered.">                if (!SeleniumDriverFactory.isNativeChromeInitied()) {</span>
+<span class="fc" id="L356">                    WebDriverManager.chromedriver()</span>
+<span class="fc" id="L357">                                    .setup();</span>
+<span class="fc" id="L358">                    SeleniumDriverFactory.setNativeChromeInitied(true);</span>
+                }
+<span class="fc" id="L360">                localDriver = buildChromeNativeDriver();</span>
+<span class="fc" id="L361">            } else if (SeleniumBrowser.FIREFOX.name()</span>
+<span class="pc bpc" id="L362" title="1 of 2 branches missed.">                                              .equalsIgnoreCase(getBrowserConfig().getBrowserName())) {</span>
+<span class="pc bpc" id="L363" title="1 of 2 branches missed.">                if (!SeleniumDriverFactory.isNativeFirefoxInitied()) {</span>
+<span class="fc" id="L364">                    WebDriverManager.firefoxdriver()</span>
+<span class="fc" id="L365">                                    .setup();</span>
+<span class="fc" id="L366">                    SeleniumDriverFactory.setNativeFirefoxInitied(true);</span>
+                }
+<span class="fc" id="L368">                localDriver = buildFirefoxNativeDriver();</span>
+<span class="nc" id="L369">            } else if (SeleniumBrowser.INTERNET_EXPLORER.name()</span>
+<span class="nc bnc" id="L370" title="All 2 branches missed.">                                                        .equalsIgnoreCase(getBrowserConfig().getBrowserName())) {</span>
+<span class="nc bnc" id="L371" title="All 2 branches missed.">                if (!SeleniumDriverFactory.isNativeInternetExplorerInitied()) {</span>
+<span class="nc" id="L372">                    WebDriverManager.iedriver()</span>
+<span class="nc" id="L373">                                    .setup();</span>
+<span class="nc" id="L374">                    SeleniumDriverFactory.setNativeInternetExplorerInitied(true);</span>
+                }
+<span class="nc" id="L376">                localDriver = buildInternetExplorerNativeDriver();</span>
+            } else {
+<span class="nc" id="L378">                throw new RobotestException(&quot;NATIVE DRIVER NOT IMPLEMENTED. REVISE ROBOTEST_BROWSER BASE CONFIG.&quot;);</span>
+            }
+<span class="fc" id="L380">            LOG.info(&quot;NATIVE DRIVER CREATED: {} HEADLESS: {}&quot;,</span>
+<span class="fc" id="L381">                     getBrowserConfig().getBrowserName(),</span>
+<span class="fc" id="L382">                     getBrowserConfig().getHeadLess());</span>
+<span class="fc" id="L383">            postCreationDriverCapabilities(localDriver.getLeft(),</span>
+<span class="fc" id="L384">                                           localDriver.getRight(),</span>
+                                           true);
+<span class="nc" id="L386">        } catch (WebDriverManagerException | WebDriverException | IllegalStateException e) {</span>
+<span class="nc" id="L387">            throw new RobotestException(&quot;NATIVE DRIVER CREATION ERROR&quot;,</span>
+                                        e);
+<span class="fc" id="L389">        }</span>
+<span class="fc" id="L390">        return localDriver.getLeft();</span>
+    }
+
+    /**
+     * Build native CHROME driver.
+     *
+     * @return WebDriver and capabilities for CHROME.
+     */
+    private Pair&lt;WebDriver, DesiredCapabilities&gt; buildChromeNativeDriver() {
+        WebDriver driver;
+<span class="fc" id="L400">        DesiredCapabilities capabilities = DesiredCapabilities.chrome();</span>
+<span class="fc" id="L401">        preCreationDriverCapabilities(capabilities);</span>
+<span class="fc" id="L402">        ChromeOptions chromeOptions = new ChromeOptions();</span>
+<span class="fc" id="L403">        chromeOptions.merge(capabilities);</span>
+<span class="fc" id="L404">        List&lt;String&gt; arguments = new ArrayList&lt;&gt;();</span>
+<span class="pc bpc" id="L405" title="1 of 2 branches missed.">        if (&quot;true&quot;.equals(getBrowserConfig().getHeadLess())) {</span>
+<span class="fc" id="L406">            arguments.add(&quot;--headless&quot;);</span>
+<span class="fc" id="L407">            arguments.add(&quot;--disable-gpu&quot;);</span>
+<span class="fc" id="L408">            arguments.add(&quot;--no-sandbox&quot;);</span>
+        }
+<span class="fc" id="L410">        arguments.add(&quot;--window-size=&quot; + getBrowserConfig().getWindowWidth() + &quot;,&quot;</span>
+<span class="fc" id="L411">                + getBrowserConfig().getWindowHeight());</span>
+<span class="fc" id="L412">        chromeOptions.addArguments(arguments);</span>
+<span class="fc" id="L413">        driver = new ChromeDriver(chromeOptions);</span>
+<span class="fc" id="L414">        return new ImmutablePair&lt;&gt;(driver,</span>
+                                   capabilities);
+    }
+
+    /**
+     * Build native FIREFOX driver.
+     *
+     * @return WebDriver and capabilities for FIREFOX.
+     */
+    private Pair&lt;WebDriver, DesiredCapabilities&gt; buildFirefoxNativeDriver() {
+        WebDriver driver;
+<span class="fc" id="L425">        DesiredCapabilities capabilities = DesiredCapabilities.firefox();</span>
+<span class="fc" id="L426">        preCreationDriverCapabilities(capabilities);</span>
+<span class="fc" id="L427">        FirefoxOptions firefoxOptions = new FirefoxOptions();</span>
+<span class="fc" id="L428">        firefoxOptions.merge(capabilities);</span>
+<span class="fc" id="L429">        List&lt;String&gt; arguments = new ArrayList&lt;&gt;();</span>
+<span class="pc bpc" id="L430" title="1 of 2 branches missed.">        if (&quot;true&quot;.equals(getBrowserConfig().getHeadLess())) {</span>
+<span class="fc" id="L431">            arguments.add(&quot;-headless&quot;);</span>
+        }
+<span class="fc" id="L433">        arguments.add(&quot;-width &quot; + getBrowserConfig().getWindowWidth());</span>
+<span class="fc" id="L434">        arguments.add(&quot;-height &quot; + getBrowserConfig().getWindowHeight());</span>
+<span class="fc" id="L435">        firefoxOptions.addArguments(arguments);</span>
+<span class="fc" id="L436">        driver = new FirefoxDriver(firefoxOptions);</span>
+<span class="fc" id="L437">        return new ImmutablePair&lt;&gt;(driver,</span>
+                                   capabilities);
+    }
+
+    /**
+     * Build native internet explorer driver.
+     *
+     * @return WebDriver and capabilities for internet explorer.
+     */
+    private Pair&lt;WebDriver, DesiredCapabilities&gt; buildInternetExplorerNativeDriver() {
+        WebDriver driver;
+<span class="nc" id="L448">        DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();</span>
+<span class="nc" id="L449">        capabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,</span>
+                                   true);
+<span class="nc" id="L451">        capabilities.setCapability(&quot;ignoreZoomSetting&quot;,</span>
+                                   true);
+<span class="nc" id="L453">        preCreationDriverCapabilities(capabilities);</span>
+<span class="nc" id="L454">        InternetExplorerOptions ieOptions = new InternetExplorerOptions();</span>
+<span class="nc" id="L455">        ieOptions.merge(capabilities);</span>
+<span class="nc" id="L456">        driver = new InternetExplorerDriver(ieOptions);</span>
+<span class="nc" id="L457">        return new ImmutablePair&lt;&gt;(driver,</span>
+                                   capabilities);
+    }
+
+    /**
+     * Pre creation driver common capabilities.
+     *
+     * @param capabilities
+     *            current capabilities
+     */
+    protected void preCreationDriverCapabilities(final DesiredCapabilities capabilities) {
+<span class="fc" id="L468">        configureBrowserLogs(capabilities);</span>
+<span class="fc" id="L469">        if (!SeleniumBrowser.INTERNET_EXPLORER.name()</span>
+<span class="pc bpc" id="L470" title="1 of 2 branches missed.">                                              .equalsIgnoreCase(capabilities.getBrowserName())) {</span>
+<span class="fc" id="L471">            capabilities.setAcceptInsecureCerts(true);</span>
+        }
+<span class="pc bpc" id="L473" title="1 of 2 branches missed.">        if (StringUtils.isEmpty(getBasicCfg().getHttp()</span>
+<span class="fc" id="L474">                                             .getProxyHost())) {</span>
+<span class="fc" id="L475">            capabilities.setCapability(CapabilityType.ForSeleniumServer.AVOIDING_PROXY,</span>
+                                       true);
+        } else {
+<span class="nc" id="L478">            if (!SeleniumBrowser.FIREFOX.name()</span>
+<span class="nc bnc" id="L479" title="All 2 branches missed.">                                        .equalsIgnoreCase(capabilities.getBrowserName())) {</span>
+<span class="nc" id="L480">                Proxy proxy = new Proxy();</span>
+<span class="nc" id="L481">                proxy.setProxyType(ProxyType.MANUAL);</span>
+<span class="nc" id="L482">                proxy.setHttpProxy(getBasicCfg().getHttp()</span>
+<span class="nc" id="L483">                                                .obtainProxyHostAndPort());</span>
+<span class="nc" id="L484">                proxy.setSslProxy(getBasicCfg().getHttp()</span>
+<span class="nc" id="L485">                                               .obtainProxyHostAndPort());</span>
+<span class="nc" id="L486">                proxy.setNoProxy(getBasicCfg().getHttp()</span>
+<span class="nc" id="L487">                                              .getNoproxyfor());</span>
+<span class="nc" id="L488">                capabilities.setCapability(CapabilityType.PROXY,</span>
+                                           proxy);
+            }
+        }
+<span class="fc" id="L492">        capabilities.setCapability(CapabilityType.ForSeleniumServer.ENSURING_CLEAN_SESSION,</span>
+                                   true);
+<span class="fc" id="L494">        com.google.gson.JsonObject timeouts = new com.google.gson.JsonObject();</span>
+<span class="fc" id="L495">        timeouts.addProperty(&quot;implicit&quot;,</span>
+<span class="fc" id="L496">                             0);</span>
+<span class="fc" id="L497">        timeouts.addProperty(&quot;pageLoad&quot;,</span>
+<span class="fc" id="L498">                             Integer.parseInt(getBasicCfg().getHttp()</span>
+<span class="fc" id="L499">                                                           .getGeneralTimeout()));</span>
+<span class="fc" id="L500">        timeouts.addProperty(&quot;script&quot;,</span>
+<span class="fc" id="L501">                             Integer.parseInt(getBasicCfg().getHttp()</span>
+<span class="fc" id="L502">                                                           .getGeneralTimeout()));</span>
+<span class="fc" id="L503">        capabilities.setCapability(&quot;timeouts&quot;,</span>
+                                   timeouts);
+<span class="fc" id="L505">        preDriverCreationChromeCapabilites(capabilities);</span>
+<span class="fc" id="L506">        preDriverCreationFirefoxCapabilities(capabilities);</span>
+<span class="fc" id="L507">    }</span>
+
+    /**
+     * Configure browserCfg logs for all browsers except browserStack
+     *
+     * @param capabilities
+     *            current capabilities
+     */
+    protected void configureBrowserLogs(final DesiredCapabilities capabilities) {
+<span class="fc" id="L516">        LoggingPreferences logs = new LoggingPreferences();</span>
+<span class="fc" id="L517">        logs.enable(LogType.BROWSER,</span>
+<span class="fc" id="L518">                    Level.parse(getBrowserConfig().getConsoleLogLevel()));</span>
+<span class="fc" id="L519">        logs.enable(LogType.CLIENT,</span>
+<span class="fc" id="L520">                    Level.parse(getBrowserConfig().getConsoleLogLevel()));</span>
+<span class="fc" id="L521">        logs.enable(LogType.DRIVER,</span>
+<span class="fc" id="L522">                    Level.parse(getBrowserConfig().getConsoleLogLevel()));</span>
+<span class="fc" id="L523">        logs.enable(LogType.PERFORMANCE,</span>
+<span class="fc" id="L524">                    Level.parse(getBrowserConfig().getConsoleLogLevel()));</span>
+<span class="fc" id="L525">        logs.enable(LogType.PROFILER,</span>
+<span class="fc" id="L526">                    Level.parse(getBrowserConfig().getConsoleLogLevel()));</span>
+<span class="fc" id="L527">        logs.enable(LogType.SERVER,</span>
+<span class="fc" id="L528">                    Level.parse(getBrowserConfig().getConsoleLogLevel()));</span>
+<span class="fc" id="L529">        capabilities.setCapability(CapabilityType.LOGGING_PREFS,</span>
+                                   logs);
+<span class="fc" id="L531">    }</span>
+
+    /**
+     * Pre driver creation Firefox capabilities
+     *
+     * @param capabilities
+     *            current capabilities
+     */
+    protected void preDriverCreationFirefoxCapabilities(final DesiredCapabilities capabilities) {
+<span class="fc" id="L540">        if (capabilities.getBrowserName()</span>
+<span class="fc bfc" id="L541" title="All 2 branches covered.">                        .equalsIgnoreCase(SeleniumBrowser.FIREFOX.name())) {</span>
+<span class="fc" id="L542">            capabilities.setBrowserName(DesiredCapabilities.firefox()</span>
+<span class="fc" id="L543">                                                           .getBrowserName());</span>
+<span class="fc" id="L544">            capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS,</span>
+                                       true);
+<span class="fc" id="L546">            capabilities.setCapability(&quot;marionette&quot;,</span>
+                                       true);
+<span class="fc" id="L548">            System.setProperty(FirefoxDriver.SystemProperty.DRIVER_USE_MARIONETTE,</span>
+                               &quot;true&quot;);
+<span class="fc" id="L550">            FirefoxProfile fp = new FirefoxProfile();</span>
+            // fp.setPreference(&quot;media.autoplay.enabled&quot;, false); // video-off
+            // fp.setPreference(&quot;media.ogg.enabled&quot;, false); // video-off
+            // fp.setPreference(&quot;media.webm.enabled&quot;, false); // video-off
+            // fp.setPreference(&quot;media.windows-media-foundation.enabled&quot;, false); // video-off
+<span class="fc" id="L555">            fp.setPreference(&quot;toolkit.startup.max_resumed_crashes&quot;,</span>
+                             -1); // Desactivar el Safe Mode
+<span class="fc" id="L557">            fp.setPreference(&quot;browserCfg.sessionstore.postdata&quot;,</span>
+                             -1); // Desactivar el &quot;Document Expired&quot;
+<span class="pc bpc" id="L559" title="1 of 2 branches missed.">            if (StringUtils.isEmpty(getBasicCfg().getHttp()</span>
+<span class="fc" id="L560">                                                 .getProxyHost())) {</span>
+<span class="fc" id="L561">                fp.setPreference(&quot;network.proxy.type&quot;,</span>
+                                 0); // Sin proxy
+            } else {
+                // JsonObject json = new JsonObject();
+                // json.addProperty(&quot;proxyType&quot;, Proxy.ProxyType.MANUAL.name().toLowerCase());
+                // json.addProperty(&quot;httpProxy&quot;, this.getBrowserConfig().getProxy());
+                // json.addProperty(&quot;sslProxy&quot;, this.getBrowserConfig().getProxy());
+                // json.addProperty(&quot;noProxy&quot;, this.getBrowserConfig().getNoproxyfor());
+                // capabilities.setCapability(&quot;proxy&quot;, json);
+                // WORKAROUND related to https://github.com/SeleniumHQ/selenium/issues/5004
+<span class="nc" id="L571">                fp.setPreference(&quot;network.proxy.type&quot;,</span>
+                                 1);
+<span class="nc" id="L573">                fp.setPreference(&quot;network.proxy.http&quot;,</span>
+<span class="nc" id="L574">                                 getBasicCfg().getHttp()</span>
+<span class="nc" id="L575">                                              .getProxyHost());</span>
+<span class="nc" id="L576">                fp.setPreference(&quot;network.proxy.http_port&quot;,</span>
+<span class="nc" id="L577">                                 Integer.parseInt(getBasicCfg().getHttp()</span>
+<span class="nc" id="L578">                                                               .getProxyPort()));</span>
+<span class="nc" id="L579">                fp.setPreference(&quot;network.proxy.ssl&quot;,</span>
+<span class="nc" id="L580">                                 getBasicCfg().getHttp()</span>
+<span class="nc" id="L581">                                              .getProxyHost());</span>
+<span class="nc" id="L582">                fp.setPreference(&quot;network.proxy.ssl_port&quot;,</span>
+<span class="nc" id="L583">                                 Integer.parseInt(getBasicCfg().getHttp()</span>
+<span class="nc" id="L584">                                                               .getProxyPort()));</span>
+<span class="nc" id="L585">                fp.setPreference(&quot;network.proxy.no_proxies_on&quot;,</span>
+<span class="nc" id="L586">                                 getBasicCfg().getHttp()</span>
+<span class="nc" id="L587">                                              .getNoproxyfor());</span>
+
+            }
+<span class="fc" id="L590">            fp.setPreference(&quot;browserCfg.cache.disk.enable&quot;,</span>
+                             true);
+<span class="fc" id="L592">            fp.setPreference(&quot;browserCfg.cache.memory.enable&quot;,</span>
+                             true);
+<span class="fc" id="L594">            fp.setPreference(&quot;browserCfg.cache.offline.enable&quot;,</span>
+                             true);
+<span class="fc" id="L596">            fp.setPreference(&quot;network.http.use-cache&quot;,</span>
+                             true);
+<span class="fc" id="L598">            fp.setPreference(&quot;startup.homepage_welcome_url.additional&quot;,</span>
+                             &quot;&quot;);
+<span class="fc" id="L600">            fp.setPreference(&quot;startup.homepage_welcome_url&quot;,</span>
+                             &quot;&quot;);
+
+<span class="fc" id="L603">            capabilities.setCapability(FirefoxDriver.PROFILE,</span>
+                                       fp);
+        }
+<span class="fc" id="L606">    }</span>
+
+    /**
+     * Pre driver creation Chrome capabilities
+     *
+     * @param capabilities
+     *            current capabilities
+     */
+    protected void preDriverCreationChromeCapabilites(final DesiredCapabilities capabilities) {
+<span class="fc" id="L615">        if (capabilities.getBrowserName()</span>
+<span class="fc bfc" id="L616" title="All 2 branches covered.">                        .equalsIgnoreCase(SeleniumBrowser.CHROME.name())) {</span>
+<span class="fc" id="L617">            ChromeOptions options = new ChromeOptions();</span>
+<span class="fc" id="L618">            options.addArguments(Arrays.asList(&quot;--no-sandbox&quot;,</span>
+                                               &quot;--start-maximized&quot;));
+<span class="fc" id="L620">            capabilities.setCapability(ChromeOptions.CAPABILITY,</span>
+                                       options);
+        }
+<span class="fc" id="L623">    }</span>
+
+    /**
+     * Post cration driver common configurations.
+     *
+     * @param webdriver
+     *            webdriver created
+     * @param capabilities
+     *            current capabilities
+     * @param localNative
+     *            true if is local native browser
+     */
+    protected void postCreationDriverCapabilities(final WebDriver webdriver,
+                                                  final DesiredCapabilities capabilities,
+                                                  final boolean localNative) {
+<span class="fc" id="L638">        deleteCookiesAndSetTimemouts(webdriver);</span>
+<span class="pc bpc" id="L639" title="1 of 2 branches missed.">        if (&quot;true&quot;.equals(getBrowserConfig().getMaximized())) {</span>
+<span class="fc" id="L640">            forzeMaximizeWindow(webdriver,</span>
+                                capabilities,
+                                localNative);
+        }
+<span class="fc" id="L644">    }</span>
+
+    /**
+     * Forze max window for all browsers, except CHROME.
+     *
+     * @param webdriver
+     *            webdriver created
+     * @param capabilities
+     *            current capabilities
+     * @param localNative
+     *            true if is local native browser
+     */
+    protected void forzeMaximizeWindow(final WebDriver webdriver,
+                                       final DesiredCapabilities capabilities,
+                                       final boolean localNative) {
+<span class="pc bpc" id="L659" title="1 of 2 branches missed.">        if (localNative || !capabilities.getBrowserName()</span>
+<span class="nc bnc" id="L660" title="All 2 branches missed.">                                        .equalsIgnoreCase(SeleniumBrowser.CHROME.name())) {</span>
+<span class="fc" id="L661">            webdriver.manage()</span>
+<span class="fc" id="L662">                     .window()</span>
+<span class="fc" id="L663">                     .maximize();</span>
+        }
+<span class="fc" id="L665">    }</span>
+
+    /**
+     * Manage delete Cookies and set timeouts.
+     *
+     * @param webdriver
+     *            webdriver created
+     */
+    protected void deleteCookiesAndSetTimemouts(final WebDriver webdriver) {
+<span class="fc" id="L674">        webdriver.manage()</span>
+<span class="fc" id="L675">                 .deleteAllCookies();</span>
+<span class="fc" id="L676">        webdriver.manage()</span>
+<span class="fc" id="L677">                 .timeouts()</span>
+<span class="fc" id="L678">                 .pageLoadTimeout((int) getBasicCfg().getHttp()</span>
+<span class="fc" id="L679">                                                     .obtainGeneralTimeoutInSeconds(),</span>
+                                  TimeUnit.SECONDS);
+<span class="fc" id="L681">        webdriver.manage()</span>
+<span class="fc" id="L682">                 .timeouts()</span>
+<span class="fc" id="L683">                 .setScriptTimeout((int) getBasicCfg().getHttp()</span>
+<span class="fc" id="L684">                                                      .obtainGeneralTimeoutInSeconds(),</span>
+                                   TimeUnit.SECONDS);
+<span class="fc" id="L686">        webdriver.manage()</span>
+<span class="fc" id="L687">                 .timeouts()</span>
+<span class="fc" id="L688">                 .implicitlyWait(0,</span>
+                                 TimeUnit.SECONDS);
+<span class="fc" id="L690">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

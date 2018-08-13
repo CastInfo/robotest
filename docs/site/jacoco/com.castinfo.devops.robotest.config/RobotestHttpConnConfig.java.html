@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RobotestHttpConnConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.cast-info.devops:robotest-core</a> &gt; <a href="index.source.html" class="el_package">com.castinfo.devops.robotest.config</a> &gt; <span class="el_source">RobotestHttpConnConfig.java</span></div><h1>RobotestHttpConnConfig.java</h1><pre class="source lang-java linenums">/********************************************************************************
+ * ROBOTEST
+ * Copyright (C) 2018 CAST-INFO, S.A. www.cast-info.es
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *******************************************************************************/
+package com.castinfo.devops.robotest.config;
+
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.StringUtils;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+/**
+ * Jackson DTO for http connection config.
+ *
+ */
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({ &quot;generalTimeout&quot;, &quot;proxyHost&quot;, &quot;proxyPort&quot;, &quot;noproxyfor&quot;, &quot;proxyUser&quot;, &quot;proxySecret&quot; })
+<span class="fc" id="L35">public class RobotestHttpConnConfig {</span>
+
+<span class="fc" id="L37">    public static String PROXY_HOST_PORT_SEPARATOR = &quot;:&quot;;</span>
+    public static final int ONE_SECOND_IN_MILLIS = 1000;
+
+<span class="fc" id="L40">    @JsonProperty(&quot;generalTimeout&quot;)</span>
+    private String generalTimeout = &quot;&quot;;
+
+<span class="fc" id="L43">    @JsonProperty(&quot;proxyHost&quot;)</span>
+    private String proxyHost = &quot;&quot;;
+
+<span class="fc" id="L46">    @JsonProperty(&quot;proxyPort&quot;)</span>
+    private String proxyPort = &quot;&quot;;
+
+<span class="fc" id="L49">    @JsonProperty(&quot;noproxyfor&quot;)</span>
+    private String noproxyfor = &quot;&quot;;
+
+<span class="fc" id="L52">    @JsonProperty(&quot;proxyUser&quot;)</span>
+    private String proxyUser = &quot;&quot;;
+
+<span class="fc" id="L55">    @JsonProperty(&quot;proxySecret&quot;)</span>
+    private String proxySecret = &quot;&quot;;
+
+    /**
+     * The generalTimeout.
+     *
+     * @return generalTimeou
+     *
+     */
+    @JsonProperty(&quot;generalTimeout&quot;)
+    public String getGeneralTimeout() {
+<span class="fc" id="L66">        return generalTimeout;</span>
+    }
+
+    public long obtainGeneralTimeoutInSeconds() {
+<span class="fc" id="L70">        long millis = Long.parseLong(generalTimeout);</span>
+<span class="fc" id="L71">        return millis / ONE_SECOND_IN_MILLIS;</span>
+    }
+
+    /**
+     * The generalTimeout.
+     *
+     * @param waitTimeout
+     *            generalTimeout
+     *
+     */
+    @JsonProperty(&quot;generalTimeout&quot;)
+    public void setGeneralTimeout(final String waitTimeout) {
+<span class="fc" id="L83">        generalTimeout = waitTimeout;</span>
+<span class="fc" id="L84">    }</span>
+
+    /**
+     * have proxy
+     *
+     * @return true if proxy
+     */
+    public boolean haveProxyHost() {
+<span class="fc" id="L92">        return StringUtils.isNotEmpty(getProxyHost());</span>
+    }
+
+    /**
+     * Getter method for proxy host.
+     *
+     * @return the proxy host
+     */
+    @JsonProperty(&quot;proxyHost&quot;)
+    public String getProxyHost() {
+<span class="fc" id="L102">        return proxyHost;</span>
+    }
+
+    /**
+     * Setter method for the proxyHost.
+     *
+     * @param proxyHost
+     *            the proxy Host to set
+     */
+    @JsonProperty(&quot;proxyHost&quot;)
+    public void setProxyHost(final String proxyHost) {
+<span class="fc" id="L113">        this.proxyHost = proxyHost;</span>
+<span class="fc" id="L114">    }</span>
+
+    /**
+     * Getter of proxyPort
+     *
+     * @return the proxyPort
+     */
+    @JsonProperty(&quot;proxyPort&quot;)
+    public String getProxyPort() {
+<span class="fc" id="L123">        return proxyPort;</span>
+    }
+
+    /**
+     * Setter of proxyPort
+     *
+     * @param proxyPort
+     *            the proxyPort to set
+     */
+    @JsonProperty(&quot;proxyPort&quot;)
+    public void setProxyPort(final String proxyPort) {
+<span class="fc" id="L134">        this.proxyPort = proxyPort;</span>
+<span class="fc" id="L135">    }</span>
+
+    /**
+     * Obtain proxyHost:proxyPort uri
+     *
+     * @return uri
+     */
+    public String obtainProxyHostAndPort() {
+<span class="nc" id="L143">        return getProxyHost() + PROXY_HOST_PORT_SEPARATOR + getProxyPort();</span>
+    }
+
+    /**
+     * proxy port int
+     *
+     * @return int
+     */
+    public int obtainIntegerProxyPort() {
+<span class="fc" id="L152">        return Integer.parseInt(proxyPort);</span>
+    }
+
+    /**
+     * have non-proxy
+     *
+     * @return true if nonprxoy
+     */
+    public boolean haveNoproxyfor() {
+<span class="fc" id="L161">        return StringUtils.isNotEmpty(getNoproxyfor());</span>
+    }
+
+    /**
+     * Getter method for noproxyfor.
+     *
+     * @return the noproxyfor
+     */
+    @JsonProperty(&quot;noproxyfor&quot;)
+    public String getNoproxyfor() {
+<span class="fc" id="L171">        return noproxyfor;</span>
+    }
+
+    /**
+     * Setter method for the noproxyfor.
+     *
+     * @param noproxyfor
+     *            the noproxyfor to set
+     */
+    @JsonProperty(&quot;noproxyfor&quot;)
+    public void setNoproxyfor(final String noproxyfor) {
+<span class="fc" id="L182">        this.noproxyfor = noproxyfor;</span>
+<span class="fc" id="L183">    }</span>
+
+    /**
+     * have proxy user
+     *
+     * @return true if proxy user
+     */
+    public boolean haveProxyUser() {
+<span class="fc" id="L191">        return StringUtils.isEmpty(getProxyUser());</span>
+    }
+
+    /**
+     * Getter of proxyUser
+     *
+     * @return the proxyUser
+     */
+    @JsonProperty(&quot;proxyUser&quot;)
+    public String getProxyUser() {
+<span class="fc" id="L201">        return proxyUser;</span>
+    }
+
+    /**
+     * Setter of proxyUser
+     *
+     * @param proxyUser
+     *            the proxyUser to set
+     */
+    @JsonProperty(&quot;proxyUser&quot;)
+    public void setProxyUser(final String proxyUser) {
+<span class="fc" id="L212">        this.proxyUser = proxyUser;</span>
+<span class="fc" id="L213">    }</span>
+
+    /**
+     * Getter of proxySecret
+     *
+     * @return the proxySecret
+     */
+    @JsonProperty(&quot;proxySecret&quot;)
+    public String getProxySecret() {
+<span class="fc" id="L222">        return proxySecret;</span>
+    }
+
+    /**
+     * Setter of proxySecret
+     *
+     * @param proxySecret
+     *            the proxySecret to set
+     */
+    @JsonProperty(&quot;proxySecret&quot;)
+    public void setProxySecret(final String proxySecret) {
+<span class="fc" id="L233">        this.proxySecret = proxySecret;</span>
+<span class="fc" id="L234">    }</span>
+
+    @Override
+    public String toString() {
+<span class="fc" id="L238">        return ToStringBuilder.reflectionToString(this);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="fc" id="L243">        return new HashCodeBuilder().append(generalTimeout)</span>
+<span class="fc" id="L244">                                    .append(proxyHost)</span>
+<span class="fc" id="L245">                                    .append(proxyPort)</span>
+<span class="fc" id="L246">                                    .append(noproxyfor)</span>
+<span class="fc" id="L247">                                    .append(proxyUser)</span>
+<span class="fc" id="L248">                                    .append(proxySecret)</span>
+<span class="fc" id="L249">                                    .toHashCode();</span>
+    }
+
+    @Override
+    public boolean equals(final Object other) {
+<span class="nc bnc" id="L254" title="All 2 branches missed.">        if (other == this) {</span>
+<span class="nc" id="L255">            return true;</span>
+        }
+<span class="nc bnc" id="L257" title="All 2 branches missed.">        if (!(other instanceof RobotestHttpConnConfig)) {</span>
+<span class="nc" id="L258">            return false;</span>
+        }
+<span class="nc" id="L260">        RobotestHttpConnConfig rhs = (RobotestHttpConnConfig) other;</span>
+<span class="nc" id="L261">        return new EqualsBuilder().append(generalTimeout,</span>
+                                          rhs.generalTimeout)
+<span class="nc" id="L263">                                  .append(proxyHost,</span>
+                                          rhs.proxyHost)
+<span class="nc" id="L265">                                  .append(proxyPort,</span>
+                                          rhs.proxyPort)
+<span class="nc" id="L267">                                  .append(noproxyfor,</span>
+                                          rhs.noproxyfor)
+<span class="nc" id="L269">                                  .append(proxyUser,</span>
+                                          rhs.proxyUser)
+<span class="nc" id="L271">                                  .append(proxySecret,</span>
+                                          rhs.proxySecret)
+<span class="nc" id="L273">                                  .isEquals();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

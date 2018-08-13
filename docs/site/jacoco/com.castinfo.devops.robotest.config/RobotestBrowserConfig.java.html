@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RobotestBrowserConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.cast-info.devops:robotest-core</a> &gt; <a href="index.source.html" class="el_package">com.castinfo.devops.robotest.config</a> &gt; <span class="el_source">RobotestBrowserConfig.java</span></div><h1>RobotestBrowserConfig.java</h1><pre class="source lang-java linenums">/********************************************************************************
+ * ROBOTEST
+ * Copyright (C) 2018 CAST-INFO, S.A. www.cast-info.es
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *******************************************************************************/
+package com.castinfo.devops.robotest.config;
+
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+/**
+ * Jackson DTO for basic config.
+ *
+ */
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({ &quot;browserName&quot;, &quot;headLess&quot;, &quot;windowWidth&quot;, &quot;windowHeight&quot;, &quot;maximized&quot;, &quot;consoleLogLevel&quot; })
+<span class="fc" id="L34">public class RobotestBrowserConfig {</span>
+
+<span class="fc" id="L36">    @JsonProperty(&quot;browserName&quot;)</span>
+    private String browserName = &quot;&quot;;
+
+<span class="fc" id="L39">    @JsonProperty(&quot;headLess&quot;)</span>
+    private String headLess = &quot;&quot;;
+
+<span class="fc" id="L42">    @JsonProperty(&quot;windowWidth&quot;)</span>
+    private String windowWidth = &quot;&quot;;
+
+<span class="fc" id="L45">    @JsonProperty(&quot;windowHeight&quot;)</span>
+    private String windowHeight = &quot;&quot;;
+
+<span class="fc" id="L48">    @JsonProperty(&quot;maximized&quot;)</span>
+    private String maximized = &quot;&quot;;
+
+<span class="fc" id="L51">    @JsonProperty(&quot;consoleLogLevel&quot;)</span>
+    private String consoleLogLevel = &quot;&quot;;
+
+    /**
+     * The Browser.
+     *
+     * @return browserName
+     *
+     */
+    @JsonProperty(&quot;browserName&quot;)
+    public String getBrowserName() {
+<span class="fc" id="L62">        return browserName;</span>
+    }
+
+    /**
+     * The Browser.
+     *
+     * @param browserName
+     *            browserName
+     *
+     */
+    @JsonProperty(&quot;browserName&quot;)
+    public void setBrowserName(final String browserName) {
+<span class="fc" id="L74">        this.browserName = browserName;</span>
+<span class="fc" id="L75">    }</span>
+
+    /**
+     * Getter method for headLess.
+     *
+     * @return the headLess
+     */
+    @JsonProperty(&quot;headLess&quot;)
+    public String getHeadLess() {
+<span class="fc" id="L84">        return headLess;</span>
+    }
+
+    /**
+     * Setter method for the headLess.
+     *
+     * @param headLess
+     *            the headLess to set
+     */
+    @JsonProperty(&quot;headLess&quot;)
+    public void setHeadLess(final String headLess) {
+<span class="fc" id="L95">        this.headLess = headLess;</span>
+<span class="fc" id="L96">    }</span>
+
+    /**
+     * Getter method for windowWidth.
+     *
+     * @return the windowWidth
+     */
+    @JsonProperty(&quot;windowWidth&quot;)
+    public String getWindowWidth() {
+<span class="fc" id="L105">        return windowWidth;</span>
+    }
+
+    /**
+     * Setter method for the windowWidth.
+     *
+     * @param windowWidth
+     *            the windowWidth to set
+     */
+    @JsonProperty(&quot;windowWidth&quot;)
+    public void setWindowWidth(final String windowWidth) {
+<span class="fc" id="L116">        this.windowWidth = windowWidth;</span>
+<span class="fc" id="L117">    }</span>
+
+    /**
+     * Getter method for windowHeight.
+     *
+     * @return the windowHeight
+     */
+    @JsonProperty(&quot;windowHeight&quot;)
+    public String getWindowHeight() {
+<span class="fc" id="L126">        return windowHeight;</span>
+    }
+
+    /**
+     * Setter method for the windowHeight.
+     *
+     * @param windowHeight
+     *            the windowHeight to set
+     */
+    @JsonProperty(&quot;windowHeight&quot;)
+    public void setWindowHeight(final String windowHeight) {
+<span class="fc" id="L137">        this.windowHeight = windowHeight;</span>
+<span class="fc" id="L138">    }</span>
+
+    /**
+     * The Browser maximized.
+     *
+     * @return maximized
+     *
+     */
+    @JsonProperty(&quot;maximized&quot;)
+    public String getMaximized() {
+<span class="fc" id="L148">        return maximized;</span>
+    }
+
+    /**
+     * The Browser maximized.
+     *
+     * @param maximized
+     *            maximized
+     *
+     */
+    @JsonProperty(&quot;maximized&quot;)
+    public void setMaximized(final String maximized) {
+<span class="fc" id="L160">        this.maximized = maximized;</span>
+<span class="fc" id="L161">    }</span>
+
+    /**
+     * The Browser Console Log Level.
+     *
+     * @return CONSOLE browserName log level
+     *
+     */
+    @JsonProperty(&quot;consoleLogLevel&quot;)
+    public String getConsoleLogLevel() {
+<span class="fc" id="L171">        return consoleLogLevel;</span>
+    }
+
+    /**
+     * The Browser Console Log Level.
+     *
+     * @param level
+     *            CONSOLE browserName log level
+     *
+     */
+    @JsonProperty(&quot;consoleLogLevel&quot;)
+    public void setConsoleLogLevel(final String level) {
+<span class="fc" id="L183">        consoleLogLevel = level;</span>
+<span class="fc" id="L184">    }</span>
+
+    @Override
+    public String toString() {
+<span class="fc" id="L188">        return ToStringBuilder.reflectionToString(this);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="fc" id="L193">        return new HashCodeBuilder().append(browserName)</span>
+<span class="fc" id="L194">                                    .append(headLess)</span>
+<span class="fc" id="L195">                                    .append(windowWidth)</span>
+<span class="fc" id="L196">                                    .append(windowHeight)</span>
+<span class="fc" id="L197">                                    .append(maximized)</span>
+<span class="fc" id="L198">                                    .append(consoleLogLevel)</span>
+<span class="fc" id="L199">                                    .toHashCode();</span>
+    }
+
+    @Override
+    public boolean equals(final Object other) {
+<span class="nc bnc" id="L204" title="All 2 branches missed.">        if (other == this) {</span>
+<span class="nc" id="L205">            return true;</span>
+        }
+<span class="nc bnc" id="L207" title="All 2 branches missed.">        if (!(other instanceof RobotestBrowserConfig)) {</span>
+<span class="nc" id="L208">            return false;</span>
+        }
+<span class="nc" id="L210">        RobotestBrowserConfig rhs = (RobotestBrowserConfig) other;</span>
+<span class="nc" id="L211">        return new EqualsBuilder().append(browserName, rhs.browserName)</span>
+<span class="nc" id="L212">                                  .append(headLess, rhs.headLess)</span>
+<span class="nc" id="L213">                                  .append(windowWidth, rhs.windowWidth)</span>
+<span class="nc" id="L214">                                  .append(windowHeight, rhs.windowHeight)</span>
+<span class="nc" id="L215">                                  .append(maximized, rhs.maximized)</span>
+<span class="nc" id="L216">                                  .append(consoleLogLevel, rhs.consoleLogLevel)</span>
+<span class="nc" id="L217">                                  .isEquals();</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SuitesListReport.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.cast-info.devops:robotest-core</a> &gt; <a href="index.source.html" class="el_package">com.castinfo.devops.robotest.report</a> &gt; <span class="el_source">SuitesListReport.java</span></div><h1>SuitesListReport.java</h1><pre class="source lang-java linenums">/********************************************************************************
+ * ROBOTEST
+ * Copyright (C) 2018 CAST-INFO, S.A. www.cast-info.es
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *******************************************************************************/
+package com.castinfo.devops.robotest.report;
+
+import java.io.File;
+import java.io.IOException;
+
+import com.castinfo.devops.robotest.RobotestException;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+
+/**
+ * Generates a index file with all suite report files.
+ *
+ */
+public class SuitesListReport {
+
+    private File suitesListFile;
+<span class="fc" id="L35">    private ObjectMapper mapper = new ObjectMapper();</span>
+<span class="fc" id="L36">    private SuiteListMapper suiteListMapper = new SuiteListMapper();</span>
+<span class="fc" id="L37">    private DefaultPrettyPrinter printer = new DefaultPrettyPrinter();</span>
+
+    /**
+     * Creates Suite List of robotest reports, creating the JSON file.
+     *
+     * @param reportFile
+     *            Report file.
+     * @throws RobotestException
+     *             Errors, probably IO.
+     */
+<span class="fc" id="L47">    public SuitesListReport(final File reportFile) throws RobotestException {</span>
+        try {
+<span class="fc" id="L49">            suitesListFile = reportFile;</span>
+<span class="fc" id="L50">            mapper.writeValue(suitesListFile,</span>
+                              suiteListMapper);
+<span class="nc" id="L52">        } catch (IOException e) {</span>
+<span class="nc" id="L53">            throw new RobotestException(&quot;ERROR CREATING SUITE LIST REPORT&quot;,</span>
+                                        e);
+<span class="fc" id="L55">        }</span>
+<span class="fc" id="L56">    }</span>
+
+    /**
+     * Getter method for suitesListFile.
+     *
+     * @return the suitesListFile
+     */
+    public File getSuitesListFile() {
+<span class="nc" id="L64">        return suitesListFile;</span>
+    }
+
+    /**
+     * Setter method for the suitesListFile.
+     *
+     * @param suitesListFile
+     *            the suitesListFile to set
+     */
+    public void setSuitesListFile(final File suitesListFile) {
+<span class="nc" id="L74">        this.suitesListFile = suitesListFile;</span>
+<span class="nc" id="L75">    }</span>
+
+    /**
+     * Getter method for mapper.
+     *
+     * @return the mapper
+     */
+    public ObjectMapper getMapper() {
+<span class="nc" id="L83">        return mapper;</span>
+    }
+
+    /**
+     * Setter method for the mapper.
+     *
+     * @param mapper
+     *            the mapper to set
+     */
+    public void setMapper(final ObjectMapper mapper) {
+<span class="nc" id="L93">        this.mapper = mapper;</span>
+<span class="nc" id="L94">    }</span>
+
+    /**
+     * Getter method for suiteListMapper.
+     *
+     * @return the suiteListMapper
+     */
+    public SuiteListMapper getSuiteListMapper() {
+<span class="nc" id="L102">        return suiteListMapper;</span>
+    }
+
+    /**
+     * Setter method for the suiteListMapper.
+     *
+     * @param suiteListMapper
+     *            the suiteListMapper to set
+     */
+    public void setSuiteListMapper(final SuiteListMapper suiteListMapper) {
+<span class="nc" id="L112">        this.suiteListMapper = suiteListMapper;</span>
+<span class="nc" id="L113">    }</span>
+
+    /**
+     * Getter method for printer.
+     *
+     * @return the printer
+     */
+    public DefaultPrettyPrinter getPrinter() {
+<span class="nc" id="L121">        return printer;</span>
+    }
+
+    /**
+     * Setter method for the printer.
+     *
+     * @param printer
+     *            the printer to set
+     */
+    public void setPrinter(final DefaultPrettyPrinter printer) {
+<span class="nc" id="L131">        this.printer = printer;</span>
+<span class="nc" id="L132">    }</span>
+
+    /**
+     * Append a suite file in the list.
+     *
+     * @param suiteReportFileName
+     *            name of suite report
+     * @throws RobotestException
+     *             io errors.
+     */
+    public void appendToSuiteListReport(final String suiteReportFileName) throws RobotestException {
+        try {
+<span class="fc" id="L144">            final SuiteListMapper suitesList = getSuiteListReportContent();</span>
+<span class="fc" id="L145">            suitesList.getSuites()</span>
+<span class="fc" id="L146">                      .add(suiteReportFileName);</span>
+<span class="fc" id="L147">            ObjectWriter writer = mapper.writer(printer);</span>
+<span class="fc" id="L148">            writer.writeValue(suitesListFile,</span>
+                              suitesList);
+<span class="nc" id="L150">        } catch (IOException e) {</span>
+<span class="nc" id="L151">            throw new RobotestException(&quot;ERROR APPEND SUITE LIST REPORT&quot;,</span>
+                                        e);
+<span class="fc" id="L153">        }</span>
+<span class="fc" id="L154">    }</span>
+
+    /**
+     * Load a POJO representation of suite list file content.
+     *
+     * @return SuiteListMapper
+     * @throws RobotestException
+     *             io errors.
+     */
+    public SuiteListMapper getSuiteListReportContent() throws RobotestException {
+        try {
+<span class="fc" id="L165">            return mapper.readValue(suitesListFile,</span>
+                                    SuiteListMapper.class);
+<span class="nc" id="L167">        } catch (IOException e) {</span>
+<span class="nc" id="L168">            throw new RobotestException(&quot;ERROR GET SUITE LIST REPORT CONTENT&quot;,</span>
+                                        e);
+        }
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BrowserStackConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.cast-info.devops:robotest-core</a> &gt; <a href="index.source.html" class="el_package">com.castinfo.devops.robotest.config</a> &gt; <span class="el_source">BrowserStackConfig.java</span></div><h1>BrowserStackConfig.java</h1><pre class="source lang-java linenums">/********************************************************************************
+ * ROBOTEST
+ * Copyright (C) 2018 CAST-INFO, S.A. www.cast-info.es
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *******************************************************************************/
+package com.castinfo.devops.robotest.config;
+
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+/**
+ * Jackson DTO for Docker config included in base config.
+ *
+ */
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({ &quot;platform&quot;, &quot;device&quot;, &quot;login&quot; })
+<span class="fc" id="L34">public class BrowserStackConfig {</span>
+
+    /**
+     * The platform .
+     */
+<span class="fc" id="L39">    @JsonProperty(&quot;platform&quot;)</span>
+    private String platform = &quot;&quot;;
+
+    /**
+     * The device.
+     */
+<span class="fc" id="L45">    @JsonProperty(&quot;device&quot;)</span>
+    private String device = &quot;&quot;;
+
+    /**
+     * The login.
+     */
+<span class="fc" id="L51">    @JsonProperty(&quot;login&quot;)</span>
+    private String login = &quot;&quot;;
+
+    /**
+     * The access key.
+     */
+<span class="fc" id="L57">    private String accessKey = &quot;&quot;;</span>
+
+    /**
+     * Getter method for platform.
+     *
+     * @return the platform
+     */
+    @JsonProperty(&quot;platform&quot;)
+    public String getPlatform() {
+<span class="fc" id="L66">        return platform;</span>
+    }
+
+    /**
+     * Setter method for the platform.
+     *
+     * @param platform
+     *            the platform to set
+     */
+    @JsonProperty(&quot;platform&quot;)
+    public void setPlatform(final String platform) {
+<span class="fc" id="L77">        this.platform = platform;</span>
+<span class="fc" id="L78">    }</span>
+
+    /**
+     * Getter method for device.
+     *
+     * @return the device
+     */
+    @JsonProperty(&quot;device&quot;)
+    public String getDevice() {
+<span class="fc" id="L87">        return device;</span>
+    }
+
+    /**
+     * Setter method for the device.
+     *
+     * @param device
+     *            the device to set
+     */
+    @JsonProperty(&quot;device&quot;)
+    public void setDevice(final String device) {
+<span class="fc" id="L98">        this.device = device;</span>
+<span class="fc" id="L99">    }</span>
+
+    /**
+     * Getter method for login.
+     *
+     * @return the login
+     */
+    @JsonProperty(&quot;login&quot;)
+    public String getLogin() {
+<span class="fc" id="L108">        return login;</span>
+    }
+
+    /**
+     * Setter method for the login.
+     *
+     * @param login
+     *            the login to set
+     */
+    @JsonProperty(&quot;login&quot;)
+    public void setLogin(final String login) {
+<span class="fc" id="L119">        this.login = login;</span>
+<span class="fc" id="L120">    }</span>
+
+    /**
+     * Getter method for accessKey.
+     *
+     * @return the accessKey
+     */
+    public String getAccessKey() {
+<span class="fc" id="L128">        return accessKey;</span>
+    }
+
+    /**
+     * Setter method for the password.
+     *
+     * @param accessKey
+     *            the accessKey to set
+     */
+    public void setAccessKey(final String accessKey) {
+<span class="fc" id="L138">        this.accessKey = accessKey;</span>
+<span class="fc" id="L139">    }</span>
+
+    @Override
+    public String toString() {
+<span class="fc" id="L143">        return ToStringBuilder.reflectionToString(this);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="fc" id="L148">        return new HashCodeBuilder().append(device)</span>
+<span class="fc" id="L149">                                    .append(platform)</span>
+<span class="fc" id="L150">                                    .append(login)</span>
+<span class="fc" id="L151">                                    .toHashCode();</span>
+    }
+
+    @Override
+    public boolean equals(final Object other) {
+<span class="fc bfc" id="L156" title="All 2 branches covered.">        if (other == this) {</span>
+<span class="fc" id="L157">            return true;</span>
+        }
+<span class="fc bfc" id="L159" title="All 2 branches covered.">        if (!(other instanceof BrowserStackConfig)) {</span>
+<span class="fc" id="L160">            return false;</span>
+        }
+<span class="fc" id="L162">        BrowserStackConfig rhs = (BrowserStackConfig) other;</span>
+<span class="fc" id="L163">        return new EqualsBuilder().append(device,</span>
+                                          rhs.device)
+<span class="fc" id="L165">                                  .append(platform,</span>
+                                          rhs.platform)
+<span class="fc" id="L167">                                  .append(login,</span>
+                                          rhs.login)
+<span class="fc" id="L169">                                  .isEquals();</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SuiteReport.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.cast-info.devops:robotest-core</a> &gt; <a href="index.source.html" class="el_package">com.castinfo.devops.robotest.report</a> &gt; <span class="el_source">SuiteReport.java</span></div><h1>SuiteReport.java</h1><pre class="source lang-java linenums">/********************************************************************************
+ * ROBOTEST
+ * Copyright (C) 2018 CAST-INFO, S.A. www.cast-info.es
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *******************************************************************************/
+package com.castinfo.devops.robotest.report;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import com.castinfo.devops.robotest.RobotestException;
+import com.castinfo.devops.robotest.StepStatus;
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+
+/**
+ * ROBOTEST Suite JSON report writer implementation.
+ *
+ */
+public class SuiteReport {
+
+<span class="fc" id="L38">    private static SuitesListReport suitesListReporter = null;</span>
+<span class="fc" id="L39">    private static final Object WRITER_BLOCKER = new Object();</span>
+
+    private int suiteOrder;
+
+    private AtomicInteger caseOrder;
+    private AtomicInteger stepOrder;
+
+    private JsonGenerator jGenerator;
+    private ConfigReport suiteConfig;
+
+<span class="fc" id="L49">    private List&lt;CaseReport&gt; caseReports = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L50">    private List&lt;ValidationEntry&gt; outCaseErrors = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * Creates Suite robotest report, creating the JSON file.
+     *
+     * @param suiteOrder
+     *            Suite execution order.
+     * @param reportFile
+     *            Report file.
+     * @throws RobotestException
+     *             Errors, probably IO.
+     */
+    public SuiteReport(final int suiteOrder,
+<span class="fc" id="L63">                       final File reportFile) throws RobotestException {</span>
+        try {
+<span class="fc" id="L65">            reportFile.getParentFile()</span>
+<span class="fc" id="L66">                      .mkdirs();</span>
+<span class="fc" id="L67">            this.suiteOrder = suiteOrder;</span>
+<span class="fc" id="L68">            JsonFactory jfactory = new JsonFactory();</span>
+<span class="fc" id="L69">            jGenerator = jfactory.createGenerator(reportFile,</span>
+                                                  JsonEncoding.UTF8);
+<span class="fc" id="L71">            synchronized (SuiteReport.WRITER_BLOCKER) {</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">                if (null == SuiteReport.suitesListReporter) {</span>
+<span class="fc" id="L73">                    File suiteReporterFile = new File(reportFile.getParentFile()</span>
+<span class="fc" id="L74">                                                                .getAbsolutePath()</span>
+                            + &quot;/robotest-suites-list.json&quot;);
+<span class="fc" id="L76">                    SuiteReport.suitesListReporter = new SuitesListReport(suiteReporterFile);</span>
+                }
+<span class="fc" id="L78">                SuiteReport.suitesListReporter.appendToSuiteListReport(reportFile.getName());</span>
+<span class="fc" id="L79">            }</span>
+<span class="nc" id="L80">        } catch (IOException e) {</span>
+<span class="nc" id="L81">            throw new RobotestException(&quot;ROBOTEST SUITE REPORTER ERROR&quot;,</span>
+                                        e);
+<span class="fc" id="L83">        }</span>
+<span class="fc" id="L84">    }</span>
+
+    /**
+     * Getter method for suiteOrder.
+     *
+     * @return the suiteOrder
+     */
+    public int getSuiteOrder() {
+<span class="nc" id="L92">        return suiteOrder;</span>
+    }
+
+    /**
+     * Setter method for the suiteOrder.
+     *
+     * @param suiteOrder
+     *            the suiteOrder to set
+     */
+    public void setSuiteOrder(final int suiteOrder) {
+<span class="nc" id="L102">        this.suiteOrder = suiteOrder;</span>
+<span class="nc" id="L103">    }</span>
+
+    /**
+     * Getter method for caseOrder.
+     *
+     * @return the caseOrder
+     */
+    public AtomicInteger getCaseOrder() {
+<span class="nc" id="L111">        return caseOrder;</span>
+    }
+
+    /**
+     * Setter method for the caseOrder.
+     *
+     * @param caseOrder
+     *            the caseOrder to set
+     */
+    public void setCaseOrder(final AtomicInteger caseOrder) {
+<span class="nc" id="L121">        this.caseOrder = caseOrder;</span>
+<span class="nc" id="L122">    }</span>
+
+    /**
+     * Getter method for stepOrder.
+     *
+     * @return the stepOrder
+     */
+    public AtomicInteger getStepOrder() {
+<span class="nc" id="L130">        return stepOrder;</span>
+    }
+
+    /**
+     * Setter method for the stepOrder.
+     *
+     * @param stepOrder
+     *            the stepOrder to set
+     */
+    public void setStepOrder(final AtomicInteger stepOrder) {
+<span class="nc" id="L140">        this.stepOrder = stepOrder;</span>
+<span class="nc" id="L141">    }</span>
+
+    /**
+     * Getter method for jGenerator.
+     *
+     * @return the jGenerator
+     */
+    public JsonGenerator getjGenerator() {
+<span class="fc" id="L149">        return jGenerator;</span>
+    }
+
+    /**
+     * Setter method for the jGenerator.
+     *
+     * @param jGenerator
+     *            the jGenerator to set
+     */
+    public void setjGenerator(final JsonGenerator jGenerator) {
+<span class="fc" id="L159">        this.jGenerator = jGenerator;</span>
+<span class="fc" id="L160">    }</span>
+
+    /**
+     * Getter method for suiteConfig.
+     *
+     * @return the suiteConfig
+     */
+    public ConfigReport getSuiteConfig() {
+<span class="nc" id="L168">        return suiteConfig;</span>
+    }
+
+    /**
+     * Setter method for the suiteConfig.
+     *
+     * @param suiteConfig
+     *            the suiteConfig to set
+     */
+    public void setSuiteConfig(final ConfigReport suiteConfig) {
+<span class="nc" id="L178">        this.suiteConfig = suiteConfig;</span>
+<span class="nc" id="L179">    }</span>
+
+    /**
+     * Getter method for caseReports.
+     *
+     * @return the caseReports
+     */
+    public List&lt;CaseReport&gt; getCaseReports() {
+<span class="nc" id="L187">        return caseReports;</span>
+    }
+
+    /**
+     * Setter method for the caseReports.
+     *
+     * @param caseReports
+     *            the caseReports to set
+     */
+    public void setCaseReports(final List&lt;CaseReport&gt; caseReports) {
+<span class="nc" id="L197">        this.caseReports = caseReports;</span>
+<span class="nc" id="L198">    }</span>
+
+    /**
+     * Getter method for outCaseErrors.
+     *
+     * @return the outCaseErrors
+     */
+    public List&lt;ValidationEntry&gt; getOutCaseErrors() {
+<span class="nc" id="L206">        return outCaseErrors;</span>
+    }
+
+    /**
+     * Setter method for the outCaseErrors.
+     *
+     * @param outCaseErrors
+     *            the outCaseErrors to set
+     */
+    public void setOutCaseErrors(final List&lt;ValidationEntry&gt; outCaseErrors) {
+<span class="nc" id="L216">        this.outCaseErrors = outCaseErrors;</span>
+<span class="nc" id="L217">    }</span>
+
+    /**
+     * Init Suite in report.
+     *
+     * @param suiteId
+     *            Suite Annot tag or custom id.
+     * @param suiteDescription
+     *            Suite custom description.
+     * @param initMillis
+     *            init execution time.
+     * @param config
+     *            Config entries.
+     * @throws RobotestException
+     *             Errors, probably IO.
+     */
+    public void initSuite(final String suiteId,
+                          final String suiteDescription,
+                          final long initMillis,
+                          final List&lt;ConfigEntry&gt; config) throws RobotestException {
+        try {
+<span class="fc" id="L238">            caseOrder = new AtomicInteger(0);</span>
+<span class="fc" id="L239">            jGenerator.writeStartObject();</span>
+<span class="fc" id="L240">            jGenerator.writeNumberField(&quot;order&quot;,</span>
+                                        suiteOrder);
+<span class="fc" id="L242">            jGenerator.writeStringField(&quot;suite&quot;,</span>
+                                        suiteId);
+<span class="fc" id="L244">            jGenerator.writeStringField(&quot;description&quot;,</span>
+                                        suiteDescription);
+<span class="fc" id="L246">            jGenerator.writeNumberField(&quot;initMillis&quot;,</span>
+                                        initMillis);
+
+<span class="fc" id="L249">            suiteConfig = new ConfigReport(config);</span>
+<span class="fc" id="L250">            suiteConfig.writeConfig(jGenerator,</span>
+                                    &quot;config&quot;);
+
+<span class="fc" id="L253">            jGenerator.writeFieldName(&quot;cases&quot;);</span>
+<span class="fc" id="L254">            jGenerator.writeStartArray();</span>
+<span class="fc" id="L255">        } catch (IOException e) {</span>
+<span class="fc" id="L256">            throw new RobotestException(&quot;ROBOTEST REPORTER ERROR&quot;,</span>
+                                        e);
+<span class="fc" id="L258">        }</span>
+<span class="fc" id="L259">    }</span>
+
+    /**
+     * Flush Suite finish data and out case errors.
+     *
+     * @param time
+     *            end time millis.
+     * @throws RobotestException
+     *             errors, probably IO.
+     */
+    public void endSuite(final long time) throws RobotestException {
+        try {
+<span class="fc" id="L271">            jGenerator.writeEndArray();</span>
+
+<span class="fc" id="L273">            jGenerator.writeFieldName(&quot;suiteOutCaseErrors&quot;);</span>
+<span class="fc" id="L274">            jGenerator.writeStartArray();</span>
+<span class="fc bfc" id="L275" title="All 2 branches covered.">            for (ValidationEntry toadd : outCaseErrors) {</span>
+<span class="fc" id="L276">                jGenerator.writeStartObject();</span>
+<span class="fc" id="L277">                jGenerator.writeStringField(&quot;status&quot;,</span>
+<span class="fc" id="L278">                                            toadd.getStatus()</span>
+<span class="fc" id="L279">                                                 .name());</span>
+<span class="pc bpc" id="L280" title="1 of 2 branches missed.">                if (null != toadd.getResource()) {</span>
+<span class="fc" id="L281">                    jGenerator.writeArrayFieldStart(&quot;resource&quot;);</span>
+<span class="fc bfc" id="L282" title="All 2 branches covered.">                    for (String res : toadd.getResource()) {</span>
+<span class="fc" id="L283">                        jGenerator.writeObject(res);</span>
+<span class="fc" id="L284">                    }</span>
+<span class="fc" id="L285">                    jGenerator.writeEndArray();</span>
+                }
+<span class="fc" id="L287">                jGenerator.writeEndObject();</span>
+<span class="fc" id="L288">            }</span>
+<span class="fc" id="L289">            jGenerator.writeEndArray();</span>
+
+<span class="fc" id="L291">            jGenerator.writeNumberField(&quot;endMillis&quot;,</span>
+                                        time);
+<span class="fc" id="L293">            jGenerator.writeEndObject();</span>
+<span class="fc" id="L294">            jGenerator.close();</span>
+<span class="fc" id="L295">        } catch (IOException e) {</span>
+<span class="fc" id="L296">            throw new RobotestException(&quot;ROBOTEST ERROR REPORT&quot;,</span>
+                                        e);
+<span class="fc" id="L298">        }</span>
+<span class="fc" id="L299">    }</span>
+
+    /**
+     * Init CaseReport under Suite in report.
+     *
+     * @param caseId
+     *            case annot tag or custom id.
+     * @param caseDescription
+     *            case custom description
+     * @param initMillis
+     *            execution init millis
+     * @param caseConfig
+     *            case configs.
+     */
+    public void initCase(final String caseId,
+                         final String caseDescription,
+                         final long initMillis,
+                         final List&lt;ConfigEntry&gt; caseConfig) {
+<span class="fc" id="L317">        stepOrder = new AtomicInteger(0);</span>
+<span class="fc" id="L318">        caseReports.add(new CaseReport(caseOrder.getAndIncrement(),</span>
+                                       caseId,
+                                       caseDescription,
+                                       initMillis,
+                                       caseConfig));
+<span class="fc" id="L323">    }</span>
+
+    /**
+     * End case to suite report.
+     *
+     * @param caseId
+     *            case annot tag or custom Id.
+     * @param endMillis
+     *            final time millis.
+     * @throws RobotestException
+     *             Errors, probably IO.
+     */
+    public void endCase(final String caseId,
+                        final long endMillis) throws RobotestException {
+<span class="fc bfc" id="L337" title="All 2 branches covered.">        for (CaseReport caseReport : caseReports) {</span>
+<span class="fc" id="L338">            if (caseReport.getId()</span>
+<span class="pc bpc" id="L339" title="1 of 2 branches missed.">                          .equals(caseId)) {</span>
+<span class="fc" id="L340">                caseReport.endCase(endMillis);</span>
+<span class="fc" id="L341">                synchronized (SuiteReport.WRITER_BLOCKER) {</span>
+<span class="fc" id="L342">                    caseReport.writeCase(jGenerator);</span>
+<span class="fc" id="L343">                }</span>
+            }
+<span class="fc" id="L345">        }</span>
+
+<span class="fc" id="L347">    }</span>
+
+    /**
+     * Initialize step report inside Case of Suite report.
+     *
+     * @param caseId
+     *            case annot tag or custom id.
+     * @param stepId
+     *            step annot tag or custom id.
+     * @param stepDescription
+     *            step custom description.
+     * @param stepConfig
+     *            step config.
+     * @param initMillis
+     *            initial exec. millis
+     */
+    public void initStep(final String caseId,
+                         final String stepId,
+                         final String stepDescription,
+                         final List&lt;ConfigEntry&gt; stepConfig,
+                         final long initMillis) {
+<span class="fc bfc" id="L368" title="All 2 branches covered.">        for (CaseReport caseReport : caseReports) {</span>
+<span class="fc" id="L369">            if (caseReport.getId()</span>
+<span class="pc bpc" id="L370" title="1 of 2 branches missed.">                          .equals(caseId)) {</span>
+<span class="fc" id="L371">                caseReport.addStep(new StepReport(stepOrder.getAndIncrement(),</span>
+                                                  stepId,
+                                                  stepDescription,
+                                                  stepConfig,
+                                                  initMillis));
+            }
+<span class="fc" id="L377">        }</span>
+<span class="fc" id="L378">    }</span>
+
+    /**
+     * Add step validation entry to step.
+     *
+     * @param caseId
+     *            case annot tag or custom id.
+     * @param stepId
+     *            secondary step annot tag or custom id.
+     * @param validationEntry
+     *            validation entry.
+     * @return The validation entry to fluent api purposes.
+     */
+    public ValidationEntry addStepValidationEntry(final String caseId,
+                                                  final String stepId,
+                                                  final ValidationEntry validationEntry) {
+<span class="fc bfc" id="L394" title="All 2 branches covered.">        for (CaseReport caseReport : caseReports) {</span>
+<span class="fc" id="L395">            if (caseReport.getId()</span>
+<span class="pc bpc" id="L396" title="1 of 2 branches missed.">                          .equals(caseId)) {</span>
+<span class="fc bfc" id="L397" title="All 2 branches covered.">                for (StepReport stepReport : caseReport.getStepReports()) {</span>
+<span class="pc bpc" id="L398" title="1 of 2 branches missed.">                    if (null != stepReport.getId() &amp;&amp; stepReport.getId()</span>
+<span class="pc bpc" id="L399" title="1 of 2 branches missed.">                                                                .equals(stepId)) {</span>
+<span class="fc" id="L400">                        validationEntry.setValidationOrder(stepReport.getValidationOrder()</span>
+<span class="fc" id="L401">                                                                     .getAndIncrement());</span>
+<span class="fc" id="L402">                        stepReport.getAdditional()</span>
+<span class="fc" id="L403">                                  .add(validationEntry);</span>
+                    }
+<span class="fc" id="L405">                }</span>
+            }
+<span class="fc" id="L407">        }</span>
+<span class="fc" id="L408">        return validationEntry;</span>
+    }
+
+    /**
+     * Add out step case validation entrys.
+     *
+     * @param caseId
+     *            case annot tag or custom id.
+     * @param validationEntry
+     *            validation entry.
+     * @return The validation entry to fluent api purposes.
+     */
+    public ValidationEntry addCaseValidationEntry(final String caseId,
+                                                  final ValidationEntry validationEntry) {
+<span class="fc bfc" id="L422" title="All 2 branches covered.">        for (CaseReport caseReport : caseReports) {</span>
+<span class="fc" id="L423">            if (caseReport.getId()</span>
+<span class="pc bpc" id="L424" title="1 of 2 branches missed.">                          .equals(caseId)) {</span>
+<span class="fc" id="L425">                caseReport.getOutStepErrors()</span>
+<span class="fc" id="L426">                          .add(validationEntry);</span>
+            }
+<span class="fc" id="L428">        }</span>
+<span class="fc" id="L429">        return validationEntry;</span>
+    }
+
+    /**
+     * Add out suite validation entry.
+     *
+     * @param validationEntry
+     *            entry.
+     */
+    public void addSuiteValidationEntry(final ValidationEntry validationEntry) {
+<span class="fc" id="L439">        outCaseErrors.add(validationEntry);</span>
+<span class="fc" id="L440">    }</span>
+
+    /**
+     * Flush step to case suite report, including validation entrys.
+     *
+     * @param caseId
+     *            case annot tag or custom id.
+     * @param stepId
+     *            step annot tag or custom id.
+     * @param resultadoStep
+     *            Step final result status.
+     * @param endMillis
+     *            end time millis.
+     */
+    public void endStep(final String caseId,
+                        final String stepId,
+                        final StepStatus resultadoStep,
+                        final long endMillis) {
+<span class="fc bfc" id="L458" title="All 2 branches covered.">        for (CaseReport caseReport : caseReports) {</span>
+<span class="fc" id="L459">            if (caseReport.getId()</span>
+<span class="pc bpc" id="L460" title="1 of 2 branches missed.">                          .equals(caseId)) {</span>
+<span class="fc bfc" id="L461" title="All 2 branches covered.">                for (StepReport stepReport : caseReport.getStepReports()) {</span>
+<span class="fc" id="L462">                    if (stepReport.getId()</span>
+<span class="pc bpc" id="L463" title="1 of 2 branches missed.">                                  .equals(stepId)) {</span>
+<span class="fc" id="L464">                        stepReport.setEndMillis(endMillis);</span>
+<span class="fc" id="L465">                        stepReport.setStepStatus(resultadoStep);</span>
+                    }
+<span class="fc" id="L467">                }</span>
+            }
+<span class="fc" id="L469">        }</span>
+<span class="fc" id="L470">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

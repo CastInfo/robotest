@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RestAssuredHttpClientConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.cast-info.devops:robotest-core</a> &gt; <a href="index.source.html" class="el_package">com.castinfo.devops.robotest.restassured</a> &gt; <span class="el_source">RestAssuredHttpClientConfig.java</span></div><h1>RestAssuredHttpClientConfig.java</h1><pre class="source lang-java linenums">/********************************************************************************
+ * ROBOTEST
+ * Copyright (C) 2018 CAST-INFO, S.A. www.cast-info.es
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *******************************************************************************/
+package com.castinfo.devops.robotest.restassured;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.http.HttpException;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpRequest;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.HttpClient;
+import org.apache.http.conn.params.ConnRoutePNames;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.HttpContext;
+
+import com.castinfo.devops.robotest.config.RobotestHttpConnConfig;
+
+import io.restassured.config.HttpClientConfig.HttpClientFactory;
+
+public class RestAssuredHttpClientConfig implements HttpClientFactory {
+
+    private RobotestHttpConnConfig httpConfig;
+
+<span class="fc" id="L48">    public RestAssuredHttpClientConfig(final RobotestHttpConnConfig httpConfiguration) {</span>
+<span class="fc" id="L49">        httpConfig = httpConfiguration;</span>
+<span class="fc" id="L50">    }</span>
+
+    @Override
+    public HttpClient createHttpClient() {
+<span class="fc" id="L54">        DefaultHttpClient httpclient = configureTimeout(httpConfig.getGeneralTimeout());</span>
+<span class="fc" id="L55">        configureProxy(httpConfig,</span>
+                       httpclient);
+        // return
+        // httpclient.build();
+<span class="fc" id="L59">        return httpclient;</span>
+    }
+
+    /**
+     * @param timeoutInMillis
+     * @return
+     */
+    private DefaultHttpClient configureTimeout(final String timeoutInMillisecs) {
+        /*
+         * HttpClientBuilder dosn't return RA expected AbstractHttpClient!
+         *
+         * Expecting resolved issue we comment lines of builder code.
+         *
+         * RequestConfig timeoutParams = RequestConfig. custom() .setConnectTimeout (timeoutInMillis)
+         * .setConnectionRequestTimeout (timeoutInMillis) .setSocketTimeout( timeoutInMillis) .build();
+         *
+         * HttpClientBuilder builder = HttpClientBuilder. create(). setDefaultRequestConfig (timeoutParams);
+         */
+<span class="fc" id="L77">        int timeoutInMillis = Integer.parseInt(timeoutInMillisecs);</span>
+<span class="fc" id="L78">        HttpParams timeoutParams = new BasicHttpParams();</span>
+<span class="fc" id="L79">        HttpConnectionParams.setConnectionTimeout(timeoutParams,</span>
+                                                  timeoutInMillis);
+<span class="fc" id="L81">        HttpConnectionParams.setSoTimeout(timeoutParams,</span>
+                                          timeoutInMillis);
+<span class="fc" id="L83">        return new DefaultHttpClient(timeoutParams);</span>
+    }
+
+    private void configureProxy(final RobotestHttpConnConfig httpConfig,
+                                final DefaultHttpClient httpclient) {
+<span class="pc bpc" id="L88" title="1 of 2 branches missed.">        if (httpConfig.haveProxyHost()) {</span>
+<span class="fc" id="L89">            HttpHost proxy = new HttpHost(httpConfig.getProxyHost(),</span>
+<span class="fc" id="L90">                                          httpConfig.obtainIntegerProxyPort(),</span>
+                                          HttpHost.DEFAULT_SCHEME_NAME);
+            // httpclient.setProxy(proxy);
+<span class="fc" id="L93">            httpclient.getParams()</span>
+<span class="fc" id="L94">                      .setParameter(ConnRoutePNames.DEFAULT_PROXY,</span>
+                                    proxy);
+<span class="fc" id="L96">            configureNonProxy(httpConfig,</span>
+                              httpclient,
+                              proxy);
+<span class="fc" id="L99">            configureProxyAuth(httpConfig,</span>
+                               httpclient);
+        }
+<span class="fc" id="L102">    }</span>
+
+    private void configureNonProxy(final RobotestHttpConnConfig httpConfig,
+                                   final DefaultHttpClient httpclient,
+                                   final HttpHost proxy) {
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">        if (httpConfig.haveNoproxyfor()) {</span>
+<span class="nc" id="L108">            List&lt;String&gt; proxyExceptions = Arrays.asList(httpConfig.getNoproxyfor()</span>
+<span class="nc" id="L109">                                                                   .split(&quot;,&quot;));</span>
+<span class="nc" id="L110">            DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy) {</span>
+                @Override
+                protected HttpHost determineProxy(final HttpHost target,
+                                                  final HttpRequest request,
+                                                  final HttpContext context) throws HttpException {
+<span class="nc bnc" id="L115" title="All 2 branches missed.">                    return proxyExceptions.contains(target.getHostName()) ? null : proxy;</span>
+                }
+            };
+<span class="nc" id="L118">            httpclient.setRoutePlanner(routePlanner);</span>
+        }
+<span class="fc" id="L120">    }</span>
+
+    private void configureProxyAuth(final RobotestHttpConnConfig httpConfig,
+                                    final DefaultHttpClient httpclient) {
+<span class="pc bpc" id="L124" title="1 of 2 branches missed.">        if (httpConfig.haveProxyUser()) {</span>
+<span class="fc" id="L125">            Credentials credentials = new UsernamePasswordCredentials(httpConfig.getProxyUser(),</span>
+<span class="fc" id="L126">                                                                      httpConfig.getProxySecret());</span>
+<span class="fc" id="L127">            AuthScope authScope = new AuthScope(httpConfig.getProxyHost(),</span>
+<span class="fc" id="L128">                                                httpConfig.obtainIntegerProxyPort());</span>
+<span class="fc" id="L129">            CredentialsProvider credsProvider = new BasicCredentialsProvider();</span>
+<span class="fc" id="L130">            credsProvider.setCredentials(authScope,</span>
+                                         credentials);
+            // httpclient.setDefaultCredentialsProvider(credsProvider);
+<span class="fc" id="L133">            httpclient.setCredentialsProvider(credsProvider);</span>
+        }
+<span class="fc" id="L135">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

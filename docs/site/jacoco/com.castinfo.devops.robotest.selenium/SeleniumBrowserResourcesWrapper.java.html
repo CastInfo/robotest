@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SeleniumBrowserResourcesWrapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.cast-info.devops:robotest-core</a> &gt; <a href="index.source.html" class="el_package">com.castinfo.devops.robotest.selenium</a> &gt; <span class="el_source">SeleniumBrowserResourcesWrapper.java</span></div><h1>SeleniumBrowserResourcesWrapper.java</h1><pre class="source lang-java linenums">/********************************************************************************
+ * ROBOTEST
+ * Copyright (C) 2018 CAST-INFO, S.A. www.cast-info.es
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *******************************************************************************/
+package com.castinfo.devops.robotest.selenium;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
+import org.openqa.selenium.JavascriptException;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoAlertPresentException;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.logging.LogEntries;
+import org.openqa.selenium.logging.LogEntry;
+import org.openqa.selenium.logging.Logs;
+import org.openqa.selenium.remote.Augmenter;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.castinfo.devops.robotest.RobotestException;
+import com.castinfo.devops.robotest.config.ConfigurationAccess;
+import com.castinfo.devops.robotest.report.ValidationEntry;
+
+/**
+ * Selenium Wrapper around browser resources management (windows/tabs/alerts, cookies, screenshots and logs).
+ *
+ */
+<span class="fc" id="L57">public abstract class SeleniumBrowserResourcesWrapper extends ConfigurationAccess {</span>
+
+    /**
+     * Get the Selenium Driver already loaded and configured.
+     *
+     * @return the driver
+     * @throws RobotestException
+     *             Configuration initialition related problems.
+     */
+    public abstract WebDriver getDriver() throws RobotestException;
+
+    /**
+     * Open passed URL, in browser.
+     *
+     * @param url
+     *            url
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public void openURL(final String url) throws RobotestException {
+<span class="fc" id="L77">        getDriver().get(url);</span>
+<span class="fc" id="L78">    }</span>
+
+    /**
+     * Open URL in browser and expect the load event.
+     *
+     * @param url
+     *            url
+     * @param timeoutInSeconds
+     *            timeout in seconds
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public void openURLAndWaitLoad(final String url,
+                                   final int timeoutInSeconds) throws RobotestException {
+<span class="nc" id="L92">        openURL(url);</span>
+<span class="nc" id="L93">        waitForPageLoaded(timeoutInSeconds);</span>
+<span class="nc" id="L94">    }</span>
+
+    /**
+     * Do wait for page load, this is not valid for AJAX invocations, in this cases expect presence of promise Ajax
+     * element page modifications. If timeout, escape in browser page loading is triggered.
+     *
+     * @param waitSeconds
+     *            timout
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public void waitForPageLoaded(final long waitSeconds) throws RobotestException {
+<span class="fc" id="L106">        ExpectedCondition&lt;Boolean&gt; expectation = webdriverParam -&gt; {</span>
+<span class="fc" id="L107">            Boolean pageLoaded = Boolean.FALSE;</span>
+            try {
+<span class="fc" id="L109">                JavascriptExecutor jsExe = (JavascriptExecutor) webdriverParam;</span>
+<span class="fc" id="L110">                Object noSafari = jsExe.executeScript(&quot;return window.performance.timing.domContentLoadedEventEnd&quot;);</span>
+<span class="fc" id="L111">                Object safari = jsExe.executeScript(&quot;return document.readyState&quot;);</span>
+<span class="pc bpc" id="L112" title="2 of 4 branches missed.">                if (&quot;complete&quot;.equals(safari) &amp;&amp; !&quot;0&quot;.equals(noSafari.toString())) {</span>
+<span class="fc" id="L113">                    pageLoaded = Boolean.TRUE;</span>
+                }
+<span class="nc" id="L115">            } catch (JavascriptException e) {</span>
+                // always false
+<span class="fc" id="L117">            }</span>
+<span class="fc" id="L118">            return pageLoaded;</span>
+        };
+        try {
+<span class="fc" id="L121">            new WebDriverWait(getDriver(),</span>
+<span class="fc" id="L122">                              waitSeconds).until(expectation);</span>
+<span class="nc" id="L123">        } catch (TimeoutException e) {</span>
+<span class="nc" id="L124">            Actions action = new Actions(getDriver());</span>
+<span class="nc" id="L125">            action.sendKeys(&quot;Keys.ESCAPE&quot;)</span>
+<span class="nc" id="L126">                  .build()</span>
+<span class="nc" id="L127">                  .perform();</span>
+<span class="nc" id="L128">            throw new RobotestException(&quot;LOADING PAGE TIMEOUT&quot;,</span>
+                                        e);
+<span class="fc" id="L130">        }</span>
+<span class="fc" id="L131">    }</span>
+
+    /**
+     * Open link in a new browser tab.
+     *
+     * @param by
+     *            By search
+     * @param timeoutSeconds
+     *            timeout
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public void openLinkInNewTab(final By by,
+                                 final long timeoutSeconds) throws RobotestException {
+<span class="nc" id="L145">        Actions a = new Actions(getDriver());</span>
+<span class="nc" id="L146">        WebElement e = getDriver().findElement(by);</span>
+<span class="nc" id="L147">        a.moveToElement(e)</span>
+<span class="nc" id="L148">         .keyDown(Keys.CONTROL)</span>
+<span class="nc" id="L149">         .click()</span>
+<span class="nc" id="L150">         .build()</span>
+<span class="nc" id="L151">         .perform();</span>
+<span class="nc" id="L152">        switchToAnotherWindow();</span>
+<span class="nc" id="L153">        waitForPageLoaded(timeoutSeconds);</span>
+<span class="nc" id="L154">    }</span>
+
+    /**
+     * Open URL in a new browser tab with id.
+     *
+     * @param urlToLoad
+     *            url
+     * @param tabId
+     *            id tab
+     * @param timeoutInSeconds
+     *            timeout
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     *
+     */
+    public void loadUrlInTabId(final String urlToLoad,
+                               final String tabId,
+                               final int timeoutInSeconds) throws RobotestException {
+<span class="nc" id="L172">        JavascriptExecutor js = (JavascriptExecutor) getDriver();</span>
+<span class="nc" id="L173">        js.executeScript(&quot;window.open('&quot; + urlToLoad + &quot;', '&quot; + tabId + &quot;');&quot;);</span>
+<span class="nc" id="L174">        getDriver().switchTo()</span>
+<span class="nc" id="L175">                   .window(tabId);</span>
+<span class="nc" id="L176">        waitForPageLoaded(timeoutInSeconds);</span>
+<span class="nc" id="L177">    }</span>
+
+    /**
+     * Close tab with id.
+     *
+     * @param tabId
+     *            tab id.
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public void closeTabById(final String tabId) throws RobotestException {
+<span class="nc" id="L188">        JavascriptExecutor js = (JavascriptExecutor) getDriver();</span>
+<span class="nc" id="L189">        js.executeScript(&quot;window.close('&quot; + tabId + &quot;');&quot;);</span>
+<span class="nc" id="L190">    }</span>
+
+    /**
+     * Gets actual browser opened URL.
+     *
+     * @return Url actual url.
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public String getCurrentUrl() throws RobotestException {
+<span class="fc" id="L200">        return getDriver().getCurrentUrl();</span>
+    }
+
+    /**
+     * Search in time period, if TEXT exist in current opened URL. If 0 timeout passed, will do not wait.
+     *
+     * @param toSearchInUrl
+     *            the search
+     * @param seconds
+     *            timeout
+     * @return true if exist TEXT in the current url.
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public boolean currentURLContains(final String toSearchInUrl,
+                                      final long seconds) throws RobotestException {
+<span class="fc" id="L216">        ExpectedCondition&lt;Boolean&gt; currentURLContains =</span>
+<span class="fc" id="L217">                webdriverApplyParam -&gt; Boolean.valueOf(webdriverApplyParam.getCurrentUrl()</span>
+<span class="fc" id="L218">                                                                          .contains(toSearchInUrl));</span>
+<span class="fc" id="L219">        boolean resultado = true;</span>
+        try {
+<span class="fc" id="L221">            new WebDriverWait(getDriver(),</span>
+<span class="fc" id="L222">                              seconds).until(currentURLContains);</span>
+<span class="fc" id="L223">        } catch (TimeoutException e) {</span>
+<span class="fc" id="L224">            resultado = false;</span>
+<span class="fc" id="L225">        }</span>
+<span class="fc" id="L226">        return resultado;</span>
+    }
+
+    /**
+     * Validates in time period, if browser window title exist. If 0 timeout passed, will do not wait.
+     *
+     * @param title
+     *            title
+     * @param seconds
+     *            timeout
+     * @return true if exist.
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public boolean pageTitleContainsUntil(final String title,
+                                          final long seconds) throws RobotestException {
+<span class="fc" id="L242">        boolean resultado = true;</span>
+        try {
+<span class="fc" id="L244">            new WebDriverWait(getDriver(),</span>
+<span class="fc" id="L245">                              seconds).until(ExpectedConditions.titleContains(title));</span>
+<span class="fc" id="L246">        } catch (TimeoutException e) {</span>
+<span class="fc" id="L247">            resultado = false;</span>
+<span class="fc" id="L248">        }</span>
+<span class="fc" id="L249">        return resultado;</span>
+    }
+
+    /**
+     * Validates if some alert/confirm dialog is open.
+     *
+     * @return true if exists.
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public boolean isAlertPresent() throws RobotestException {
+<span class="fc" id="L260">        boolean resultado = true;</span>
+        try {
+<span class="fc" id="L262">            getDriver().switchTo()</span>
+<span class="nc" id="L263">                       .alert();</span>
+<span class="fc" id="L264">        } catch (NoAlertPresentException e) {</span>
+<span class="fc" id="L265">            resultado = false;</span>
+<span class="nc" id="L266">        }</span>
+<span class="fc" id="L267">        return resultado;</span>
+    }
+
+    /**
+     * Returns alert/confirm showed TEXT.
+     *
+     * @param clickAccept
+     *            true if will do an accept action / false if cancel action wil be triggered.
+     * @return El alert/confirm TEXT.
+     * @throws RobotestException
+     *             if Selenium Driver unavailable
+     */
+    public String closeAlertAndGetItsText(final boolean clickAccept) throws RobotestException {
+<span class="nc" id="L280">        Alert alert = getDriver().switchTo()</span>
+<span class="nc" id="L281">                                 .alert();</span>
+<span class="nc" id="L282">        String alertText = alert.getText();</span>
+<span class="nc bnc" id="L283" title="All 2 branches missed.">        if (clickAccept) {</span>
+<span class="nc" id="L284">            alert.accept();</span>
+        } else {
+<span class="nc" id="L286">            alert.dismiss();</span>
+        }
+
+<span class="nc" id="L289">        return alertText;</span>
+    }
+
+    /**
+     * Do focus in first no-principal.
+     *
+     * @return Window identificator.
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public String switchToAnotherWindow() throws RobotestException {
+<span class="nc" id="L300">        String popupHandle = &quot;&quot;;</span>
+<span class="nc" id="L301">        Set&lt;String&gt; s = getDriver().getWindowHandles();</span>
+<span class="nc" id="L302">        Iterator&lt;String&gt; ite = s.iterator();</span>
+<span class="nc bnc" id="L303" title="All 2 branches missed.">        while (ite.hasNext()) {</span>
+<span class="nc" id="L304">            popupHandle = ite.next();</span>
+<span class="nc bnc" id="L305" title="All 2 branches missed.">            if (!popupHandle.contains(getDriver().getWindowHandle())) {</span>
+<span class="nc" id="L306">                getDriver().switchTo()</span>
+<span class="nc" id="L307">                           .window(popupHandle);</span>
+<span class="nc" id="L308">                break;</span>
+            }
+        }
+<span class="nc" id="L311">        return popupHandle;</span>
+    }
+
+    /**
+     * Do focus in firt non-principal window that have searched window title.
+     *
+     * @param title
+     *            window title to search
+     * @return true if window with this title exist.
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public boolean switchToWindowThatContainsTitle(final String title) throws RobotestException {
+<span class="nc" id="L324">        String windowParent = getDriver().getWindowHandle();</span>
+<span class="nc" id="L325">        Iterator&lt;String&gt; availableWindows = getDriver().getWindowHandles()</span>
+<span class="nc" id="L326">                                                       .iterator();</span>
+<span class="nc" id="L327">        boolean resultado = false;</span>
+<span class="nc bnc" id="L328" title="All 4 branches missed.">        while (!resultado &amp;&amp; availableWindows.hasNext()) {</span>
+<span class="nc" id="L329">            String window = availableWindows.next();</span>
+<span class="nc bnc" id="L330" title="All 2 branches missed.">            if (!windowParent.equals(window)) {</span>
+<span class="nc" id="L331">                getDriver().switchTo()</span>
+<span class="nc" id="L332">                           .window(window);</span>
+<span class="nc" id="L333">                if (getDriver().getTitle()</span>
+<span class="nc" id="L334">                               .toLowerCase()</span>
+<span class="nc bnc" id="L335" title="All 2 branches missed.">                               .contains(title)) {</span>
+<span class="nc" id="L336">                    resultado = true;</span>
+                } else {
+<span class="nc" id="L338">                    getDriver().switchTo()</span>
+<span class="nc" id="L339">                               .window(windowParent);</span>
+                }
+            }
+<span class="nc" id="L342">        }</span>
+<span class="nc" id="L343">        return resultado;</span>
+    }
+
+    /**
+     * Add cookie to browser.
+     *
+     * @param cookieName
+     *            name of cookie
+     * @param cookieValue
+     *            desired value.
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public void addCookie(final String cookieName,
+                          final String cookieValue) throws RobotestException {
+<span class="fc" id="L358">        Cookie ck = new Cookie(cookieName,</span>
+                               cookieValue);
+<span class="fc" id="L360">        getDriver().manage()</span>
+<span class="fc" id="L361">                   .addCookie(ck);</span>
+<span class="fc" id="L362">    }</span>
+
+    /**
+     * Get cookie value of a cookie if exists.
+     *
+     * @param cookieName
+     *            name of cookie
+     * @return String value of cookie, null if not exist
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public String getCookieValueByName(final String cookieName) throws RobotestException {
+<span class="fc" id="L374">        String resultado = null;</span>
+<span class="fc" id="L375">        Cookie c = getDriver().manage()</span>
+<span class="fc" id="L376">                              .getCookieNamed(cookieName);</span>
+<span class="pc bpc" id="L377" title="1 of 2 branches missed.">        if (null != c) {</span>
+<span class="fc" id="L378">            resultado = c.getValue();</span>
+        }
+<span class="fc" id="L380">        return resultado;</span>
+    }
+
+    /**
+     * List of cookies.
+     *
+     * @return list of cookies
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public Set&lt;Cookie&gt; listOfCookiesAvailable() throws RobotestException {
+<span class="fc" id="L391">        return getDriver().manage()</span>
+<span class="fc" id="L392">                          .getCookies();</span>
+    }
+
+    /**
+     * Makes browser screenshoot and return in bytes.
+     *
+     * @return bytes screeshoot captured
+     * @throws RobotestException
+     *             Selenium Driver unavailable or error
+     */
+    public byte[] takeScreenShoot() throws RobotestException {
+        try {
+<span class="fc" id="L404">            WebDriver captureDriver = getDriver();</span>
+<span class="pc bpc" id="L405" title="1 of 2 branches missed.">            if (captureDriver instanceof RemoteWebDriver) {</span>
+<span class="fc" id="L406">                new Augmenter().augment(captureDriver);</span>
+            }
+<span class="fc" id="L408">            return ((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.BYTES);</span>
+<span class="nc" id="L409">        } catch (WebDriverException e) {</span>
+<span class="nc" id="L410">            throw new RobotestException(&quot;CAPTURE SCREEN SHOOT ERROR&quot;,</span>
+                                        e);
+        }
+
+    }
+
+    /**
+     * Makes browser present HTML page source capture and return in String.
+     *
+     * @return HTML file captured in a String
+     * @throws RobotestException
+     *             if Selenium Driver unavailable or error
+     */
+    public String takePageSource() throws RobotestException {
+        try {
+<span class="fc" id="L425">            return getDriver().getPageSource();</span>
+<span class="nc" id="L426">        } catch (WebDriverException e) {</span>
+<span class="nc" id="L427">            throw new RobotestException(&quot;CAPTURE PAGE SOURCE ERROR&quot;,</span>
+                                        e);
+        }
+    }
+
+    /**
+     * Returns a limited list of ValidationEntrys of WebDriver visible log from browser CONSOLE with desired level of
+     * any kind (JavaScript, CSS, network, etc). The retrived Level status equivalence is WARNING for WARNING, ERROR for
+     * &amp;gt; WARNING &amp;amp; INFO for &amp;lt; WARNING.
+     *
+     * @param desiredLogLevel
+     *            log level desired
+     * @return The retrived browser CONSOLE log list
+     * @throws RobotestException
+     *             Errors in the log retrive with web driver.
+     */
+    public List&lt;ValidationEntry&gt; takeBrowserConsoleLogs(final Level desiredLogLevel) throws RobotestException {
+<span class="fc" id="L444">        List&lt;ValidationEntry&gt; resultado = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L445">        ValidationEntry tmpValidationEntry = null;</span>
+        try {
+<span class="fc" id="L447">            Logs logs = getDriver().manage()</span>
+<span class="fc" id="L448">                                   .logs();</span>
+<span class="fc" id="L449">            Iterator&lt;String&gt; itTiposLog = logs.getAvailableLogTypes()</span>
+<span class="fc" id="L450">                                              .iterator();</span>
+<span class="fc bfc" id="L451" title="All 2 branches covered.">            while (itTiposLog.hasNext()) {</span>
+<span class="fc" id="L452">                String tipoLog = itTiposLog.next();</span>
+<span class="fc" id="L453">                LogEntries logEntries = logs.get(tipoLog);</span>
+<span class="pc bpc" id="L454" title="1 of 2 branches missed.">                for (LogEntry logEntry : logEntries) {</span>
+<span class="nc" id="L455">                    if (logEntry.getLevel()</span>
+<span class="nc bnc" id="L456" title="All 2 branches missed.">                                .intValue() &gt;= desiredLogLevel.intValue()) {</span>
+<span class="nc" id="L457">                        if (Level.WARNING.intValue() &lt; logEntry.getLevel()</span>
+<span class="nc bnc" id="L458" title="All 2 branches missed.">                                                               .intValue()) {</span>
+<span class="nc" id="L459">                            tmpValidationEntry = ValidationEntry.buildError()</span>
+<span class="nc" id="L460">                                                                .withConsole(logEntry.getMessage());</span>
+<span class="nc" id="L461">                        } else if (Level.WARNING.intValue() &gt; logEntry.getLevel()</span>
+<span class="nc bnc" id="L462" title="All 2 branches missed.">                                                                      .intValue()) {</span>
+<span class="nc" id="L463">                            tmpValidationEntry = ValidationEntry.buildInfo()</span>
+<span class="nc" id="L464">                                                                .withConsole(logEntry.getMessage());</span>
+                        } else {
+<span class="nc" id="L466">                            tmpValidationEntry = ValidationEntry.buildWarning()</span>
+<span class="nc" id="L467">                                                                .withConsole(logEntry.getMessage());</span>
+                        }
+<span class="nc" id="L469">                        resultado.add(tmpValidationEntry);</span>
+                    }
+<span class="nc" id="L471">                }</span>
+<span class="fc" id="L472">            }</span>
+<span class="nc" id="L473">        } catch (WebDriverException e) {</span>
+<span class="nc" id="L474">            throw new RobotestException(&quot;ERROR RETRIVING LOGS&quot;,</span>
+                                        e);
+<span class="fc" id="L476">        }</span>
+<span class="fc" id="L477">        return resultado;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>
